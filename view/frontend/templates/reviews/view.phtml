@@ -1,0 +1,7 @@
+<div style="display: none !important;">Reviews</div>
+<?php if ($this->getLsProductAttrs()) { ?>
+    <div id="lipscore-review-post" <?php echo $this->getLsProductAttrs() ?>></div>
+    <div id="lipscore-review-list" <?php echo $this->getLsProductAttrs() ?>></div>
+<?php } else { ?>
+    <div style="display: none !important;">Lipscore: empty product data</div>
+<?php } ?>

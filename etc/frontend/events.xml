@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="layout_generate_blocks_after">
+        <observer name="reviewTab" instance="Lipscore\RatingsReviews\Observer\ReviewTab" />
+    </event>
+    <event name="core_layout_block_create_after">
+        <observer name="output" instance="Lipscore\RatingsReviews\Observer\Output" />
+    </event>
+</config>

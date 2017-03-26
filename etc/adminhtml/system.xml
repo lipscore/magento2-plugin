@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="lipscore" translate="label" sortOrder="600">
+            <label>Lipscore</label>
+        </tab>
+
+        <section id="lipscore_general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>General</label>
+            <tab>lipscore</tab>
+            <resource>Lipscore_RatingsReviews::lipscore_ratingsreviews</resource>
+
+            <group id="api_key" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Api Key</label>
+                <field id="api_key" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Api Key</label>
+                    <frontend_model>Lipscore\RatingsReviews\Block\System\Config\Form\Field\Apikey</frontend_model>
+                    <backend_model>Lipscore\RatingsReviews\Model\System\Config\Backend\OutputValue</backend_model>
+                </field>
+            </group>
+
+            <group id="product_brand" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Product Brand</label>
+                <field id="attr" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Brand Attribute</label>
+                    <source_model>Lipscore\RatingsReviews\Model\System\Config\Source\Brand</source_model>
+                    <backend_model>Lipscore\RatingsReviews\Model\System\Config\Backend\OutputValue</backend_model>
+                </field>
+            </group>
+
+            <group id="locale" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Interface Locale</label>
+                <field id="locale" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Locale</label>
+                    <comment>If 'Auto' is selected, the store locale will be used.</comment>
+                    <source_model>Lipscore\RatingsReviews\Model\System\Config\Source\Locale</source_model>
+                    <backend_model>Lipscore\RatingsReviews\Model\System\Config\Backend\OutputValue</backend_model>
+                </field>
+            </group>
+
+            <group id="emails" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Review Request Emails</label>
+                <field id="emails_text" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Lipscore\RatingsReviews\Block\System\Config\Form\Field\Email\Text</frontend_model>
+                </field>
+                <field id="order_status" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Order status</label>
+                    <comment>Send emails for orders in this status</comment>
+                    <source_model>Lipscore\RatingsReviews\Model\System\Config\Source\Order\Status\Reminder</source_model>
+                </field>
+            </group>
+
+            <group id="coupons" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Coupons</label>
+                <field id="coupons_text" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Lipscore\RatingsReviews\Block\System\Config\Form\Field\Coupon\Text</frontend_model>
+                </field>
+                <field id="price_rule_id" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Cart Price Rule</label>
+                    <comment>Price rule's description will be used as a coupon description.</comment>
+                    <source_model>Lipscore\RatingsReviews\Model\System\Config\Source\Coupon</source_model>
+                </field>
+            </group>
+
+            <group id="module" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Disable Lipscore for this store view</label>
+                <field id="active" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Current status</label>
+                    <comment>'Inactive' will completely disable the extension</comment>
+                    <source_model>Lipscore\RatingsReviews\Model\System\Config\Source\Module\Active</source_model>
+                    <backend_model>Lipscore\RatingsReviews\Model\System\Config\Backend\OutputValue</backend_model>
+                </field>
+            </group>
+
+            <group id="dashboard_link" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                <frontend_model>Lipscore\RatingsReviews\Block\System\Config\Form\Fieldset\Dashboard\Link</frontend_model>
+            </group>
+        </section>
+    </system>
+</config>

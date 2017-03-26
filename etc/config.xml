@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <lipscore_general>
+            <api_key>
+                <api_key>889c3f3e4b6ac67269261324</api_key>
+                <demo_api_key>889c3f3e4b6ac67269261324</demo_api_key>
+            </api_key>
+            <product_brand>
+                <attr>brand</attr>
+            </product_brand>
+            <locale>
+                <locale>auto</locale>
+            </locale>
+            <emails>
+                <order_status>pending</order_status>
+            </emails>
+            <module>
+                <active>1</active>
+            </module>
+        </lipscore_general>
+    </default>
+</config>

@@ -1,0 +1,23 @@
+<?php
+/**
+ * JS block for lipscore initialization
+ */
+?>
+
+<?php if ($block->getIsLipscoreActive() && $block->getApiKey()) { ?>
+    <script data-cfasync="false" type="text/javascript">
+    //<![CDATA[
+    window.lipscoreInit = function() {
+        lipscore.init({
+            apiKey: "<?php echo $block->getApiKey() ?>"
+        });
+    };
+    (function() {
+        var scr = document.createElement('script'); scr.async = 1; scr.setAttribute('data-cfasync', false);
+        scr.charset = "utf-8";
+        scr.src = "<?php echo $block->getAssetsUrl() ?>/<?php echo $block->getLocale() ?>lipscore-v1.js";
+        document.getElementsByTagName('head')[0].appendChild(scr);
+    })();
+    //]]>
+    </script>
+<?php } ?>

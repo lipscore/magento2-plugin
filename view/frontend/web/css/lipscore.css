@@ -1,0 +1,9 @@
+img.lipscore-rating-small-image { display: inline; }
+.lipscore-reviews-single {
+    clear:   both;
+    display: block;
+    margin-top: 15px;
+}
+.ls-demo-mode-label {
+    color: #e92631;
+}
