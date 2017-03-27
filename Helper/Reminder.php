@@ -87,7 +87,7 @@ class Reminder extends AbstractHelper
 
     protected function productsData(\Magento\Sales\Model\Order $order)
     {
-        $productsData = array();
+        $productsData = [];
         $storeId = $order->getStoreId();
         $orderItems = $order->getAllVisibleItems();
 
@@ -108,7 +108,9 @@ class Reminder extends AbstractHelper
                 $data['url'] = $store->getBaseUrl(UrlInterface::URL_TYPE_LINK);
             }
 
-            $productsData[$product->getId()] = $data;
+            if ($data) {
+                $productsData[$product->getId()] = $data;
+            }
 
             gc_collect_cycles();
         }

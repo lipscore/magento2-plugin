@@ -32,4 +32,8 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Magento\Framework\Url">
+        <plugin name="Lipscore_RatingsReviews_Plugin_UrlPlugin" type="Lipscore\RatingsReviews\Plugin\UrlPlugin" disabled="false" sortOrder="10" />
+    </type>
 </config>

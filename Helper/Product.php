@@ -12,6 +12,7 @@ class Product extends AbstractHelper
     protected $imageHelper;
     protected $registry;
     protected $catalogCategory;
+    protected $urlModel;
 
     public function __construct(
         \Lipscore\RatingsReviews\Model\Logger $logger,
@@ -20,7 +21,9 @@ class Product extends AbstractHelper
         \Magento\Catalog\Model\ProductRepository $productRepository,
         \Lipscore\RatingsReviews\Helper\Image $imageHelper,
         \Magento\Framework\Registry $registry,
-        \Magento\Catalog\Model\Category $catalogCategory
+        \Magento\Catalog\Model\Category $catalogCategory,
+        \Magento\Catalog\Model\Product\UrlFactory $urlModelFactory,
+        \Magento\Framework\UrlFactoryFactory $urlFactoryFactory
     ){
         parent::__construct($logger, $config, $storeManager);
 
@@ -28,11 +31,16 @@ class Product extends AbstractHelper
         $this->imageHelper       = $imageHelper;
         $this->registry          = $registry;
         $this->catalogCategory   = $catalogCategory;
+        $this->urlModel          = $urlModelFactory->create([
+            'urlFactory' => $urlFactoryFactory->create([
+                'instanceName' => \Magento\Framework\Url::class
+            ])
+        ]);
     }
 
     public function getProductData(MagentoProduct $product)
     {
-        $data = array();
+        $data = [];
         try {
             $data = $this->_getProductData($product);
         } catch (\Exception $e) {
@@ -43,7 +51,7 @@ class Product extends AbstractHelper
 
     protected function _getProductData(MagentoProduct $product)
     {
-        return array(
+        return [
             'name'         => $this->getName($product),
             'brand'        => $this->getBrand($product),
             'sku_values'   => array($this->getSku($product)),
@@ -55,7 +63,7 @@ class Product extends AbstractHelper
             'category'     => $this->getCategory($product),
             'description'  => $this->getDescription($product),
             'availability' => $this->getAvailability($product)
-        );
+        ];
     }
 
     protected function getName(MagentoProduct $product)
@@ -72,7 +80,10 @@ class Product extends AbstractHelper
 
     public function getUrl(MagentoProduct $product)
     {
-        return $product->getProductUrl(false);
+        return $this->urlModel->getUrl($product, [
+            '_ls_remove_scope' => true,
+            '_nosid'           => true
+        ]);
     }
 
     protected function getImageUrl(MagentoProduct $product)
