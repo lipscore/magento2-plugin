@@ -16,14 +16,6 @@
         "OSL-3.0",
         "AFL-3.0"
     ],
-    "extra": {
-        "map": [
-            [
-                "*",
-                "Lipscore/RatingsReviews"
-            ]
-        ]
-    },
     "autoload": {
         "files": [ "registration.php" ],
         "psr-4": {
