@@ -16,7 +16,7 @@ class Coupon extends AbstractHelper
         \Lipscore\RatingsReviews\Model\Config\AbstractConfig $config,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\SalesRule\Model\CouponFactory $couponFactory
-    ){
+    ) {
         parent::__construct($logger, $config, $storeManager);
 
         $this->couponFactory = $couponFactory;

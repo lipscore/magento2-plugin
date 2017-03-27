@@ -18,8 +18,7 @@ class Init extends \Magento\Framework\View\Element\Template
         \Lipscore\RatingsReviews\Helper\Locale $localeHelper,
         \Lipscore\RatingsReviews\Helper\Module $moduleHelper,
         array $data = []
-    )
-    {
+    ){
         $this->env            = $env;
         $this->lipscoreConfig = $config;
         $this->localeHelper   = $localeHelper;

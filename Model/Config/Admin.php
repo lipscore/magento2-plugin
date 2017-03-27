@@ -10,10 +10,10 @@ class Admin extends AbstractConfig
         \Lipscore\RatingsReviews\Model\Config\AccessorFactory $configAccessorFactory,
         $websiteId,
         $storeId
-    ){
+    ) {
         $this->websiteId = $websiteId;
         $this->storeId   = $storeId;
-        # order is important, should be affter website and store setters
+        // order is important, should be affter website and store setters
         parent::__construct($configAccessorFactory);
     }
 }

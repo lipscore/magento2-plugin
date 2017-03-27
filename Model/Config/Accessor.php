@@ -30,7 +30,7 @@ class Accessor
         \Magento\Config\Model\ResourceModel\Config $resourceConfig,
         $websiteId,
         $storeId
-    ){
+    ) {
         $this->scopeConfig = $scopeConfig;
         $this->resourceConfig = $resourceConfig;
         $this->scope   = $this->getScope($websiteId, $storeId);

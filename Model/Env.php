@@ -16,7 +16,7 @@ class Env
     public function __construct(
         \Lipscore\RatingsReviews\Model\Logger $logger,
         ModuleDirReader $dirReader
-    ){
+    ) {
         $this->logger = $logger;
 
         try {
@@ -42,7 +42,8 @@ class Env
         return (getenv('LIPSCORE_MAGE_ENV') == self::DEV_ENV) ? self::DEV_ENV : self::PROD_ENV;
     }
 
-    protected function configFilePath(ModuleDirReader $dirReader) {
+    protected function configFilePath(ModuleDirReader $dirReader)
+    {
         $env        = $this->env();
         $moduleDir  = $dirReader->getModuleDir(Dir::MODULE_ETC_DIR, 'Lipscore_RatingsReviews');
         return "$moduleDir/env/$env.json";

@@ -14,7 +14,7 @@ abstract class AbstractHelper
         \Lipscore\RatingsReviews\Model\Logger $logger,
         \Lipscore\RatingsReviews\Model\Config\AbstractConfig $config,
         \Magento\Store\Model\StoreManagerInterface $storeManager
-    ){
+    ) {
         $this->lipscoreConfig = $config;
         $this->storeManager   = $storeManager;
         $this->logger         = $logger;

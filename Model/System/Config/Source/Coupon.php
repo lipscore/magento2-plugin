@@ -12,7 +12,7 @@ class Coupon implements \Magento\Framework\Option\ArrayInterface
     public function __construct(
         \Lipscore\RatingsReviews\Model\Logger $logger,
         Collection $ruleCollection
-    ){
+    ) {
         $this->ruleCollection = $ruleCollection;
         $this->logger         = $logger;
     }
@@ -55,9 +55,9 @@ class Coupon implements \Magento\Framework\Option\ArrayInterface
                         \Magento\SalesRule\Model\Rule::COUPON_TYPE_SPECIFIC
                     ]
                 ]
-           )
-           ->addOrder('name', Collection::SORT_ORDER_ASC);
-       $this->ruleCollection->load();
-       return $this->ruleCollection;
+            )
+            ->addOrder('name', Collection::SORT_ORDER_ASC);
+        $this->ruleCollection->load();
+        return $this->ruleCollection;
     }
 }

@@ -16,7 +16,8 @@ class Purchase extends AbstractHelper
         return $email;
     }
 
-    public function customerName(\Magento\Sales\Model\Order $order) {
+    public function customerName(\Magento\Sales\Model\Order $order)
+    {
         $addr = $order->getBillingAddress();
         $name = $addr->getFirstname() . ' ' . $addr->getLastname();
 
@@ -27,9 +28,9 @@ class Purchase extends AbstractHelper
         return $name;
     }
 
-    /*
+    /**
     * @return int
-    */
+    **/
     public function createdAt($order)
     {
         $date = $order->getCreatedAt();

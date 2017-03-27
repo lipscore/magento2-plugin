@@ -18,7 +18,7 @@ class Module extends AbstractHelper
         \Magento\Framework\Module\Manager $moduleManager,
         \Magento\Framework\Module\ResourceInterface $moduleResource,
         $data = array()
-    ){
+    ) {
         if (isset($data['config'])) {
             $config = $config;
         }
@@ -37,16 +37,6 @@ class Module extends AbstractHelper
             return 'N/A';
         }
     }
-
-    /*public function isNewVersion()
-    {
-        $website        = Mage::app()->getWebsite();
-        $lipscoreConfig = Mage::getModel('lipscore_ratingsreviews/config', array('website' => $website));
-        $oldVersion     = (string) $lipscoreConfig->lastTrackedVersion();
-        $newVersion     = $this->getVersion();
-
-        return strcmp($oldVersion, $newVersion) < 0;
-    }*/
 
     public function isLipscoreActive()
     {

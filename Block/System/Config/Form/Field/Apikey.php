@@ -6,7 +6,7 @@ use Lipscore\RatingsReviews\Block\System\Config\Form\Field\AbstractField;
 
 class ApiKey extends AbstractField
 {
-   protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
+    protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
         $isDemoKey = false;
         try {

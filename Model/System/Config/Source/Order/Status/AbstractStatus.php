@@ -12,7 +12,7 @@ class AbstractStatus
     public function __construct(
         \Lipscore\RatingsReviews\Model\Logger $logger,
         \Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory
-    ){
+    ) {
         $this->statusCollectionFactory = $statusCollectionFactory;
         $this->logger                  = $logger;
     }

@@ -19,7 +19,7 @@ class Logger
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\App\ProductMetadataInterface $productMetadata,
         \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder
-    ){
+    ) {
         $this->logger           = $logger;
         $this->storeManager     = $storeManager;
         $this->productMetadata  = $productMetadata;
@@ -76,13 +76,17 @@ class Logger
 
         $transport = $this->transportBuilder
             ->setTemplateIdentifier('lipscore_ratingsreviews_email_error')
-            ->setTemplateOptions([
-                'area' => 'adminhtml',
-                'store' => Store::DEFAULT_STORE_ID
-            ])->setTemplateVars([
-                'message' => nl2br($msg),
-                'subject' => $sbj
-            ])->setFrom(['email' => $email, 'name' => 'Lipscore exception logger'])
+            ->setTemplateOptions(
+                [
+                    'area' => 'adminhtml',
+                    'store' => Store::DEFAULT_STORE_ID
+                ]
+            )->setTemplateVars(
+                [
+                    'message' => nl2br($msg),
+                    'subject' => $sbj
+                ]
+            )->setFrom(['email' => $email, 'name' => 'Lipscore exception logger'])
             ->addTo($email)
             ->getTransport();
 

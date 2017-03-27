@@ -18,7 +18,7 @@ class OrderStatus extends AbstractObserver
         \Lipscore\RatingsReviews\Helper\ModuleFactory $moduleHelperFactory,
         \Lipscore\RatingsReviews\Model\Config\AdminFactory $adminConfigFactory,
         \Lipscore\RatingsReviews\Model\ReminderFactory $reminderFactory
-    ){
+    ) {
         parent::__construct($logger, $moduleHelperFactory, $adminConfigFactory);
         $this->reminderFactory = $reminderFactory;
     }
@@ -57,11 +57,14 @@ class OrderStatus extends AbstractObserver
         }
     }
 
-    protected function init($storeId) {
-        $this->data['config'] = $this->adminConfigFactory->create([
-            'storeId'   => $storeId,
-            'websiteId' => null
-        ]);
+    protected function init($storeId)
+    {
+        $this->data['config'] = $this->adminConfigFactory->create(
+            [
+                'storeId'   => $storeId,
+                'websiteId' => null
+            ]
+        );
     }
 
     protected function isReminderableStatus($status)
@@ -78,9 +81,11 @@ class OrderStatus extends AbstractObserver
     protected function reminder()
     {
         if (!$this->_reminder) {
-            $this->_reminder = $this->reminderFactory->create([
-                'config' => $this->config
-            ]);
+            $this->_reminder = $this->reminderFactory->create(
+                [
+                    'config' => $this->config
+                ]
+            );
         }
         return $this->_reminder;
     }
@@ -93,9 +98,11 @@ class OrderStatus extends AbstractObserver
     protected function moduleHelper()
     {
         if (!$this->_moduleHelper) {
-            $this->_moduleHelper = $this->moduleHelperFactory->create([
-                'config' => $this->config
-            ]);
+            $this->_moduleHelper = $this->moduleHelperFactory->create(
+                [
+                    'config' => $this->config
+                ]
+            );
         }
         return $this->_moduleHelper;
     }
@@ -105,7 +112,8 @@ class OrderStatus extends AbstractObserver
         return true;
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         if (isset($this->data[$name])) {
             return $this->data[$name];
         } elseif ($name == 'config') {

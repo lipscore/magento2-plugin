@@ -14,7 +14,7 @@ class ProductType
         \Magento\GroupedProduct\Model\Product\Type\Grouped $grouped,
         \Magento\ConfigurableProduct\Model\Product\Type\Configurable $configurable,
         \Magento\Bundle\Model\Product\Type $bundle
-    ){
+    ) {
         $this->configurable = $configurable;
         $this->grouped      = $grouped;
         $this->bundle       = $bundle;

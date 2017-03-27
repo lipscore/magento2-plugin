@@ -24,18 +24,16 @@ class Product extends AbstractHelper
         \Magento\Catalog\Model\Category $catalogCategory,
         \Magento\Catalog\Model\Product\UrlFactory $urlModelFactory,
         \Magento\Framework\UrlFactoryFactory $urlFactoryFactory
-    ){
+    ) {
         parent::__construct($logger, $config, $storeManager);
 
         $this->productRepository = $productRepository;
         $this->imageHelper       = $imageHelper;
         $this->registry          = $registry;
         $this->catalogCategory   = $catalogCategory;
-        $this->urlModel          = $urlModelFactory->create([
-            'urlFactory' => $urlFactoryFactory->create([
-                'instanceName' => \Magento\Framework\Url::class
-            ])
-        ]);
+        $this->urlModel          = $urlModelFactory->create(
+            ['urlFactory' => $urlFactoryFactory->create(['instanceName' => \Magento\Framework\Url::class])]
+       );
     }
 
     public function getProductData(MagentoProduct $product)
@@ -80,10 +78,13 @@ class Product extends AbstractHelper
 
     public function getUrl(MagentoProduct $product)
     {
-        return $this->urlModel->getUrl($product, [
-            '_ls_remove_scope' => true,
-            '_nosid'           => true
-        ]);
+        return $this->urlModel->getUrl(
+            $product,
+            [
+                '_ls_remove_scope' => true,
+                '_nosid'           => true
+            ]
+        );
     }
 
     protected function getImageUrl(MagentoProduct $product)

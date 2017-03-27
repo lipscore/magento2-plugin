@@ -1,10 +1,9 @@
 <?php
+
 /**
  * Review renderer
- *
- * Copyright © 2016 Magento. All rights reserved.
- * See COPYING.txt for license details.
  */
+
 namespace Lipscore\RatingsReviews\Block\Product;
 
 use Lipscore\RatingsReviews\Block\AbstractWidget;
@@ -29,8 +28,8 @@ class ReviewRenderer extends AbstractWidget implements ReviewRendererInterface
      * Get review summary html
      *
      * @param Product $product
-     * @param string $templateType
-     * @param bool $displayIfNoReviews
+     * @param string  $templateType
+     * @param bool    $displayIfNoReviews
      *
      * @return string
      */

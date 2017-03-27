@@ -11,8 +11,8 @@ class Widget extends AbstractHelper
         $attrs = '';
         try {
             $attrs = $this->_getProductAttrs($productData);
-        } catch (Exception $e) {
-            #Lipscore_RatingsReviews_Logger::logException($e);
+        } catch (\Exception $e) {
+            $this->logger->log($e);
         }
         return $attrs;
     }
@@ -32,10 +32,10 @@ class Widget extends AbstractHelper
             'ls-availability'   => $productData['availability']
 
         );
-        return $this->_toString($attrs);
+        return $this->toString($attrs);
     }
 
-    protected function _toString($attrs)
+    protected function toString($attrs)
     {
         $strAttrs = array();
         foreach ($attrs as $attr => $value) {

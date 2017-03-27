@@ -18,13 +18,14 @@ abstract class AbstractObserver implements ObserverInterface
         \Lipscore\RatingsReviews\Model\Logger $logger,
         \Lipscore\RatingsReviews\Helper\ModuleFactory $moduleHelperFactory,
         \Lipscore\RatingsReviews\Model\Config\AdminFactory $adminConfigFactory
-    ){
+    ) {
         $this->moduleHelperFactory = $moduleHelperFactory;
         $this->adminConfigFactory  = $adminConfigFactory;
         $this->logger              = $logger;
     }
 
-    public function execute(\Magento\Framework\Event\Observer $observer) {
+    public function execute(\Magento\Framework\Event\Observer $observer)
+    {
         try {
             $this->log($this->defaultLogMessage());
             if ($this->methodAvailable()) {

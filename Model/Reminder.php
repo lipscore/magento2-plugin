@@ -12,11 +12,13 @@ class Reminder
         \Lipscore\RatingsReviews\Helper\ReminderFactory $reminderHelperFactory,
         \Lipscore\RatingsReviews\Model\Api\RequestFactory $senderFactory,
         $config
-    ){
+    ) {
         $this->config = $config;
-        $this->dataHelper = $reminderHelperFactory->create([
-            'config' => $this->config
-        ]);
+        $this->dataHelper = $reminderHelperFactory->create(
+            [
+                'config' => $this->config
+            ]
+        );
         $this->senderFactory = $senderFactory;
     }
 
@@ -32,12 +34,14 @@ class Reminder
 
     protected function sender()
     {
-        return $this->senderFactory->create([
-            'config' => $this->config,
-            'path'   => 'purchases',
-            'params' => [
-                'timeout' => $this->config->reminderTimeout()
+        return $this->senderFactory->create(
+            [
+                'config' => $this->config,
+                'path'   => 'purchases',
+                'params' => [
+                    'timeout' => $this->config->reminderTimeout()
+                ]
             ]
-        ]);
+        );
     }
 }

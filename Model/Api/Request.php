@@ -20,7 +20,7 @@ class Request
         $config,
         $path,
         $params = array()
-    ){
+    ) {
         $this->env    = $env;
         $this->client = $clientFactory->create();
         $this->config = $config;

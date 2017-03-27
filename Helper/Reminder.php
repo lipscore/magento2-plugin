@@ -27,7 +27,7 @@ class Reminder extends AbstractHelper
         \Lipscore\RatingsReviews\Helper\CouponFactory $couponHelperFactory,
         \Lipscore\RatingsReviews\Helper\PurchaseFactory $purchaseHelperFactory,
         \Lipscore\RatingsReviews\Helper\Reminder\ProductType $productTypeHelper
-    ){
+    ) {
         parent::__construct($logger, $config, $storeManager);
 
         $this->ruleFactory       = $ruleFactory;
@@ -57,12 +57,15 @@ class Reminder extends AbstractHelper
         $lang   = $this->localeHelper->getStoreLocale();
         $date   = $this->purchaseHelper->createdAt($order);
 
-        return array_merge($couponData, [
-            'buyer_email'   => $email,
-            'buyer_name'    => $name,
-            'purchased_at'  => $date,
-            'lang'          => $lang
-        ]);
+        return array_merge(
+            $couponData,
+            [
+                'buyer_email'   => $email,
+                'buyer_name'    => $name,
+                'purchased_at'  => $date,
+                'lang'          => $lang
+            ]
+        );
     }
 
     protected function couponData(\Magento\Sales\Model\Order $order)

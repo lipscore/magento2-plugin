@@ -13,13 +13,15 @@ class AbstractField extends Field
         \Magento\Backend\Block\Template\Context $context,
         \Lipscore\RatingsReviews\Model\Config\AdminFactory $adminConfigFactory,
         array $data = []
-    ){
-        # order is important, should be before config initialization
+    ) {
+        // order is important, should be before config initialization
         parent::__construct($context, $data);
 
-        $this->lipscoreConfig = $adminConfigFactory->create([
-            'websiteId' => $this->getRequest()->getParam('website', ''),
-            'storeId'   => $this->getRequest()->getParam('store', '')
-        ]);
+        $this->lipscoreConfig = $adminConfigFactory->create(
+            [
+                'websiteId' => $this->getRequest()->getParam('website', ''),
+                'storeId'   => $this->getRequest()->getParam('store', '')
+            ]
+        );
     }
 }

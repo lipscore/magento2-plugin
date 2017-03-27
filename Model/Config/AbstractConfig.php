@@ -15,11 +15,13 @@ abstract class AbstractConfig
 
     public function __construct(
         \Lipscore\RatingsReviews\Model\Config\AccessorFactory $configAccessorFactory
-    ){
-        $this->accessor = $configAccessorFactory->create([
-            'websiteId' => $this->websiteId,
-            'storeId'   => $this->storeId
-        ]);
+    ) {
+        $this->accessor = $configAccessorFactory->create(
+            [
+                'websiteId' => $this->websiteId,
+                'storeId'   => $this->storeId
+            ]
+        );
     }
 
     public function apiKey()

@@ -12,7 +12,7 @@ class Brand implements \Magento\Framework\Option\ArrayInterface
     public function __construct(
         \Lipscore\RatingsReviews\Model\Logger $logger,
         \Magento\Eav\Model\Config $eavConfig
-    ){
+    ) {
         $this->eavConfig = $eavConfig;
         $this->logger    = $logger;
     }
