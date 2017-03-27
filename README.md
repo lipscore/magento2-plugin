@@ -1,6 +1,6 @@
 # Lipscore - Supercharged Ratings and Reviews
 
-## Installation
+## Install Lipscore App
 
 ###### Install Using Composer
 
@@ -9,6 +9,12 @@ composer require lipscore/magento2-plugin
 ```
 
 ###### Or Install Manually
+
+* Download the extension
+* Unzip the file
+* Create a folder {Magento root}/app/code/Lipscore/RatingsReviews
+* Copy the content from the unzip folder
+* Flush cache
 
 ## Enable Lipscore App
 
