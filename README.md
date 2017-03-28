@@ -5,7 +5,7 @@
 ###### Install Using Composer
 
 ```
-composer require lipscore/magento2-plugin
+composer require lipscore/ratingsreviews-magento2
 ```
 
 ###### Or Install Manually
