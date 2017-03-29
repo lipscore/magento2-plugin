@@ -146,10 +146,12 @@ class Product extends AbstractHelper
         }
 
         if ('select' == $attr->getFrontendInput()) {
-            return $attr->getSource()->getOptionText($product->getData($attrCode));
+            $value = $attr->getSource()->getOptionText($product->getData($attrCode));
         } else {
-            return $product->getData($attrCode);
+            $value =  $product->getData($attrCode);
         }
+
+        return $value ? $value : null;
     }
 
     protected function filterText($text)
