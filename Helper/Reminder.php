@@ -50,7 +50,7 @@ class Reminder extends AbstractHelper
 
     protected function purchaseData(\Magento\Sales\Model\Order $order)
     {
-        $couponData = $this->couponData($order);
+        $couponData = $this->couponData();
 
         $email  = $this->purchaseHelper->customerEmail($order);
         $name   = $this->purchaseHelper->customerName($order);
@@ -68,7 +68,7 @@ class Reminder extends AbstractHelper
         );
     }
 
-    protected function couponData(\Magento\Sales\Model\Order $order)
+    protected function couponData()
     {
         $data = [];
 

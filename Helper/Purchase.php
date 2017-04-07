@@ -7,7 +7,8 @@ use Magento\Sales\Model\Order;
 
 class Purchase extends AbstractHelper
 {
-    public function customerEmail(\Magento\Sales\Model\Order $order) {
+    public function customerEmail(\Magento\Sales\Model\Order $order)
+    {
         $email = $order->getBillingAddress()->getEmail();
         if (!$email) {
             $email = $order->getCustomerEmail();
@@ -29,8 +30,8 @@ class Purchase extends AbstractHelper
     }
 
     /**
-    * @return int
-    **/
+     * @return int
+     */
     public function createdAt($order)
     {
         $date = $order->getCreatedAt();

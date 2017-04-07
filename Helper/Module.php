@@ -17,7 +17,7 @@ class Module extends AbstractHelper
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\Module\Manager $moduleManager,
         \Magento\Framework\Module\ResourceInterface $moduleResource,
-        $data = array()
+        $data = []
     ) {
         if (isset($data['config'])) {
             $config = $config;

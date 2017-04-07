@@ -51,7 +51,7 @@ class Locale extends AbstractHelper
         list($language, $region) = explode('_', $localeCode);
 
         $locale = $this->getAvailableLocale($language);
-        if (is_null($locale)) {
+        if ($locale === null) {
             $locale = $this->getAvailableLocale($region);
         }
         return $locale;

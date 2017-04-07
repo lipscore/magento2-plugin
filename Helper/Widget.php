@@ -19,7 +19,7 @@ class Widget extends AbstractHelper
 
     protected function _getProductAttrs($productData)
     {
-        $attrs = array(
+        $attrs = [
             'ls-product-name'   => $productData['name'],
             'ls-brand'          => $productData['brand'],
             'ls-sku'            => implode(';', $productData['sku_values']),
@@ -31,13 +31,13 @@ class Widget extends AbstractHelper
             'ls-description'    => $productData['description'],
             'ls-availability'   => $productData['availability']
 
-        );
+        ];
         return $this->toString($attrs);
     }
 
     protected function toString($attrs)
     {
-        $strAttrs = array();
+        $strAttrs = [];
         foreach ($attrs as $attr => $value) {
             $value = htmlspecialchars($value);
             $strAttrs[] = "$attr=\"$value\"";

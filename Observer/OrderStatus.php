@@ -4,6 +4,7 @@ namespace Lipscore\RatingsReviews\Observer;
 
 use Lipscore\RatingsReviews\Observer\AbstractObserver;
 use Magento\Sales\Api\Data\OrderInterface;
+use \Magento\Framework\Exception\LocalizedException;
 
 class OrderStatus extends AbstractObserver
 {
@@ -117,9 +118,9 @@ class OrderStatus extends AbstractObserver
         if (isset($this->data[$name])) {
             return $this->data[$name];
         } elseif ($name == 'config') {
-            throw new Exception('No config is set');
+            throw new LocalizedException(__('No config is set'));
         } else {
-            throw new Exception('Undefined property on ' . get_class($this) . ': ' . $name);
+            throw new LocalizedException(__('Undefined property on ') . get_class($this) . ': ' . $name);
         }
     }
 }

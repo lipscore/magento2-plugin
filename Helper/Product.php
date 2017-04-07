@@ -33,7 +33,7 @@ class Product extends AbstractHelper
         $this->catalogCategory   = $catalogCategory;
         $this->urlModel          = $urlModelFactory->create(
             ['urlFactory' => $urlFactoryFactory->create(['instanceName' => \Magento\Framework\Url::class])]
-       );
+        );
     }
 
     public function getProductData(MagentoProduct $product)
@@ -52,7 +52,7 @@ class Product extends AbstractHelper
         return [
             'name'         => $this->getName($product),
             'brand'        => $this->getBrand($product),
-            'sku_values'   => array($this->getSku($product)),
+            'sku_values'   => [$this->getSku($product)],
             'internal_id'  => "{$product->getId()}",
             'url'          => $this->getUrl($product),
             'image_url'    => $this->getImageUrl($product),

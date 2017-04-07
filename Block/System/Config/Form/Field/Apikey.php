@@ -6,6 +6,12 @@ use Lipscore\RatingsReviews\Block\System\Config\Form\Field\AbstractField;
 
 class ApiKey extends AbstractField
 {
+    protected static $commentText = <<<EOT
+<strong style="color:red">Warning!</strong>&nbsp;Your Lipscore installation is set up using a
+Demo Account. Please sign up with your own account on <a href="http://lipscore.com/" target="_blank">
+www.lipscore.com</a> to get access to all available features.
+EOT;
+
     protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
         $isDemoKey = false;
@@ -20,7 +26,6 @@ class ApiKey extends AbstractField
 
     protected function commentHtml()
     {
-        $comment = '<strong style="color:red">Warning!</strong>&nbsp;Your Lipscore installation is set up using a Demo Account. Please sign up with your own account on <a href="http://lipscore.com/" target="_blank">www.lipscore.com</a> to get access to all available features.';
-        return "<p class='note'><span>$comment</span></p>";
+        return '<p class="note"><span>' . static::$commentText . '</span></p>';
     }
 }

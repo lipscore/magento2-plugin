@@ -19,7 +19,7 @@ class Request
         \Magento\Framework\HTTP\ZendClientFactory $clientFactory,
         $config,
         $path,
-        $params = array()
+        $params = []
     ) {
         $this->env    = $env;
         $this->client = $clientFactory->create();

@@ -45,7 +45,7 @@ class Brand implements \Magento\Framework\Option\ArrayInterface
 
     protected function findAttrs()
     {
-        $attrs = array();
+        $attrs = [];
 
         $collection = $this->eavConfig
             ->getEntityType(\Magento\Catalog\Model\Product::ENTITY)

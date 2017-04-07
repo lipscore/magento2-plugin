@@ -13,7 +13,7 @@ class Accessor
     protected $scopeConfig;
     protected $resourceConfig;
 
-    protected static $paths = array(
+    protected static $paths = [
         'coupon'       => 'lipscore_coupons/coupons/',
         'brand'        => 'lipscore_general/product_brand/',
         'apiKey'       => 'lipscore_general/api_key/',
@@ -23,7 +23,7 @@ class Accessor
         'coupons'      => 'lipscore_general/coupons/',
         'tracking'     => 'lipscore_plugin/',
         'storeGeneral' => 'general/',
-    );
+    ];
 
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,

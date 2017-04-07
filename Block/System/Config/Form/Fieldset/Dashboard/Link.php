@@ -8,6 +8,10 @@ class Link extends Fieldset
 {
     public function render(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
-        return '<div class="lipscore-dashboard-link">Advanced settings are available on <a href="https://members.lipscore.com/">your Lipscore.com dashboard</a></div>';
+        return <<<EOT
+<div class="lipscore-dashboard-link">
+    Advanced settings are available on <a href="https://members.lipscore.com/">your Lipscore.com dashboard</a>
+</div>
+EOT;
     }
 }
