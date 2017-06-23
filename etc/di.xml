@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Magento\Catalog\Block\Product\ReviewRendererInterface" type="Lipscore\RatingsReviews\Block\Product\ReviewRenderer" />
-
     <type name="Magento\Catalog\Model\Product\ReservedAttributeList">
         <arguments>
             <argument name="allowedAttributes" xsi:type="array">
@@ -19,7 +17,7 @@
 
     <type name="Lipscore\RatingsReviews\Helper\AbstractHelper">
         <arguments>
-             <argument name="config" xsi:type="object">\Lipscore\RatingsReviews\Model\Config\Front</argument>
+            <argument name="config" xsi:type="object">\Lipscore\RatingsReviews\Model\Config\Front</argument>
             <argument name="storeManager" xsi:type="object">\Magento\Store\Model\StoreManagerInterface\Proxy</argument>
         </arguments>
     </type>
@@ -35,5 +33,9 @@
 
     <type name="Magento\Framework\Url">
         <plugin name="Lipscore_RatingsReviews_Plugin_UrlPlugin" type="Lipscore\RatingsReviews\Plugin\UrlPlugin" disabled="false" sortOrder="10" />
+    </type>
+
+    <type name="Magento\Review\Block\Product\ReviewRenderer">
+        <plugin name="Lipscore_RatingsReviews_Plugin_ReviewRendererPlugin" type="Lipscore\RatingsReviews\Plugin\ReviewRendererPlugin" disabled="false" sortOrder="10" />
     </type>
 </config>

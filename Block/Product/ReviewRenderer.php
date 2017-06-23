@@ -39,9 +39,6 @@ class ReviewRenderer extends AbstractWidget implements ReviewRendererInterface
         $displayIfNoReviews = false
     ) {
         try {
-            if (!$this->moduleHelper->isLipscoreOutputEnabled()) {
-                return '';
-            }
             $this->initReviewSummary($product, $templateType);
         } catch (\Exception $e) {
             $this->logger->log($e);

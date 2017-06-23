@@ -17,13 +17,11 @@ abstract class AbstractWidget extends \Magento\Framework\View\Element\Template
         \Magento\Framework\Registry $registry,
         \Lipscore\RatingsReviews\Helper\Product $productHelper,
         \Lipscore\RatingsReviews\Helper\Widget $widgetHelper,
-        \Lipscore\RatingsReviews\Helper\Module $moduleHelper,
         array $data = []
     ) {
         $this->coreRegistry  = $registry;
         $this->productHelper = $productHelper;
         $this->widgetHelper  = $widgetHelper;
-        $this->moduleHelper  = $moduleHelper;
         $this->logger        = $logger;
 
         parent::__construct($context, $data);

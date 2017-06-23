@@ -24,9 +24,10 @@ class Output extends AbstractObserver
         }
 
         $lipscoreEnabled = $this->moduleHelper()->isLipscoreOutputEnabled();
-        $disableLipscore = $isLipscore && !$lipscoreEnabled;
+        $hideLipscore    = $isLipscore && !$lipscoreEnabled;
+        $hideMagento     = $isMagentoReview && $lipscoreEnabled;
 
-        if ($disableLipscore || $isMagentoReview) {
+        if ($hideMagento || $hideLipscore) {
             $blockName = $block->getNameInLayout();
             $block->getLayout()->renameElement($blockName, $blockName . '_ls_hidden');
         }

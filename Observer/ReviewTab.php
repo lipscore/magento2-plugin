@@ -23,7 +23,7 @@ class ReviewTab extends AbstractObserver
             return;
         }
 
-        if (!$layout->hasElement('reviews.tab')) {
+        if (!$layout->hasElement('lipscore_reviews.tab')) {
             $layout->addBlock(
                 \Lipscore\RatingsReviews\Block\Product\Review\Single::class,
                 'reviews.single',
