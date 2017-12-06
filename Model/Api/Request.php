@@ -11,7 +11,7 @@ class Request
     protected $env;
     protected $client;
     protected $requestType = ZendClient::POST;
-    protected $timeout     = 10;
+    protected $timeout     = 5;
     protected $response;
 
     public function __construct(
@@ -38,12 +38,14 @@ class Request
     public function send($data)
     {
         $apiKey = $this->config->apiKey();
+        $secret = $this->config->secret();
         $apiUrl = $this->env->apiUrl();
 
         $this->client->setUri("$apiUrl/{$this->path}?api_key=$apiKey");
         $this->client->setConfig(['timeout' => $this->timeout]);
         $this->client->setMethod($this->requestType);
         $this->client->setRawData(json_encode($data), 'application/json');
+        $this->client->setHeaders('X-Authorization', $secret);
 
         $this->response = $this->client->request();
 

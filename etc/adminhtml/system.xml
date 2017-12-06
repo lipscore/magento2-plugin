@@ -11,12 +11,16 @@
             <resource>Lipscore_RatingsReviews::lipscore_ratingsreviews</resource>
 
             <group id="api_key" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Api Key</label>
+                <label>API Key</label>
                 <frontend_model>Lipscore\RatingsReviews\Block\System\Config\Form\Fieldset\ApiKey</frontend_model>
                 <field id="api_key" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Api Key</label>
                     <frontend_model>Lipscore\RatingsReviews\Block\System\Config\Form\Field\ApiKey</frontend_model>
                     <backend_model>Lipscore\RatingsReviews\Model\System\Config\Backend\OutputValue</backend_model>
+                </field>
+                <field id="secret" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Secret Api Key</label>
+                    <frontend_class>js-ls-no-autocomplete-field</frontend_class>
                 </field>
             </group>
 
