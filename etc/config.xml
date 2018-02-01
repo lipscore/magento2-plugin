@@ -6,9 +6,10 @@
                 <api_key>889c3f3e4b6ac67269261324</api_key>
                 <demo_api_key>889c3f3e4b6ac67269261324</demo_api_key>
             </api_key>
-            <product_brand>
-                <attr>brand</attr>
-            </product_brand>
+            <product_attributes>
+                <id>id</id>
+                <brand>brand</brand>
+            </product_attributes>
             <locale>
                 <locale>auto</locale>
             </locale>

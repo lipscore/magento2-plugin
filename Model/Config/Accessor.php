@@ -14,15 +14,15 @@ class Accessor
     protected $resourceConfig;
 
     protected static $paths = [
-        'coupon'       => 'lipscore_coupons/coupons/',
-        'brand'        => 'lipscore_general/product_brand/',
-        'apiKey'       => 'lipscore_general/api_key/',
-        'locale'       => 'lipscore_general/locale/',
-        'emails'       => 'lipscore_general/emails/',
-        'module'       => 'lipscore_general/module/',
-        'coupons'      => 'lipscore_general/coupons/',
-        'tracking'     => 'lipscore_plugin/',
-        'storeGeneral' => 'general/',
+        'coupon'             => 'lipscore_coupons/coupons/',
+        'product_attributes' => 'lipscore_general/product_attributes/',
+        'apiKey'             => 'lipscore_general/api_key/',
+        'locale'             => 'lipscore_general/locale/',
+        'emails'             => 'lipscore_general/emails/',
+        'module'             => 'lipscore_general/module/',
+        'coupons'            => 'lipscore_general/coupons/',
+        'tracking'           => 'lipscore_plugin/',
+        'storeGeneral'       => 'general/',
     ];
 
     public function __construct(

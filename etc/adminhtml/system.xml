@@ -20,11 +20,16 @@
                 </field>
             </group>
 
-            <group id="product_brand" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Product Brand</label>
-                <field id="attr" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Brand Attribute</label>
-                    <source_model>Lipscore\RatingsReviews\Model\System\Config\Source\Brand</source_model>
+            <group id="product_attributes" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Product Attributes</label>
+                <field id="id" translate="label comment" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product ID attribute</label>
+                    <source_model>Lipscore\RatingsReviews\Model\System\Config\Source\Product\Id</source_model>
+                    <backend_model>Lipscore\RatingsReviews\Model\System\Config\Backend\OutputValue</backend_model>
+                </field>
+                <field id="brand" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Brand attribute</label>
+                    <source_model>Lipscore\RatingsReviews\Model\System\Config\Source\Product\Brand</source_model>
                     <backend_model>Lipscore\RatingsReviews\Model\System\Config\Backend\OutputValue</backend_model>
                 </field>
             </group>

@@ -53,7 +53,7 @@ class Product extends AbstractHelper
             'name'         => $this->getName($product),
             'brand'        => $this->getBrand($product),
             'sku_values'   => [$this->getSku($product)],
-            'internal_id'  => "{$product->getId()}",
+            'internal_id'  => $this->getId($product),
             'url'          => $this->getUrl($product),
             'image_url'    => $this->getImageUrl($product),
             'price'        => $this->getPrice($product),
@@ -74,6 +74,13 @@ class Product extends AbstractHelper
         $brandAttr = $this->lipscoreConfig->brandAttr();
         $brand = $this->getAttributeValue($product, $brandAttr);
         return $this->filterText($brand);
+    }
+
+    protected function getId(MagentoProduct $product)
+    {
+        $idAttr = $this->lipscoreConfig->productIdAttr();
+        $id = $this->getAttributeValue($product, $idAttr);
+        return "{$id}";
     }
 
     public function getUrl(MagentoProduct $product)
@@ -101,7 +108,7 @@ class Product extends AbstractHelper
                 $category = $this->catalogCategory->load($categoryIds[0]);
             }
         }
-        return $category ? $category->getName() : '';
+        return $this->filterText($category ? $category->getName() : '');
     }
 
     protected function getAvailability(MagentoProduct $product)
@@ -141,6 +148,15 @@ class Product extends AbstractHelper
     protected function getAttributeValue(MagentoProduct $product, $attrCode)
     {
         $attr = $product->getResource()->getAttribute($attrCode);
+
+        if ($attrCode == 'id') {
+            return $product->getId();
+        }
+
+        if ($attrCode == 'sku') {
+            return $this->getSku($product);
+        }
+
         if (!$attr) {
             return null;
         }

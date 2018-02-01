@@ -46,7 +46,12 @@ abstract class AbstractConfig
 
     public function brandAttr()
     {
-        return $this->accessor->get('attr', 'brand');
+        return $this->accessor->get('brand', 'product_attributes');
+    }
+
+    public function productIdAttr()
+    {
+        return $this->accessor->get('id', 'product_attributes');
     }
 
     public function lastTrackedVersion()
