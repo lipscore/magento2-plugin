@@ -29,6 +29,11 @@ abstract class AbstractConfig
         return $this->accessor->get('api_key', 'apiKey');
     }
 
+    public function secret()
+    {
+        return $this->accessor->get('secret', 'apiKey');
+    }
+
     public function demoApiKey()
     {
         return $this->accessor->get('demo_api_key', 'apiKey');

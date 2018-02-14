@@ -4,5 +4,6 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="Lipscore_RatingsReviews::css/lipscore.css"/>
+        <link src="Lipscore_RatingsReviews::js/lipscore.js"/>
     </head>
 </page>
