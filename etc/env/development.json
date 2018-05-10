@@ -1,4 +1,4 @@
 {
-    "api_url": "http://api.lipscore.dev:3000",
-    "assets_url": "http://static.lipscore.dev:3000/assets"
+    "api_url": "http://api.lipscore.local:3000",
+    "assets_url": "http://static.lipscore.local:3000/assets"
 }

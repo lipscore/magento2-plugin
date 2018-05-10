@@ -9,73 +9,41 @@ use Magento\Framework\Exception\LocalizedException;
 class Coupon extends AbstractHelper
 {
     protected $ruleFactory;
-    protected $couponFactory;
+    protected $massgeneratorFactory;
 
     public function __construct(
         \Lipscore\RatingsReviews\Model\Logger $logger,
         \Lipscore\RatingsReviews\Model\Config\AbstractConfig $config,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\SalesRule\Model\CouponFactory $couponFactory
+        \Magento\SalesRule\Model\Coupon\MassgeneratorFactory $massgeneratorFactory
     ) {
         parent::__construct($logger, $config, $storeManager);
 
-        $this->couponFactory = $couponFactory;
+        $this->massgeneratorFactory = $massgeneratorFactory;
     }
 
-    public function acquireCoupon(\Magento\SalesRule\Model\Rule $priceRule)
+    public function acquireCouponCode(\Magento\SalesRule\Model\Rule $priceRule)
     {
         if ($priceRule->getCouponType() == Rule::COUPON_TYPE_NO_COUPON) {
             return;
         }
+
         if ($priceRule->getCouponType() == Rule::COUPON_TYPE_SPECIFIC && !$priceRule->getUseAutoGeneration()) {
-            return $priceRule->getPrimaryCoupon();
+            return $priceRule->getPrimaryCoupon()->getCode();
         }
 
-        $coupon = $this->couponFactory->create();
-        $coupon->setRule(
-            $priceRule
-        )->setIsPrimary(
-            false
-        )->setUsageLimit(
-            $priceRule->getUsesPerCoupon() ? $priceRule->getUsesPerCoupon() : null
-        )->setUsagePerCustomer(
-            $priceRule->getUsesPerCustomer() ? $priceRule->getUsesPerCustomer() : null
-        )->setExpirationDate(
-            $priceRule->getToDate()
-        );
-
-        $couponCode = $priceRule->getCouponCodeGenerator()->generateCode();
-        $coupon->setCode($couponCode);
-
-        $ok = false;
-
-        if ($priceRule->getId()) {
-            for ($attemptNum = 0; $attemptNum < 10; $attemptNum++) {
-                try {
-                    $coupon->save();
-                } catch (\Exception $e) {
-                    if ($e instanceof LocalizedException || $coupon->getId()) {
-                        throw $e;
-                    }
-                    $coupon->setCode(
-                        $couponCode . $priceRule->getCouponCodeGenerator()->getDelimiter() . sprintf(
-                            '%04u',
-                            rand(0, 9999)
-                        )
-                    );
-                    continue;
-                }
-                $ok = true;
-                break;
-            }
-        }
-
-        if (!$ok) {
-            $coupon = null;
-            $e = new LocalizedException(__('Can\'t acquire coupon.'));
-            $this->logger->log($e);
-        }
-
-        return $coupon;
+        $generator = $this->massgeneratorFactory->create();
+        $data = [
+            'qty'                => 1,
+            'rule_id'            => $priceRule->getId(),
+            'length'             => 12,
+            'format'             => \Magento\SalesRule\Helper\Coupon::COUPON_FORMAT_ALPHANUMERIC,
+            'usage_per_customer' => $priceRule->getUsesPerCustomer() ? $priceRule->getUsesPerCustomer() : null,
+            'usage_limit'        => $priceRule->getUsesPerCoupon() ? $priceRule->getUsesPerCoupon() : null,
+            'to_date'            => $priceRule->getToDate()
+        ];
+       $generator->setData($data);
+       $generatedCodes = $generator->generatePool()->getGeneratedCodes();
+       return count($generatedCodes) > 0 ? $generatedCodes[0] : null;
     }
 }

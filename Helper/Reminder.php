@@ -78,11 +78,11 @@ class Reminder extends AbstractHelper
         }
 
         $priceRule = $this->ruleFactory->create()->load($priceRuleId);
-        $coupon = $this->couponHelper->acquireCoupon($priceRule);
+        $couponCode = $this->couponHelper->acquireCouponCode($priceRule);
 
-        if ($coupon) {
+        if ($couponCode) {
             $data['discount_descr']   = $priceRule->getDescription();
-            $data['discount_voucher'] = $coupon->getCode();
+            $data['discount_voucher'] = $couponCode;
         }
 
         return $data;
