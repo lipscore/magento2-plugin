@@ -60,7 +60,8 @@ class Product extends AbstractHelper
             'currency'     => $this->getCurrency(),
             'category'     => $this->getCategory($product),
             'description'  => $this->getDescription($product),
-            'availability' => $this->getAvailability($product)
+            'availability' => $this->getAvailability($product),
+            'gtin'         => $this->getGtin($product)
         ];
     }
 
@@ -81,6 +82,13 @@ class Product extends AbstractHelper
         $idAttr = $this->lipscoreConfig->productIdAttr();
         $id = $this->getAttributeValue($product, $idAttr);
         return "{$id}";
+    }
+
+    protected function getGtin(MagentoProduct $product)
+    {
+        $gtinAttr = $this->lipscoreConfig->gtinAttr();
+        $gtin = $this->getAttributeValue($product, $gtinAttr);
+        return "{$gtin}";
     }
 
     public function getUrl(MagentoProduct $product)
@@ -147,7 +155,9 @@ class Product extends AbstractHelper
 
     protected function getAttributeValue(MagentoProduct $product, $attrCode)
     {
-        $attr = $product->getResource()->getAttribute($attrCode);
+        if (!$attrCode) {
+            return null;
+        }
 
         if ($attrCode == 'id') {
             return $product->getId();
@@ -156,6 +166,8 @@ class Product extends AbstractHelper
         if ($attrCode == 'sku') {
             return $this->getSku($product);
         }
+
+        $attr = $product->getResource()->getAttribute($attrCode);
 
         if (!$attr) {
             return null;

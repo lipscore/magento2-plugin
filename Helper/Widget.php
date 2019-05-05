@@ -29,8 +29,8 @@ class Widget extends AbstractHelper
             'ls-price-currency' => $productData['currency'],
             'ls-category'       => $productData['category'],
             'ls-description'    => $productData['description'],
-            'ls-availability'   => $productData['availability']
-
+            'ls-availability'   => $productData['availability'],
+            'ls-gtin'           => $productData['gtin']
         ];
         return $this->toString($attrs);
     }

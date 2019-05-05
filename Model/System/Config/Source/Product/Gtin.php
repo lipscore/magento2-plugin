@@ -4,7 +4,7 @@ namespace Lipscore\RatingsReviews\Model\System\Config\Source\Product;
 
 use \Magento\Framework\Data\Collection;
 
-class Brand implements \Magento\Framework\Option\ArrayInterface
+class Gtin implements \Magento\Framework\Option\ArrayInterface
 {
     protected $eavConfig;
     protected $logger;
@@ -50,8 +50,8 @@ class Brand implements \Magento\Framework\Option\ArrayInterface
         $collection = $this->eavConfig
             ->getEntityType(\Magento\Catalog\Model\Product::ENTITY)
             ->getAttributeCollection()
-            ->addFieldToFilter('backend_type', ['in' => ['varchar', 'text']])
-            ->addFieldToFilter('frontend_input', ['in' => ['text', 'textarea', 'select']])
+            ->addFieldToFilter('backend_type', ['in' => ['varchar', 'text', 'int']])
+            ->addFieldToFilter('frontend_input', ['in' => ['text', 'textarea']])
             ->addOrder('frontend_label', Collection::SORT_ORDER_ASC);
 
         if ($collection->getSize() > 0) {

@@ -52,7 +52,7 @@ class Id implements \Magento\Framework\Option\ArrayInterface
             ->getEntityType(\Magento\Catalog\Model\Product::ENTITY)
             ->getAttributeCollection()
             ->addFieldToFilter('backend_type', ['in' => ['varchar', 'text', 'int']])
-            ->addFieldToFilter('frontend_input', ['in' => ['text', 'textarea', 'select', 'hidden']])
+            ->addFieldToFilter('frontend_input', ['in' => ['text', 'textarea']])
             ->addOrder('frontend_label', Collection::SORT_ORDER_ASC);
 
         if ($collection->getSize() > 0) {
