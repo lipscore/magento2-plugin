@@ -9,7 +9,6 @@
             <product_attributes>
                 <id>id</id>
                 <brand>brand</brand>
-                <gtin>brand</gtin>
             </product_attributes>
             <locale>
                 <locale>auto</locale>
