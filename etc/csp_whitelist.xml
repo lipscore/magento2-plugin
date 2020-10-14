@@ -26,5 +26,10 @@
                 <value id="lipscore" type="host">wapi.lipscore.com</value>
             </values>
         </policy>
+        <policy id="connect-src">
+            <values>
+                <value id="lipscore" type="host">users.lipscore.com</value>
+            </values>
+        </policy>
     </policies>
 </csp_whitelist>
