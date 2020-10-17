@@ -9,6 +9,8 @@
         <policy id="img-src">
             <values>
                 <value id="lipscore" type="host">static.lipscore.com</value>
+                <value id="lipscore-blob" type="host">blob:</value>
+                <value id="lipscore-youtube-preview-img" type="host">img.youtube.com</value>
             </values>
         </policy>
         <policy id="style-src">
@@ -23,12 +25,8 @@
         </policy>
         <policy id="connect-src">
             <values>
-                <value id="lipscore" type="host">wapi.lipscore.com</value>
-            </values>
-        </policy>
-        <policy id="connect-src">
-            <values>
-                <value id="lipscore" type="host">users.lipscore.com</value>
+                <value id="lipscore-wapi" type="host">wapi.lipscore.com</value>
+                <value id="lipscore-users" type="host">users.lipscore.com</value>
             </values>
         </policy>
     </policies>
