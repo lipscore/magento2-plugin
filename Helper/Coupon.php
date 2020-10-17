@@ -42,8 +42,8 @@ class Coupon extends AbstractHelper
             'usage_limit'        => $priceRule->getUsesPerCoupon() ? $priceRule->getUsesPerCoupon() : null,
             'to_date'            => $priceRule->getToDate()
         ];
-       $generator->setData($data);
-       $generatedCodes = $generator->generatePool()->getGeneratedCodes();
-       return count($generatedCodes) > 0 ? $generatedCodes[0] : null;
+        $generator->setData($data);
+        $generatedCodes = $generator->generatePool()->getGeneratedCodes();
+        return count($generatedCodes) > 0 ? $generatedCodes[0] : null;
     }
 }

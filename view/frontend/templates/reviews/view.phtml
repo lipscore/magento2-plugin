@@ -1,5 +1,5 @@
 <div style="display: none !important;"><?php echo $block->escapeHtml(__('Reviews')) ?></div>
-<?php if ($this->getLsProductAttrs()) { ?>
+<?php if ($block->getLsProductAttrs()) { ?>
     <div id="lipscore-review-post" <?php echo $block->getLsProductAttrs() ?>></div>
     <div id="lipscore-review-list" <?php echo $block->getLsProductAttrs() ?>></div>
 <?php } else { ?>
