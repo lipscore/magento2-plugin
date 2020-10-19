@@ -1,11 +1,11 @@
-<?php if ($this->getLsProductAttrs()) { ?>
-    <div class="product-reviews-summary <?php echo $this->getIsShortType() ? 'short ' : '' ?>mg-lipscore-rating-wrapper">
+<?php if ($block->getLsProductAttrs()) { ?>
+    <div class="product-reviews-summary <?php echo $block->getIsShortType() ? 'short ' : '' ?>mg-lipscore-rating-wrapper">
         <div class="rating-summary">
-            <div <?php echo $this->getRatingType() ?>
-                 <?php echo $this->getLsProductAttrs() ?>>
+            <div <?php echo $block->getRatingType() ?>
+                 <?php echo $block->getLsProductAttrs() ?>>
             </div>
         </div>
      </div>
 <?php } else { ?>
-    <div style="display: none !important;">Lipscore: empty product data</div>
+    <div style="display: none !important;"><?php echo $block->escapeHtml(__('Lipscore: empty product data')) ?></div>
 <?php } ?>

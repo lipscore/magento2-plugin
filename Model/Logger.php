@@ -29,7 +29,9 @@ class Logger
     {
         try {
             $this->logger->critical($e);
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+
+        }
     }
 
     protected static function url($url)

@@ -1,7 +1,7 @@
-<div style="display: none !important;">Reviews</div>
-<?php if ($this->getLsProductAttrs()) { ?>
-    <div id="lipscore-review-post" <?php echo $this->getLsProductAttrs() ?>></div>
-    <div id="lipscore-review-list" <?php echo $this->getLsProductAttrs() ?>></div>
+<div style="display: none !important;"><?php echo $block->escapeHtml(__('Reviews')) ?></div>
+<?php if ($block->getLsProductAttrs()) { ?>
+    <div id="lipscore-review-post" <?php echo $block->getLsProductAttrs() ?>></div>
+    <div id="lipscore-review-list" <?php echo $block->getLsProductAttrs() ?>></div>
 <?php } else { ?>
-    <div style="display: none !important;">Lipscore: empty product data</div>
+    <div style="display: none !important;"><?php echo $block->escapeHtml(__('Lipscore: empty product data')) ?></div>
 <?php } ?>

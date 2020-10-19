@@ -12,11 +12,11 @@ class ReviewRendererPlugin
         \Lipscore\RatingsReviews\Model\Logger $logger,
         \Lipscore\RatingsReviews\Helper\Module $moduleHelper,
         \Lipscore\RatingsReviews\Block\Product\ReviewRenderer $lipscoreReviewRenderer
-	) {
+    ) {
         $this->moduleHelper           = $moduleHelper;
         $this->logger                 = $logger;
         $this->lipscoreReviewRenderer = $lipscoreReviewRenderer;
-	}
+    }
 
     public function aroundGetReviewsSummaryHtml(
         \Magento\Review\Block\Product\ReviewRenderer $subject,
@@ -27,7 +27,9 @@ class ReviewRendererPlugin
     ) {
         try {
             if ($this->moduleHelper->isLipscoreOutputEnabled()) {
-                 return $this->lipscoreReviewRenderer->getReviewsSummaryHtml($product, $templateType, $displayIfNoReviews);
+                 return $this->lipscoreReviewRenderer->getReviewsSummaryHtml(
+                     $product, $templateType, $displayIfNoReviews
+                 );
             }
         } catch (\Exception $e) {
             $this->logger->log($e);
