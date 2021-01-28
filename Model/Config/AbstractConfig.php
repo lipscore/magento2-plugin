@@ -107,6 +107,11 @@ abstract class AbstractConfig
         return $this->apiKey() && !$this->isDemoKey();
     }
 
+    public function isQADisabed()
+    {
+        return !$this->accessor->get('qa', 'appearance');
+    }
+
     public function setLastTrackedVersion($value)
     {
         return $this->accessor->set('last_tracked_version', 'tracking', $value);
