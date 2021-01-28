@@ -19,6 +19,9 @@
             <module>
                 <active>1</active>
             </module>
+            <appearance>
+                <qa>0</qa>
+            </appearance>
         </lipscore_general>
     </default>
 </config>

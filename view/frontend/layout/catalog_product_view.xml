@@ -4,6 +4,7 @@
     <body>
         <referenceBlock name="product.info.details">
             <block class="Lipscore\RatingsReviews\Block\Product\Review" name="lipscore_reviews.tab" as="lipscore-reviews" group="detailed_info" />
+            <block class="Lipscore\RatingsReviews\Block\Product\QA" name="lipscore_qa.tab" as="lipscore-qa" group="detailed_info" />
         </referenceBlock>
     </body>
 </page>

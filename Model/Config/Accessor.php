@@ -23,6 +23,7 @@ class Accessor
         'coupons'            => 'lipscore_general/coupons/',
         'tracking'           => 'lipscore_plugin/',
         'storeGeneral'       => 'general/',
+        'appearance'         => 'lipscore_general/appearance/'
     ];
 
     public function __construct(

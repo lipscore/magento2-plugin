@@ -1,5 +1,5 @@
 img.lipscore-rating-small-image { display: inline; }
-.lipscore-reviews-single {
+.lipscore-reviews-single, .lipscore-qa-single {
     clear:   both;
     display: block;
     margin-top: 15px;

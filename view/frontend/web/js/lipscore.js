@@ -16,6 +16,15 @@ require(['jquery'], function ($){
                     $(tabSelector).parent().click();
                 });
             }
+
+            if ($('#js-lipscore-qa-tab').length > 0) {
+                // show questions count
+                lipscore.on('question-count-set', function (data){
+                    if (data.value > 0) {
+                        $('#js-lipscore-question-tab-count').show();
+                    }
+                });
+            }
         };
 
         if (typeof lipscore !== 'undefined') {

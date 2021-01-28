@@ -1,0 +1,7 @@
+<div style="display: none !important;"><?php echo $block->escapeHtml(__('Q&A')) ?></div>
+<?php if ($block->getLsProductAttrs()) { ?>
+    <div id="lipscore-question-post" <?php echo $block->getLsProductAttrs() ?>></div>
+    <div id="lipscore-question-list" <?php echo $block->getLsProductAttrs() ?>></div>
+<?php } else { ?>
+    <div style="display: none !important;"><?php echo $block->escapeHtml(__('Lipscore: empty product data')) ?></div>
+<?php } ?>
