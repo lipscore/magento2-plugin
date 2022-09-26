@@ -88,7 +88,16 @@ class Product extends AbstractHelper
     {
         $gtinAttr = $this->lipscoreConfig->gtinAttr();
         $gtin = $this->getAttributeValue($product, $gtinAttr);
-        return "{$gtin}";
+        $delimiters = array(",","_"," ");
+        $gtinArray = $this->multiExplode($delimiters, $gtin);
+
+        return $gtinArray;
+    }
+
+    public function multiExplode ($delimiters,$data) {
+        $makeReady = str_replace($delimiters, $delimiters[0], $data);
+        $return    = explode($delimiters[0], $makeReady);
+        return  $return;
     }
 
     public function getUrl(MagentoProduct $product)

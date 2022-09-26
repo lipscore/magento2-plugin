@@ -18,19 +18,19 @@ class Widget extends AbstractHelper
     }
 
     protected function _getProductAttrs($productData)
-    {
+    {   
         $attrs = [
-            'ls-product-name'   => $productData['name'],
-            'ls-brand'          => $productData['brand'],
-            'ls-sku'            => implode(';', $productData['sku_values']),
-            'ls-product-id'     => $productData['internal_id'],
-            'ls-image-url'      => $productData['image_url'],
-            'ls-price'          => $productData['price'],
-            'ls-price-currency' => $productData['currency'],
-            'ls-category'       => $productData['category'],
-            'ls-description'    => $productData['description'],
-            'ls-availability'   => $productData['availability'],
-            'ls-gtin'           => $productData['gtin']
+            'data-ls-product-name'   => $productData['name'],
+            'data-ls-brand'          => $productData['brand'],
+            'data-ls-sku'            => implode(';', $productData['sku_values']),
+            'data-ls-product-id'     => $productData['internal_id'],
+            'data-ls-image-url'      => $productData['image_url'],
+            'data-ls-price'          => $productData['price'],
+            'data-ls-price-currency' => $productData['currency'],
+            'data-ls-category'       => $productData['category'],
+            'data-ls-description'    => $productData['description'],
+            'data-ls-availability'   => $productData['availability'],
+            'data-ls-gtin'           => implode(';', $productData['gtin'])
         ];
         return $this->toString($attrs);
     }

@@ -38,6 +38,7 @@
                 </field>
                 <field id="gtin" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>GTIN attribute</label>
+                    <comment>If multiple GTINs are required for the same product: separate GTINs with a space, comma or underscore ( |,|_). E.g. 123451,123452,19827 or 123451 123452 19827</comment>
                     <source_model>Lipscore\RatingsReviews\Model\System\Config\Source\Product\Gtin</source_model>
                     <backend_model>Lipscore\RatingsReviews\Model\System\Config\Backend\OutputValue</backend_model>
                 </field>
