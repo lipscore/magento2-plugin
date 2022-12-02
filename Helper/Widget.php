@@ -18,7 +18,7 @@ class Widget extends AbstractHelper
     }
 
     protected function _getProductAttrs($productData)
-    {   
+    {
         $attrs = [
             'data-ls-product-name'   => $productData['name'],
             'data-ls-brand'          => $productData['brand'],
@@ -39,6 +39,7 @@ class Widget extends AbstractHelper
     {
         $strAttrs = [];
         foreach ($attrs as $attr => $value) {
+            $value = isset($value) ? $value : '';
             $value = htmlspecialchars($value);
             $strAttrs[] = "$attr=\"$value\"";
         }
