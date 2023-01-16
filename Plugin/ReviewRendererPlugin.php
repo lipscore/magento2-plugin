@@ -22,7 +22,7 @@ class ReviewRendererPlugin
         \Magento\Review\Block\Product\ReviewRenderer $subject,
         callable $proceed,
         \Magento\Catalog\Model\Product $product,
-        $templateType = self::DEFAULT_VIEW,
+        $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::DEFAULT_VIEW,
         $displayIfNoReviews = false
     ) {
         try {
