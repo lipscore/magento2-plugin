@@ -3,18 +3,41 @@
 namespace Lipscore\RatingsReviews\Model\System\Config\Source\Product;
 
 use \Magento\Framework\Data\Collection;
+use Magento\Catalog\Model\Product;
+use Magento\Eav\Model\ResourceModel\Entity\Attribute\CollectionFactory as AttributeCollectionFactory;
+use Magento\Eav\Model\Entity\Type;
+use Lipscore\RatingsReviews\Model\Logger;
 
 class Brand implements \Magento\Framework\Option\ArrayInterface
 {
-    protected $eavConfig;
+    /**
+     * @var AttributeCollectionFactory
+     */
+    protected $attributeFactory;
+
+    /**
+     * @var Type
+     */
+    protected $type;
+
+    /**
+     * @var Logger
+     */
     protected $logger;
 
+    /**
+     * @param Logger $logger
+     * @param AttributeCollectionFactory $attributeFactory
+     * @param Type $type
+     */
     public function __construct(
-        \Lipscore\RatingsReviews\Model\Logger $logger,
-        \Magento\Eav\Model\Config $eavConfig
+        Logger $logger,
+        AttributeCollectionFactory $attributeFactory,
+        Type $type
     ) {
-        $this->eavConfig = $eavConfig;
-        $this->logger    = $logger;
+        $this->logger = $logger;
+        $this->attributeFactory = $attributeFactory;
+        $this->type = $type;
     }
 
     /**
@@ -32,8 +55,8 @@ class Brand implements \Magento\Framework\Option\ArrayInterface
             $attrs = $this->findAttrs();
             foreach ($attrs as $attr) {
                 $options[] = [
-                    'value' => $attr->getAttributeCode(),
-                    'label' => $attr->getStoreLabel()
+                    'value' => $attr['code'],
+                    'label' => $attr['label']
                 ];
             }
         } catch (\Exception $e) {
@@ -47,12 +70,15 @@ class Brand implements \Magento\Framework\Option\ArrayInterface
     {
         $attrs = [];
 
-        $collection = $this->eavConfig
-            ->getEntityType(\Magento\Catalog\Model\Product::ENTITY)
-            ->getAttributeCollection()
-            ->addFieldToFilter('backend_type', ['in' => ['varchar', 'text']])
+        $entityTypeId = $this->type->loadByCode(Product::ENTITY)->getId();
+        $collection = $this->attributeFactory->create()
+            ->removeAllFieldsFromSelect()
+            ->addFieldToSelect('attribute_code', 'code')
+            ->addFieldToSelect('frontend_label', 'label')
+            ->addFieldToFilter('entity_type_id', ['eq' => $entityTypeId])
+            ->addFieldToFilter('backend_type', ['in' => ['varchar', 'text', 'int']])
             ->addFieldToFilter('frontend_input', ['in' => ['text', 'textarea', 'select']])
-            ->addOrder('frontend_label', Collection::SORT_ORDER_ASC);
+            ->setOrder('frontend_label', Collection::SORT_ORDER_ASC);
 
         if ($collection->getSize() > 0) {
             return $collection->getItems();
