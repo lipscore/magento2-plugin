@@ -2,7 +2,7 @@
 
 namespace Lipscore\RatingsReviews\Model\System\Config\Source\Product;
 
-use \Magento\Framework\Data\Collection;
+use Magento\Framework\Data\Collection;
 use Magento\Catalog\Model\Product;
 use Magento\Eav\Model\ResourceModel\Entity\Attribute\CollectionFactory as AttributeCollectionFactory;
 use Magento\Eav\Model\Entity\Type;
@@ -31,13 +31,13 @@ class Brand implements \Magento\Framework\Option\ArrayInterface
      * @param Type $type
      */
     public function __construct(
-        Logger $logger,
-        AttributeCollectionFactory $attributeFactory,
-        Type $type
+        \Lipscore\RatingsReviews\Model\Logger $logger,
+        \Magento\Eav\Model\ResourceModel\Entity\Attribute\CollectionFactory $attributeFactory,
+        \Magento\Eav\Model\Entity\Type $type
     ) {
-        $this->logger = $logger;
+        $this->logger           = $logger;
         $this->attributeFactory = $attributeFactory;
-        $this->type = $type;
+        $this->type             = $type;
     }
 
     /**
