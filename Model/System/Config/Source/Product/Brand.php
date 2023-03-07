@@ -4,31 +4,28 @@ namespace Lipscore\RatingsReviews\Model\System\Config\Source\Product;
 
 use Magento\Framework\Data\Collection;
 use Magento\Catalog\Model\Product;
-use Magento\Eav\Model\ResourceModel\Entity\Attribute\CollectionFactory as AttributeCollectionFactory;
-use Magento\Eav\Model\Entity\Type;
-use Lipscore\RatingsReviews\Model\Logger;
 
 class Brand implements \Magento\Framework\Option\ArrayInterface
 {
     /**
-     * @var AttributeCollectionFactory
+     * @var \Magento\Eav\Model\ResourceModel\Entity\Attribute\CollectionFactory
      */
     protected $attributeFactory;
 
     /**
-     * @var Type
+     * @var \Magento\Eav\Model\Entity\Type
      */
     protected $type;
 
     /**
-     * @var Logger
+     * @var \Lipscore\RatingsReviews\Model\Logger
      */
     protected $logger;
 
     /**
-     * @param Logger $logger
-     * @param AttributeCollectionFactory $attributeFactory
-     * @param Type $type
+     * @param \Lipscore\RatingsReviews\Model\Logger $logger
+     * @param \Magento\Eav\Model\ResourceModel\Entity\Attribute\CollectionFactory $attributeFactory
+     * @param \Magento\Eav\Model\Entity\Type $type
      */
     public function __construct(
         \Lipscore\RatingsReviews\Model\Logger $logger,
@@ -66,6 +63,11 @@ class Brand implements \Magento\Framework\Option\ArrayInterface
         return $options;
     }
 
+     /**
+     * Find attributes to render
+     * 
+     * @return array
+     */
     protected function findAttrs()
     {
         $attrs = [];
