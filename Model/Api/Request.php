@@ -2,27 +2,22 @@
 
 namespace Lipscore\RatingsReviews\Model\Api;
 
-use \Magento\Framework\HTTP\ZendClient;
-
 class Request
 {
     protected $config;
     protected $path;
     protected $env;
-    protected $client;
-    protected $requestType = ZendClient::POST;
+    protected $requestType = \Laminas\Http\Request::METHOD_POST;
     protected $timeout     = 5;
     protected $response;
 
     public function __construct(
         \Lipscore\RatingsReviews\Model\Env $env,
-        \Magento\Framework\HTTP\ZendClientFactory $clientFactory,
         $config,
         $path,
         $params = []
     ) {
         $this->env    = $env;
-        $this->client = $clientFactory->create();
         $this->config = $config;
         $this->path   = $path;
 
@@ -41,15 +36,20 @@ class Request
         $secret = $this->config->secret();
         $apiUrl = $this->env->apiUrl();
 
-        $this->client->setUri("$apiUrl/{$this->path}?api_key=$apiKey");
-        $this->client->setConfig(['timeout' => $this->timeout]);
-        $this->client->setMethod($this->requestType);
-        $this->client->setRawData(json_encode($data), 'application/json');
-        $this->client->setHeaders('X-Authorization', $secret);
+        $client = new \Laminas\Http\Client();
 
-        $this->response = $this->client->request();
+        $client->setUri("$apiUrl/{$this->path}?api_key=$apiKey");
+        $client->setOptions(['timeout' => $this->timeout]);
+        $client->setMethod($this->requestType);
+        $client->setRawBody(json_encode($data));
+        $client->setHeaders([
+            'X-Authorization' => strval($secret),
+            'Content-Type'    => 'application/json'
+        ]);
 
-        $result = $this->response->isSuccessful();
+        $this->response = $client->send();
+
+        $result = $this->response->isSuccess();
         if ($result) {
             $result = json_decode($this->response->getBody(), true);
         }
