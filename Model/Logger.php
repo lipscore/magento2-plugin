@@ -11,6 +11,7 @@ class Logger
 
     protected $logger;
     protected $storeManager;
+    protected $productMetadata;
     protected $transportBuilder;
 
     public function __construct(
