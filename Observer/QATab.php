@@ -7,6 +7,7 @@ use Lipscore\RatingsReviews\Observer\AbstractObserver;
 class QATab extends AbstractObserver
 {
     protected static $logFile = 'ls_qa_tab_observer';
+    protected $config;
 
     public function __construct(
         \Lipscore\RatingsReviews\Model\Logger $logger,
