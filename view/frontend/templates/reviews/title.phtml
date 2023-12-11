@@ -1,3 +1,43 @@
 <span id='js-lipscore-reviews-tab'>
     <?php echo $block->escapeHtml(__('Reviews')) ?><span id='js-lipscore-reviews-tab-count' style='display: none;'>&nbsp;(<span class='lipscore-review-count' <?php echo $block->getLsProductAttrs() ?>></span>)</span>
 </span>
+<script>
+
+function wcLipscoreInit () {
+    var tabSelector = document.getElementById('js-lipscore-reviews-tab');
+    if (tabSelector && tabSelector.innerHTML != '') {
+        lipscore.on('review-count-set', function (data){
+            if (data.value > 0) {
+                document.getElementById('js-lipscore-reviews-tab-count').style.display = 'block';
+            }
+        });
+
+        lipscore.on('review-count-link-clicked', function (data){
+            var el = document.getElementById('js-lipscore-reviews-tab').parentNode;
+            if (el.onclick) {
+                el.onclick();
+            } else if (el.click) {
+                el.click();
+            }
+        });
+    }
+
+    var tabSelector = document.getElementById('js-lipscore-qa-tab');
+    if (tabSelector && tabSelector.innerHTML != '') {
+        lipscore.on('question-count-set', function (data){
+            if (data.value > 0) {
+                document.getElementById('js-lipscore-question-tab-count').style.display = 'block';
+            }
+        });
+    }
+};
+
+if (typeof lipscore !== 'undefined') {
+    wcLipscoreInit();
+} else {
+    document.addEventListener('lipscore-created', function (event) {
+        wcLipscoreInit();
+    });
+}
+
+</script>
