@@ -5,6 +5,7 @@ namespace Lipscore\RatingsReviews\Helper;
 use Lipscore\RatingsReviews\Helper\AbstractHelper;
 use Magento\Sales\Model\Order;
 use Magento\Framework\UrlInterface;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 
 class Reminder extends AbstractHelper
 {
@@ -95,16 +96,24 @@ class Reminder extends AbstractHelper
         $orderItems = $order->getAllVisibleItems();
 
         foreach ($orderItems as $orderItem) {
+            if ($orderItem->getProductType() == Configurable::TYPE_CODE) {
+                continue;
+            }
+            
+            $parentItem = $orderItem->getParentItem();
             $productId = $orderItem->getProductId();
-            $product   = $this->productFactory->create()->load($productId);
-
-            $parentProductId = $this->getParentProductId($product, $orderItem);
+            $product = $mainProduct  = $this->productFactory->create()->load($productId);
+            
+            $parentProductId = $parentItem ? $parentItem->getProductId() : null;
             if ($parentProductId) {
-                $product = $this->productFactory->create()->load($parentProductId);
+                $mainProduct = $this->productFactory->create()->load($parentProductId);
             }
 
             $product->setStoreId($storeId);
-            $data = $this->productHelper->getProductData($product);
+            $mainProduct->setStoreId($storeId);
+            
+            $variantProduct = $parentItem && $parentItem->getProductType() == Configurable::TYPE_CODE ? $product : null;
+            $data = $this->productHelper->getProductFullData($mainProduct, $variantProduct);
 
             if (!$product->isVisibleInSiteVisibility() && !$parentProductId) {
                 $store = $this->storeManager->getStore($storeId);
@@ -112,7 +121,7 @@ class Reminder extends AbstractHelper
             }
 
             if ($data) {
-                $productsData[$product->getId()] = $data;
+                $productsData[$variantProduct ? $variantProduct->getId() : $mainProduct->getId()] = $data;
             }
 
             gc_collect_cycles();
@@ -123,15 +132,7 @@ class Reminder extends AbstractHelper
 
     protected function getParentProductId($product, $item)
     {
-        $superProductConfig = $item->getBuyRequest()->getSuperProductConfig();
-        if (!empty($superProductConfig['product_id'])) {
-            return (int) $superProductConfig['product_id'];
-        }
-
-        if ($product->isVisibleInSiteVisibility()) {
-            return;
-        }
-
-        return $this->productTypeHelper->getParentId($product->getId());
+        return $item->getParentItem() ? $item->getParentItem()->getProductId() : null;
     }
+
 }
