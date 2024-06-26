@@ -47,13 +47,13 @@ class Product extends AbstractHelper
         return $data;
     }
     
-    public function getProductFullData($parentProduct, $product = null)
+    public function getProductFullData($parentProduct, $variant = null)
     {
         $data = [];
         try {
             $data = array_merge(
                 $this->_getProductData($parentProduct),
-                $this->_getVariantData($product)
+                $this->_getVariantData($variant)
             );
         } catch (\Exception $e) {
             $this->logger->log($e);

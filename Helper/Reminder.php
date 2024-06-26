@@ -102,7 +102,7 @@ class Reminder extends AbstractHelper
             
             $parentItem = $orderItem->getParentItem();
             $productId = $orderItem->getProductId();
-            $product = $mainProduct  = $this->productFactory->create()->load($productId);
+            $product = $mainProduct = $this->productFactory->create()->load($productId);
             
             $parentProductId = $parentItem ? $parentItem->getProductId() : null;
             if ($parentProductId) {
@@ -121,7 +121,8 @@ class Reminder extends AbstractHelper
             }
 
             if ($data) {
-                $productsData[$variantProduct ? $variantProduct->getId() : $mainProduct->getId()] = $data;
+                $dataProductId = $variantProduct ? $variantProduct->getId() : $mainProduct->getId();
+                $productsData[$dataProductId] = $data;
             }
 
             gc_collect_cycles();
