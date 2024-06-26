@@ -7,7 +7,7 @@
         "ratings",
         "reminders"
     ],
-    "version": "1.4.11",
+    "version": "1.4.12",
     "require": {
         "php": "~5.5.0|~5.6.0|~7.0|~8.1"
     },
