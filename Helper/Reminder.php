@@ -3,44 +3,106 @@
 namespace Lipscore\RatingsReviews\Helper;
 
 use Lipscore\RatingsReviews\Helper\AbstractHelper;
+use Lipscore\RatingsReviews\Helper\CouponFactory as HelperCouponFactory;
+use Lipscore\RatingsReviews\Helper\LocaleFactory as HelperLocaleFactory;
+use Lipscore\RatingsReviews\Helper\ProductFactory as HelperProductFactory;
+use Lipscore\RatingsReviews\Helper\PurchaseFactory as PurchaseFactoryAlias;
+use Lipscore\RatingsReviews\Helper\Reminder\ProductType;
+use Lipscore\RatingsReviews\Model\Config\AbstractConfig;
+use Lipscore\RatingsReviews\Model\Logger;
+use Magento\Catalog\Model\ProductFactory as ModelProductFactory;
 use Magento\Sales\Model\Order;
 use Magento\Framework\UrlInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Magento\SalesRule\Model\RuleFactory;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class Reminder extends AbstractHelper
 {
-    protected $ruleFactory;
-    protected $productFactory;
-    protected $productHelper;
-    protected $localeHelper;
-    protected $couponHelper;
-    protected $purchaseHelper;
-    protected $productTypeHelper;
+    const XML_PATH_MERGEREVIEWS_IS_ENABLED = 'mergereviews/general/is_enabled';
 
+    /**
+     * @var RuleFactory
+     */
+    protected $ruleFactory;
+    /**
+     * @var ModelProductFactory
+     */
+    protected $productFactory;
+    /**
+     * @var Product
+     */
+    protected $productHelper;
+    /**
+     * @var Locale
+     */
+    protected $localeHelper;
+    /**
+     * @var Coupon
+     */
+    protected $couponHelper;
+    /**
+     * @var Purchase
+     */
+    protected $purchaseHelper;
+    /**
+     * @var ProductType
+     */
+    protected $productTypeHelper;
+    /**
+     * @var ResourceConnection
+     */
+    private $resourceConnection;
+    /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
+     * @param Logger $logger
+     * @param AbstractConfig $config
+     * @param StoreManagerInterface $storeManager
+     * @param RuleFactory $ruleFactory
+     * @param ModelProductFactory $productFactory
+     * @param ProductFactory $productHelperFactory
+     * @param LocaleFactory $localeHelperFactory
+     * @param CouponFactory $couponHelperFactory
+     * @param PurchaseFactory $purchaseHelperFactory
+     * @param ProductType $productTypeHelper
+     * @param ResourceConnection $resourceConnection
+     * @param ScopeConfigInterface $scopeConfig
+     */
     public function __construct(
-        \Lipscore\RatingsReviews\Model\Logger $logger,
-        \Lipscore\RatingsReviews\Model\Config\AbstractConfig $config,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\SalesRule\Model\RuleFactory $ruleFactory,
-        \Magento\Catalog\Model\ProductFactory $productFactory,
-        \Lipscore\RatingsReviews\Helper\ProductFactory $productHelperFactory,
-        \Lipscore\RatingsReviews\Helper\LocaleFactory $localeHelperFactory,
-        \Lipscore\RatingsReviews\Helper\CouponFactory $couponHelperFactory,
-        \Lipscore\RatingsReviews\Helper\PurchaseFactory $purchaseHelperFactory,
-        \Lipscore\RatingsReviews\Helper\Reminder\ProductType $productTypeHelper
+        Logger $logger,
+        AbstractConfig $config,
+        StoreManagerInterface $storeManager,
+        RuleFactory $ruleFactory,
+        ModelProductFactory $productFactory,
+        HelperProductFactory $productHelperFactory,
+        HelperLocaleFactory $localeHelperFactory,
+        HelperCouponFactory $couponHelperFactory,
+        PurchaseFactoryAlias $purchaseHelperFactory,
+        ProductType $productTypeHelper,
+        ResourceConnection $resourceConnection,
+        ScopeConfigInterface $scopeConfig
     ) {
         parent::__construct($logger, $config, $storeManager);
 
-        $this->ruleFactory       = $ruleFactory;
-        $this->productFactory    = $productFactory;
+        $this->ruleFactory = $ruleFactory;
+        $this->productFactory = $productFactory;
         $this->productTypeHelper = $productTypeHelper;
-        $this->productHelper     = $productHelperFactory->create(['config' => $config]);
-        $this->localeHelper      = $localeHelperFactory->create(['config' => $config]);
-        $this->couponHelper      = $couponHelperFactory->create(['config' => $config]);
-        $this->purchaseHelper    = $purchaseHelperFactory->create(['config' => $config]);
+        $this->productHelper = $productHelperFactory->create(['config' => $config]);
+        $this->localeHelper = $localeHelperFactory->create(['config' => $config]);
+        $this->couponHelper = $couponHelperFactory->create(['config' => $config]);
+        $this->purchaseHelper = $purchaseHelperFactory->create(['config' => $config]);
+        $this->resourceConnection = $resourceConnection;
+        $this->scopeConfig = $scopeConfig;
     }
 
-    public function data(\Magento\Sales\Model\Order $order)
+    public function data(Order $order)
     {
         $data = [];
         return [
@@ -49,7 +111,7 @@ class Reminder extends AbstractHelper
         ];
     }
 
-    protected function purchaseData(\Magento\Sales\Model\Order $order)
+    protected function purchaseData(Order $order)
     {
         $couponData = $this->couponData();
 
@@ -89,7 +151,12 @@ class Reminder extends AbstractHelper
         return $data;
     }
 
-    protected function productsData(\Magento\Sales\Model\Order $order)
+    /**
+     * @param Order $order
+     * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    protected function productsData(Order $order)
     {
         $productsData = [];
         $storeId = $order->getStoreId();
@@ -99,20 +166,28 @@ class Reminder extends AbstractHelper
             if ($orderItem->getProductType() == Configurable::TYPE_CODE) {
                 continue;
             }
-            
+
             $parentItem = $orderItem->getParentItem();
             $productId = $orderItem->getProductId();
             $product = $mainProduct = $this->productFactory->create()->load($productId);
-            
+
             $parentProductId = $parentItem ? $parentItem->getProductId() : null;
+            $parentType = $parentItem && $parentItem->getProductType() ? $parentItem->getProductType() : null;
             if ($parentProductId) {
                 $mainProduct = $this->productFactory->create()->load($parentProductId);
+            }elseif ($this->isEnabled()) {
+                $ids = $this->getParentIds($orderItem->getProductId());
+                if (!empty($ids)) {
+                    $parentId = $ids[0];
+                    $mainProduct = $this->productFactory->create()->load($parentId);
+                    $parentType = $mainProduct->getTypeId();
+                }
             }
 
             $product->setStoreId($storeId);
             $mainProduct->setStoreId($storeId);
-            
-            $variantProduct = $parentItem && $parentItem->getProductType() == Configurable::TYPE_CODE ? $product : null;
+
+            $variantProduct = $parentType == Configurable::TYPE_CODE ? $product : null;
             $data = $this->productHelper->getProductFullData($mainProduct, $variantProduct);
 
             if (!$product->isVisibleInSiteVisibility() && !$parentProductId) {
@@ -136,4 +211,26 @@ class Reminder extends AbstractHelper
         return $item->getParentItem() ? $item->getParentItem()->getProductId() : null;
     }
 
+    /**
+     * @param $childId
+     * @return mixed
+     */
+    private function getParentIds($childId)
+    {
+        $connection = $this->resourceConnection->getConnection();
+        $select = $connection->select()
+            ->from('catalog_product_relation', 'parent_id')
+            ->where('child_id = ?', (int)$childId);
+
+        return $connection->fetchCol($select);
+    }
+    /**
+     * @return bool
+     */
+    private function isEnabled()
+    {
+        $storeScope = ScopeInterface::SCOPE_STORE;
+
+        return (bool)$this->scopeConfig->getValue(self::XML_PATH_MERGEREVIEWS_IS_ENABLED, $storeScope);
+    }
 }

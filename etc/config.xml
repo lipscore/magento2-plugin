@@ -23,5 +23,10 @@
                 <qa>0</qa>
             </appearance>
         </lipscore_general>
+        <mergereviews>
+            <general>
+                <is_enabled>0</is_enabled>
+            </general>
+        </mergereviews>
     </default>
 </config>
