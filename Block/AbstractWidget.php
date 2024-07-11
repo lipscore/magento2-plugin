@@ -2,21 +2,64 @@
 
 namespace Lipscore\RatingsReviews\Block;
 
-abstract class AbstractWidget extends \Magento\Framework\View\Element\Template
+use Lipscore\RatingsReviews\Helper\Product;
+use Lipscore\RatingsReviews\Helper\Widget;
+use Lipscore\RatingsReviews\Model\Logger;
+use Magento\Framework\Registry;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Catalog\Model\ProductFactory;
+use Magento\Framework\App\ResourceConnection;
+
+abstract class AbstractWidget extends Template
 {
+    const XML_PATH_MERGEREVIEWS_IS_ENABLED = 'mergereviews/general/is_enabled';
     protected $productAttrs;
-
+    /**
+     * @var Registry
+     */
     protected $coreRegistry;
+    /**
+     * @var Product
+     */
     protected $productHelper;
+    /**
+     * @var Widget
+     */
     protected $widgetHelper;
+    /**
+     * @var Logger
+     */
     protected $logger;
+    /**
+     * @var ResourceConnection
+     */
+    private $resourceConnection;
+    /**
+     * @var ProductFactory
+     */
+    private $productFactory;
 
+    /**
+     * @param Context $context
+     * @param Logger $logger
+     * @param Registry $registry
+     * @param Product $productHelper
+     * @param Widget $widgetHelper
+     * @param ResourceConnection $resourceConnection
+     * @param ProductFactory $productFactory
+     * @param array $data
+     */
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Lipscore\RatingsReviews\Model\Logger $logger,
-        \Magento\Framework\Registry $registry,
-        \Lipscore\RatingsReviews\Helper\Product $productHelper,
-        \Lipscore\RatingsReviews\Helper\Widget $widgetHelper,
+        Context $context,
+        Logger $logger,
+        Registry $registry,
+        Product $productHelper,
+        Widget $widgetHelper,
+        ResourceConnection $resourceConnection,
+        ProductFactory $productFactory,
         array $data = []
     ) {
         $this->coreRegistry  = $registry;
@@ -25,6 +68,8 @@ abstract class AbstractWidget extends \Magento\Framework\View\Element\Template
         $this->logger        = $logger;
 
         parent::__construct($context, $data);
+        $this->resourceConnection = $resourceConnection;
+        $this->productFactory = $productFactory;
     }
 
     public function getLsProductAttrs()
@@ -52,12 +97,47 @@ abstract class AbstractWidget extends \Magento\Framework\View\Element\Template
         return $this->widgetHelper->getProductAttrs($productData);
     }
 
+    /**
+     * @return \Magento\Catalog\Model\Product|mixed|null
+     */
     protected function getCurrentProduct()
     {
-        if ($this->getProduct()) {
-            return $this->getProduct();
-        } else {
-            return $this->coreRegistry->registry('product');
+        if(!$this->isEnabled()) {
+            if ($this->getProduct()) {
+                return $this->getProduct();
+            } else {
+                return $this->coreRegistry->registry('product');
+            }
         }
+        $product = $this->getProduct() ? $this->getProduct(): $this->coreRegistry->registry('product');
+        $parentIds = $this->getParentIds($product->getId());
+        if (!empty($parentIds)) {
+            $parentId = $parentIds[0];
+            $product = $this->productFactory->create()->load($parentId);
+        }
+        return $product;
+    }
+
+    /**
+     * @param $childId
+     * @return mixed
+     */
+    private function getParentIds($childId)
+    {
+        $connection = $this->resourceConnection->getConnection();
+        $select = $connection->select()
+            ->from('catalog_product_relation', 'parent_id')
+            ->where('child_id = ?', (int)$childId);
+
+        return $connection->fetchCol($select);
+    }
+    /**
+     * @return bool
+     */
+    private function isEnabled()
+    {
+        $storeScope = ScopeInterface::SCOPE_STORE;
+
+        return (bool)$this->_scopeConfig->getValue(self::XML_PATH_MERGEREVIEWS_IS_ENABLED, $storeScope);
     }
 }
