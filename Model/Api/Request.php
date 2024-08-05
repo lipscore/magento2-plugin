@@ -56,30 +56,20 @@ class Request
         $apiUrl = $this->env->apiUrl();
         $headers = [
             'X-Authorization' => strval($secret),
-            'Content-Type' => 'application/json',
+            'Content-Type'    => 'application/json',
         ];
         $url = "$apiUrl/{$this->path}?api_key=$apiKey";
 
-        if ($this->client instanceof \Laminas\Http\Client) {
-            $this->client->setUri($url);
-            $this->client->setOptions(['timeout' => $this->timeout]);
-            $this->client->setMethod($this->requestType);
-            $this->client->setRawBody(json_encode($data));
-            $this->client->setHeaders($headers);
-            $this->response = $this->client->send();
-            $result = $this->response->isSuccess() ? json_decode($this->response->getBody(), true) : false;
-        } elseif ($this->client instanceof \GuzzleHttp\Client) {
-
+        if ($this->client instanceof \GuzzleHttp\Client) {
             $options = [
                 'headers' => $headers,
-                'json' => $data,
+                'json'    => $data,
                 'timeout' => $this->timeout,
             ];
             $response = $this->client->request($this->requestType, $url, $options);
             $this->response = $response;
             $result = $response->getStatusCode() === 200 ? json_decode($response->getBody(), true) : false;
-
-        } elseif ($this->client instanceof \Zend\Http\Client) {
+        } else {
             $this->client->setUri($url);
             $this->client->setOptions(['timeout' => $this->timeout]);
             $this->client->setMethod($this->requestType);
@@ -88,7 +78,6 @@ class Request
             $this->response = $this->client->send();
             $result = $this->response->isSuccess() ? json_decode($this->response->getBody(), true) : false;
         }
-
         return $result;
     }
 
