@@ -2,17 +2,26 @@
 
 namespace Lipscore\RatingsReviews\Model\Api;
 
+use Lipscore\RatingsReviews\Model\Env;
+
 class Request
 {
     protected $config;
     protected $path;
     protected $env;
-    protected $requestType = \Laminas\Http\Request::METHOD_POST;
+    protected $requestType = 'POST';
     protected $timeout     = 5;
     protected $response;
+    protected $client;
 
+    /**
+     * @param Env $env
+     * @param $config
+     * @param $path
+     * @param $params
+     */
     public function __construct(
-        \Lipscore\RatingsReviews\Model\Env $env,
+        Env $env,
         $config,
         $path,
         $params = []
@@ -28,6 +37,16 @@ class Request
         if (!empty($params['requestType'])) {
             $this->requestType = $params['requestType'];
         }
+
+        if (class_exists(\Laminas\Http\Client::class)) {
+            $this->client = new \Laminas\Http\Client();
+        } elseif (class_exists(\GuzzleHttp\Client::class)) {
+            $this->client = new \GuzzleHttp\Client();
+        } elseif (class_exists(\Zend\Http\Client::class)) {
+            $this->client = new \Zend\Http\Client();
+        } else {
+            throw new Exception('No HTTP client library available.');
+        }
     }
 
     public function send($data)
@@ -35,25 +54,30 @@ class Request
         $apiKey = $this->config->apiKey();
         $secret = $this->config->secret();
         $apiUrl = $this->env->apiUrl();
-
-        $client = new \Laminas\Http\Client();
-
-        $client->setUri("$apiUrl/{$this->path}?api_key=$apiKey");
-        $client->setOptions(['timeout' => $this->timeout]);
-        $client->setMethod($this->requestType);
-        $client->setRawBody(json_encode($data));
-        $client->setHeaders([
+        $headers = [
             'X-Authorization' => strval($secret),
-            'Content-Type'    => 'application/json'
-        ]);
+            'Content-Type'    => 'application/json',
+        ];
+        $url = "$apiUrl/{$this->path}?api_key=$apiKey";
 
-        $this->response = $client->send();
-
-        $result = $this->response->isSuccess();
-        if ($result) {
-            $result = json_decode($this->response->getBody(), true);
+        if ($this->client instanceof \GuzzleHttp\Client) {
+            $options = [
+                'headers' => $headers,
+                'json'    => $data,
+                'timeout' => $this->timeout,
+            ];
+            $response = $this->client->request($this->requestType, $url, $options);
+            $this->response = $response;
+            $result = $response->getStatusCode() === 200 ? json_decode($response->getBody(), true) : false;
+        } else {
+            $this->client->setUri($url);
+            $this->client->setOptions(['timeout' => $this->timeout]);
+            $this->client->setMethod($this->requestType);
+            $this->client->setRawBody(json_encode($data));
+            $this->client->setHeaders($headers);
+            $this->response = $this->client->send();
+            $result = $this->response->isSuccess() ? json_decode($this->response->getBody(), true) : false;
         }
-
         return $result;
     }
 
