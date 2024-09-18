@@ -11,6 +11,10 @@
         lipscore.init({
             apiKey: "<?php echo $block->getApiKey() ?>"
         });
+
+        document.addEventListener('contentUpdated', function() {
+            lipscore.initWidgets();
+        });
     };
     (function() {
         var scr = document.createElement('script'); scr.async = 1; scr.setAttribute('data-cfasync', false);
