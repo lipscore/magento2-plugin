@@ -39,6 +39,7 @@ bin/magento setup:di:compile
 
 [Lipscore Documentation](https://lipscore.com/ikb/magento-guide/)
 
+<!--
 ## Local Development
 
 1. Make sure Docker is installed.
@@ -56,3 +57,4 @@ bin/magento setup:upgrade
 7. Go to /admin route and log in to admin dashboard.
 8. Your local store is set up. You can now follow instructions to install the Lipscore plugin.
 9. To test reviews, you can go to "Orders", choose specific order and click "Reorder". This will quickly create an order in Pending state and create invitation on your Lipscore account. You can immediately send the invitation, rate the product and see the results on your store.
+-->
