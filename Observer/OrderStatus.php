@@ -81,14 +81,11 @@ class OrderStatus extends AbstractObserver
 
     protected function reminder()
     {
-        if (!$this->_reminder) {
-            $this->_reminder = $this->reminderFactory->create(
-                [
-                    'config' => $this->config
-                ]
-            );
-        }
-        return $this->_reminder;
+        return $this->reminderFactory->create(
+            [
+                'config' => $this->config
+            ]
+        );
     }
 
     protected function isReminderEnabled()
