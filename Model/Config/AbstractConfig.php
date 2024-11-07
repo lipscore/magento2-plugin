@@ -64,6 +64,11 @@ abstract class AbstractConfig
         return $this->accessor->get('gtin', 'product_attributes');
     }
 
+    public function mpnAttr()
+    {
+        return $this->accessor->get('mpn', 'product_attributes');
+    }
+
     public function lastTrackedVersion()
     {
         return $this->accessor->get('last_tracked_version', 'tracking');

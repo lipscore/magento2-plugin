@@ -57,14 +57,17 @@ class Reminder extends AbstractHelper
     {
         $couponData = $this->couponData();
 
-        $email  = $this->purchaseHelper->customerEmail($order);
-        $name   = $this->purchaseHelper->customerName($order);
-        $lang   = $this->localeHelper->getStoreLocale();
-        $date   = $this->purchaseHelper->createdAt($order);
+        $email      = $this->purchaseHelper->customerEmail($order);
+        $name       = $this->purchaseHelper->customerName($order);
+        $lang       = $this->localeHelper->getStoreLocale();
+        $date       = $this->purchaseHelper->createdAt($order);
+        $customerId = $order->getCustomerId() ? $order->getCustomerId() : '';
 
         return array_merge(
             $couponData,
             [
+                'internal_order_id'    => (string) $order->getIncrementId(),
+                'internal_customer_id' => $customerId,
                 'buyer_email'   => $email,
                 'buyer_name'    => $name,
                 'purchased_at'  => $date,

@@ -42,6 +42,11 @@
                     <source_model>Lipscore\RatingsReviews\Model\System\Config\Source\Product\Gtin</source_model>
                     <backend_model>Lipscore\RatingsReviews\Model\System\Config\Backend\OutputValue</backend_model>
                 </field>
+                <field id="mpn" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>MPN attribute</label>
+                    <source_model>Lipscore\RatingsReviews\Model\System\Config\Source\Product\Mpn</source_model>
+                    <backend_model>Lipscore\RatingsReviews\Model\System\Config\Backend\OutputValue</backend_model>
+                </field>
             </group>
 
             <group id="locale" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
