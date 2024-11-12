@@ -46,7 +46,7 @@ class Product extends AbstractHelper
         }
         return $data;
     }
-    
+
     public function getProductFullData($parentProduct, $variant = null)
     {
         $data = [];
@@ -75,16 +75,17 @@ class Product extends AbstractHelper
             'category'     => $this->getCategory($product),
             'description'  => $this->getDescription($product),
             'availability' => $this->getAvailability($product),
-            'gtin'         => $this->getGtin($product)
+            'gtin'         => $this->getGtin($product),
+            'mpn'          => $this->getMpn($product)
         ];
     }
-    
+
     protected function _getVariantData($product)
     {
         if (!$product) {
             return [];
         }
-        
+
         return [
             'variant_id'   => $this->getId($product),
             'variant_name' => $this->getName($product),
@@ -119,6 +120,13 @@ class Product extends AbstractHelper
         $gtinArray = $this->multiExplode($delimiters, $gtin);
 
         return $gtinArray;
+    }
+
+    protected function getMpn(MagentoProduct $product)
+    {
+        $mpnAttr = $this->lipscoreConfig->mpnAttr();
+
+        return $this->getAttributeValue($product, $mpnAttr) ?? '';
     }
 
     public function multiExplode ($delimiters, $data) {
