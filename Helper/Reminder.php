@@ -2,71 +2,81 @@
 
 namespace Lipscore\RatingsReviews\Helper;
 
-use Lipscore\RatingsReviews\Helper\AbstractHelper;
+use Lipscore\RatingsReviews\Helper\Coupon as CouponHelper;
+use Lipscore\RatingsReviews\Helper\Locale as LocaleHelper;
+use Lipscore\RatingsReviews\Helper\Product as ProductHelper;
+use Lipscore\RatingsReviews\Helper\Purchase as PurchaseHelper;
+use Lipscore\RatingsReviews\Helper\Reminder\ProductType as ProductTypeHelper;
+use Lipscore\RatingsReviews\Model\Config;
+use Lipscore\RatingsReviews\Model\Logger;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Sales\Model\Order;
-use Magento\Framework\UrlInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Magento\Framework\UrlInterface;
+use Magento\Sales\Model\Order;
+use Magento\SalesRule\Model\RuleFactory;
+use Magento\Store\Model\StoreManagerInterface;
 
 class Reminder extends AbstractHelper
 {
     protected $ruleFactory;
-    protected $productFactory;
+
     protected $productRepository;
+
     protected $productHelper;
+
     protected $localeHelper;
+
     protected $couponHelper;
+
     protected $purchaseHelper;
+
     protected $productTypeHelper;
 
     public function __construct(
-        \Lipscore\RatingsReviews\Model\Logger $logger,
-        \Lipscore\RatingsReviews\Model\Config\AbstractConfig $config,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\SalesRule\Model\RuleFactory $ruleFactory,
-        \Magento\Catalog\Model\ProductFactory $productFactory,
+        Logger $logger,
+        Config $config,
+        StoreManagerInterface $storeManager,
+        RuleFactory $ruleFactory,
         ProductRepositoryInterface $productRepository,
-        \Lipscore\RatingsReviews\Helper\ProductFactory $productHelperFactory,
-        \Lipscore\RatingsReviews\Helper\LocaleFactory $localeHelperFactory,
-        \Lipscore\RatingsReviews\Helper\CouponFactory $couponHelperFactory,
-        \Lipscore\RatingsReviews\Helper\PurchaseFactory $purchaseHelperFactory,
-        \Lipscore\RatingsReviews\Helper\Reminder\ProductType $productTypeHelper
+        ProductHelper $productHelper,
+        LocaleHelper $localeHelper,
+        CouponHelper $couponHelper,
+        PurchaseHelper $purchaseHelper,
+        ProductTypeHelper $productTypeHelper
     ) {
         parent::__construct($logger, $config, $storeManager);
 
         $this->ruleFactory       = $ruleFactory;
         $this->productRepository = $productRepository;
-        $this->productFactory    = $productFactory;
         $this->productTypeHelper = $productTypeHelper;
-        $this->productHelper     = $productHelperFactory->create(['config' => $config]);
-        $this->localeHelper      = $localeHelperFactory->create(['config' => $config]);
-        $this->couponHelper      = $couponHelperFactory->create(['config' => $config]);
-        $this->purchaseHelper    = $purchaseHelperFactory->create(['config' => $config]);
+        $this->productHelper     = $productHelper;
+        $this->localeHelper      = $localeHelper;
+        $this->couponHelper      = $couponHelper;
+        $this->purchaseHelper    = $purchaseHelper;
     }
 
-    public function data(\Magento\Sales\Model\Order $order)
+    public function data(Order $order)
     {
-        $data = [];
         return [
             'purchase' => $this->purchaseData($order),
             'products' => $this->productsData($order)
         ];
     }
 
-    protected function purchaseData(\Magento\Sales\Model\Order $order)
+    protected function purchaseData(Order $order)
     {
         $couponData = $this->couponData();
 
         $email      = $this->purchaseHelper->customerEmail($order);
         $name       = $this->purchaseHelper->customerName($order);
-        $lang       = $this->localeHelper->getStoreLocale();
+        $lang       = $this->localeHelper->getLipscoreLocale($order->getStoreId());
         $date       = $this->purchaseHelper->createdAt($order);
         $customerId = $order->getCustomerId() ? $order->getCustomerId() : '';
 
         return array_merge(
             $couponData,
             [
-                'internal_order_id'    => (string) $order->getIncrementId(),
+                'internal_order_id' => (string) $order->getIncrementId(),
                 'internal_customer_id' => $customerId,
                 'buyer_email'   => $email,
                 'buyer_name'    => $name,
@@ -80,7 +90,7 @@ class Reminder extends AbstractHelper
     {
         $data = [];
 
-        $priceRuleId = $this->lipscoreConfig->priceRuleId();
+        $priceRuleId = $this->config->getCouponsPriceRuleId();
         if (!$priceRuleId) {
             return $data;
         }
@@ -96,7 +106,7 @@ class Reminder extends AbstractHelper
         return $data;
     }
 
-    protected function productsData(\Magento\Sales\Model\Order $order)
+    protected function productsData(Order $order)
     {
         $productsData = [];
         $storeId = $order->getStoreId();

@@ -2,35 +2,25 @@
 
 namespace Lipscore\RatingsReviews\Model\System\Config\Source\Product;
 
-use Magento\Framework\Data\Collection;
+use Lipscore\RatingsReviews\Model\Logger;
 use Magento\Catalog\Model\Product;
+use Magento\Eav\Model\Entity\Type;
+use Magento\Eav\Model\ResourceModel\Entity\Attribute\CollectionFactory;
+use Magento\Framework\Data\Collection;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class Brand implements \Magento\Framework\Option\ArrayInterface
+class Brand implements OptionSourceInterface
 {
-    /**
-     * @var \Magento\Eav\Model\ResourceModel\Entity\Attribute\CollectionFactory
-     */
     protected $attributeFactory;
 
-    /**
-     * @var \Magento\Eav\Model\Entity\Type
-     */
     protected $type;
 
-    /**
-     * @var \Lipscore\RatingsReviews\Model\Logger
-     */
     protected $logger;
 
-    /**
-     * @param \Lipscore\RatingsReviews\Model\Logger $logger
-     * @param \Magento\Eav\Model\ResourceModel\Entity\Attribute\CollectionFactory $attributeFactory
-     * @param \Magento\Eav\Model\Entity\Type $type
-     */
     public function __construct(
-        \Lipscore\RatingsReviews\Model\Logger $logger,
-        \Magento\Eav\Model\ResourceModel\Entity\Attribute\CollectionFactory $attributeFactory,
-        \Magento\Eav\Model\Entity\Type $type
+        Logger $logger,
+        CollectionFactory $attributeFactory,
+        Type $type
     ) {
         $this->logger           = $logger;
         $this->attributeFactory = $attributeFactory;
@@ -65,7 +55,7 @@ class Brand implements \Magento\Framework\Option\ArrayInterface
 
      /**
      * Find attributes to render
-     * 
+     *
      * @return array
      */
     protected function findAttrs()

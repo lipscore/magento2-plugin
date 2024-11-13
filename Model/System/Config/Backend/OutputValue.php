@@ -2,14 +2,19 @@
 
 namespace Lipscore\RatingsReviews\Model\System\Config\Backend;
 
-class OutputValue extends \Magento\Framework\App\Config\Value
+use Magento\Framework\App\Cache\Type\Block;
+use Magento\Framework\App\Cache\Type\Layout;
+use Magento\Framework\App\Config\Value;
+use Magento\PageCache\Model\Cache\Type;
+
+class OutputValue extends Value
 {
     protected $isChanged = false;
 
     protected static $cacheTypes = [
-        \Magento\Framework\App\Cache\Type\Block::TYPE_IDENTIFIER,
-        \Magento\Framework\App\Cache\Type\Layout::TYPE_IDENTIFIER,
-        \Magento\PageCache\Model\Cache\Type::TYPE_IDENTIFIER
+        Block::TYPE_IDENTIFIER,
+        Layout::TYPE_IDENTIFIER,
+        Type::TYPE_IDENTIFIER
     ];
 
     public function afterSave()

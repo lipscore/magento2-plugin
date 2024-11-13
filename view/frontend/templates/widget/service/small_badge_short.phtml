@@ -1,0 +1,20 @@
+<?php
+/**
+ * @var $block \Lipscore\RatingsReviews\Block\Widget\Service
+ */
+?>
+<div class="lipscore-service-review-badge-small-short <?= $block->getBadgeWidgetOptions() ?>" style="display:<?= $block->getDefaultDisplay() ?>;"
+     <?= $block->getSharedWidgetAttributes() ?>>
+</div>
+
+<?php if ($block->getLipscoreCss()) : ?>
+    <style>
+        <?= $block->getLipscoreCss() ?>
+    </style>
+<?php endif; ?>
+
+<?php if ($block->getLipscoreJs()) : ?>
+    <script>
+        <?= $block->getLipscoreJs() ?>
+    </script>
+<?php endif; ?>

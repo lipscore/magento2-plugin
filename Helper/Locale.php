@@ -2,27 +2,25 @@
 
 namespace Lipscore\RatingsReviews\Helper;
 
-use Lipscore\RatingsReviews\Helper\AbstractHelper;
-
 class Locale extends AbstractHelper
 {
-    protected static $availableLocales = [
+    public const AVAILABLE_LOCALES = [
         'en', 'it', 'no', 'es', 'br', 'ru', 'se', 'cz', 'nl', 'dk', 'ja', 'de', 'fi', 'fr'
     ];
 
-    public function getLipscoreLocale()
+    public function getLipscoreLocale($storeId = null)
     {
         $locale = null;
         try {
-            $locale = $this->lipscoreConfig->locale();
+            $locale = $this->config->getLocale($storeId);
         } catch (\Exception $e) {
             $this->logger->log($e);
         }
 
-        if ($locale == 'auto') {
+        if ($locale === 'auto') {
             $locale = null;
             try {
-                $locale = $this->getFromStore();
+                $locale = $this->getLocaleFromStore($storeId);
             } catch (\Exception $e) {
                 $this->logger->log($e);
             }
@@ -30,36 +28,23 @@ class Locale extends AbstractHelper
         return $locale;
     }
 
-    public function getStoreLocale()
+    protected function getLocaleFromStore($storeId = null)
     {
-        $locale = '';
-        try {
-            $locale = $this->getLipscoreLocale();
-            if (!$locale) {
-                $localeCode = $this->lipscoreConfig->storeLocaleCode();
-                list($locale, $region) = explode('_', $localeCode);
-            }
-        } catch (\Exception $e) {
-            $this->logger->log($e);
-        }
-        return $locale ? $locale : 'en';
-    }
-
-    protected function getFromStore()
-    {
-        $localeCode = $this->lipscoreConfig->storeLocaleCode();
+        $localeCode = $this->config->getStoreLocale($storeId);
         list($language, $region) = explode('_', $localeCode);
 
         $locale = $this->getAvailableLocale($language);
         if ($locale === null) {
             $locale = $this->getAvailableLocale($region);
         }
+
         return $locale;
     }
 
     protected function getAvailableLocale($locale)
     {
         $locale = strtolower($locale);
-        return in_array($locale, self::$availableLocales) ? $locale : null;
+
+        return in_array($locale, self::AVAILABLE_LOCALES) ? $locale : null;
     }
 }

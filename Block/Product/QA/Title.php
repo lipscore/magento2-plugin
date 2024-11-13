@@ -2,9 +2,9 @@
 
 namespace Lipscore\RatingsReviews\Block\Product\QA;
 
-use Lipscore\RatingsReviews\Block\AbstractWidget;
+use Lipscore\RatingsReviews\Block\AbstractBlock;
 
-class Title extends AbstractWidget
+class Title extends AbstractBlock
 {
     protected $_template = 'qa/title.phtml';
 }

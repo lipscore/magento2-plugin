@@ -2,28 +2,40 @@
 
 namespace Lipscore\RatingsReviews\Helper;
 
-use Lipscore\RatingsReviews\Helper\AbstractHelper;
+use Lipscore\RatingsReviews\Model\Config;
+use Lipscore\RatingsReviews\Model\Logger;
+use Magento\Catalog\Model\Category;
 use Magento\Catalog\Model\Product as MagentoProduct;
+use Magento\Catalog\Model\Product\UrlFactory;
+use Magento\Catalog\Model\ProductRepository;
 use Magento\Catalog\Pricing\Price;
+use Magento\Framework\Registry;
+use Magento\Framework\Url;
+use Magento\Framework\UrlFactoryFactory;
+use Magento\Store\Model\StoreManagerInterface;
 
 class Product extends AbstractHelper
 {
     protected $productRepository;
+
     protected $imageHelper;
+
     protected $registry;
+
     protected $catalogCategory;
+
     protected $urlModel;
 
     public function __construct(
-        \Lipscore\RatingsReviews\Model\Logger $logger,
-        \Lipscore\RatingsReviews\Model\Config\AbstractConfig $config,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Catalog\Model\ProductRepository $productRepository,
-        \Lipscore\RatingsReviews\Helper\Image $imageHelper,
-        \Magento\Framework\Registry $registry,
-        \Magento\Catalog\Model\Category $catalogCategory,
-        \Magento\Catalog\Model\Product\UrlFactory $urlModelFactory,
-        \Magento\Framework\UrlFactoryFactory $urlFactoryFactory
+        Logger $logger,
+        Config $config,
+        StoreManagerInterface $storeManager,
+        ProductRepository $productRepository,
+        Image $imageHelper,
+        Registry $registry,
+        Category $catalogCategory,
+        UrlFactory $urlModelFactory,
+        UrlFactoryFactory $urlFactoryFactory
     ) {
         parent::__construct($logger, $config, $storeManager);
 
@@ -32,7 +44,7 @@ class Product extends AbstractHelper
         $this->registry          = $registry;
         $this->catalogCategory   = $catalogCategory;
         $this->urlModel          = $urlModelFactory->create(
-            ['urlFactory' => $urlFactoryFactory->create(['instanceName' => \Magento\Framework\Url::class])]
+            ['urlFactory' => $urlFactoryFactory->create(['instanceName' => Url::class])]
         );
     }
 
@@ -71,7 +83,7 @@ class Product extends AbstractHelper
             'url'          => $this->getUrl($product),
             'image_url'    => $this->getImageUrl($product),
             'price'        => $this->getPrice($product),
-            'currency'     => $this->getCurrency(),
+            'currency'     => $this->getCurrency($product),
             'category'     => $this->getCategory($product),
             'description'  => $this->getDescription($product),
             'availability' => $this->getAvailability($product),
@@ -100,21 +112,21 @@ class Product extends AbstractHelper
 
     protected function getBrand(MagentoProduct $product)
     {
-        $brandAttr = $this->lipscoreConfig->brandAttr();
+        $brandAttr = $this->config->getProductAttributeBrand();
         $brand = $this->getAttributeValue($product, $brandAttr);
         return $this->filterText($brand);
     }
 
     protected function getId(MagentoProduct $product)
     {
-        $idAttr = $this->lipscoreConfig->productIdAttr();
+        $idAttr = $this->config->getProductAttributeId();
         $id = $this->getAttributeValue($product, $idAttr);
         return "{$id}";
     }
 
     protected function getGtin(MagentoProduct $product)
     {
-        $gtinAttr = $this->lipscoreConfig->gtinAttr();
+        $gtinAttr = $this->config->getProductAttributeGtin();
         $gtin = $this->getAttributeValue($product, $gtinAttr);
         $delimiters = array(",", "_", " ");
         $gtinArray = $this->multiExplode($delimiters, $gtin);
@@ -124,12 +136,13 @@ class Product extends AbstractHelper
 
     protected function getMpn(MagentoProduct $product)
     {
-        $mpnAttr = $this->lipscoreConfig->mpnAttr();
+        $attr = $this->config->getProductAttributeMpn();
 
-        return $this->getAttributeValue($product, $mpnAttr) ?? '';
+        return $this->getAttributeValue($product, $attr) ?? '';
     }
 
-    public function multiExplode ($delimiters, $data) {
+    public function multiExplode ($delimiters, $data)
+    {
         $data          = isset($data) ? $data : '';
         $processedData = str_replace($delimiters, $delimiters[0], $data);
         $return        = explode($delimiters[0], $processedData);
@@ -185,9 +198,11 @@ class Product extends AbstractHelper
         return $finalPrice->getMinimalPrice()->getValue();
     }
 
-    protected function getCurrency()
+    protected function getCurrency(MagentoProduct $product)
     {
-        return $this->getStore()->getCurrentCurrency()->getCode();
+        return $this->storeManager->getStore($product->getStoreId())
+            ->getCurrentCurrency()
+            ->getCode();
     }
 
     protected function getSku(MagentoProduct $product)
@@ -205,11 +220,11 @@ class Product extends AbstractHelper
             return null;
         }
 
-        if ($attrCode == 'id') {
+        if ($attrCode === 'id') {
             return $product->getId();
         }
 
-        if ($attrCode == 'sku') {
+        if ($attrCode === 'sku') {
             return $this->getSku($product);
         }
 
@@ -219,13 +234,13 @@ class Product extends AbstractHelper
             return null;
         }
 
-        if ('select' == $attr->getFrontendInput()) {
+        if ('select' === $attr->getFrontendInput()) {
             $value = $attr->getSource()->getOptionText($product->getData($attrCode));
         } else {
             $value =  $product->getData($attrCode);
         }
 
-        return $value ? $value : null;
+        return $value ?: null;
     }
 
     protected function filterText($text)

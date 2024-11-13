@@ -2,29 +2,30 @@
 
 namespace Lipscore\RatingsReviews\Observer;
 
+use Lipscore\RatingsReviews\Model\Config;
+use Lipscore\RatingsReviews\Model\Logger;
+use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 
 abstract class AbstractObserver implements ObserverInterface
 {
     protected static $logFile = 'observer';
+
     protected static $logEnabled = false;
 
-    protected $_moduleHelper;
-    protected $moduleHelperFactory;
-    protected $adminConfigFactory;
+    protected $config;
+
     protected $logger;
 
     public function __construct(
-        \Lipscore\RatingsReviews\Model\Logger $logger,
-        \Lipscore\RatingsReviews\Helper\ModuleFactory $moduleHelperFactory,
-        \Lipscore\RatingsReviews\Model\Config\AdminFactory $adminConfigFactory
+        Config $config,
+        Logger $logger
     ) {
-        $this->moduleHelperFactory = $moduleHelperFactory;
-        $this->adminConfigFactory  = $adminConfigFactory;
-        $this->logger              = $logger;
+        $this->logger = $logger;
+        $this->config = $config;
     }
 
-    public function execute(\Magento\Framework\Event\Observer $observer)
+    public function execute(Observer $observer)
     {
         try {
             $this->log($this->defaultLogMessage());
@@ -37,14 +38,6 @@ abstract class AbstractObserver implements ObserverInterface
     }
 
     abstract protected function methodAvailable();
-
-    protected function moduleHelper()
-    {
-        if (!$this->_moduleHelper) {
-            $this->_moduleHelper = $this->moduleHelperFactory->create();
-        }
-        return $this->_moduleHelper;
-    }
 
     protected function defaultLogMessage()
     {

@@ -2,7 +2,9 @@
 
 namespace Lipscore\RatingsReviews\Model\System\Config\Source\Module;
 
-class Active implements \Magento\Framework\Option\ArrayInterface
+use Magento\Framework\Data\OptionSourceInterface;
+
+class Active implements OptionSourceInterface
 {
     /**
      * Options getter

@@ -1,0 +1,18 @@
+<?php
+/**
+ * @var $block \Lipscore\RatingsReviews\Block\Widget\Service
+ */
+?>
+<div id="lipscore-service-review-list" style="display:<?= $block->getDefaultDisplay() ?>;"></div>
+
+<?php if ($block->getLipscoreCss()) : ?>
+    <style>
+        <?= $block->getLipscoreCss() ?>
+    </style>
+<?php endif; ?>
+
+<?php if ($block->getLipscoreJs()) : ?>
+    <script>
+        <?= $block->getLipscoreJs() ?>
+    </script>
+<?php endif; ?>

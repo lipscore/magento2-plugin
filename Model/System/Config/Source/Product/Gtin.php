@@ -2,16 +2,21 @@
 
 namespace Lipscore\RatingsReviews\Model\System\Config\Source\Product;
 
-use \Magento\Framework\Data\Collection;
+use Lipscore\RatingsReviews\Model\Logger;
+use Magento\Catalog\Model\Product;
+use Magento\Eav\Model\Config;
+use Magento\Framework\Data\Collection;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class Gtin implements \Magento\Framework\Option\ArrayInterface
+class Gtin implements OptionSourceInterface
 {
     protected $eavConfig;
+
     protected $logger;
 
     public function __construct(
-        \Lipscore\RatingsReviews\Model\Logger $logger,
-        \Magento\Eav\Model\Config $eavConfig
+        Logger $logger,
+        Config $eavConfig
     ) {
         $this->eavConfig = $eavConfig;
         $this->logger    = $logger;
@@ -48,7 +53,7 @@ class Gtin implements \Magento\Framework\Option\ArrayInterface
         $attrs = [];
 
         $collection = $this->eavConfig
-            ->getEntityType(\Magento\Catalog\Model\Product::ENTITY)
+            ->getEntityType(Product::ENTITY)
             ->getAttributeCollection()
             ->addFieldToFilter('backend_type', ['in' => ['varchar', 'text', 'int']])
             ->addFieldToFilter('frontend_input', ['in' => ['text', 'textarea']])

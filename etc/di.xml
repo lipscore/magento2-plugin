@@ -9,19 +9,6 @@
         </arguments>
     </type>
 
-    <type name="Lipscore\RatingsReviews\Helper\Product">
-        <arguments>
-            <argument name="productRepository" xsi:type="object">\Magento\Catalog\Model\ProductRepository\Proxy</argument>
-        </arguments>
-    </type>
-
-    <type name="Lipscore\RatingsReviews\Helper\AbstractHelper">
-        <arguments>
-            <argument name="config" xsi:type="object">\Lipscore\RatingsReviews\Model\Config\Front</argument>
-            <argument name="storeManager" xsi:type="object">\Magento\Store\Model\StoreManagerInterface\Proxy</argument>
-        </arguments>
-    </type>
-
     <type name="Lipscore\RatingsReviews\Model\Logger\Logger">
         <arguments>
             <argument name="name" xsi:type="string">lipscoreLogger</argument>

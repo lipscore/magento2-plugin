@@ -2,8 +2,6 @@
 
 namespace Lipscore\RatingsReviews\Observer;
 
-use Lipscore\RatingsReviews\Observer\AbstractObserver;
-
 class ReviewTab extends AbstractObserver
 {
     protected static $logFile = 'ls_review_tab_observer';
@@ -35,6 +33,6 @@ class ReviewTab extends AbstractObserver
 
     protected function methodAvailable()
     {
-        return $this->moduleHelper()->isLipscoreActive();
+        return $this->config->isActive();
     }
 }
