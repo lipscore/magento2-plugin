@@ -2,26 +2,27 @@
 
 namespace Lipscore\RatingsReviews\Helper;
 
+use Lipscore\RatingsReviews\Model\Config;
+use Lipscore\RatingsReviews\Model\Logger;
+use Magento\Store\Model\StoreManagerInterface;
+
 abstract class AbstractHelper
 {
     protected $store;
 
-    protected $lipscoreConfig;
+    protected $config;
+
     protected $storeManager;
+
     protected $logger;
 
     public function __construct(
-        \Lipscore\RatingsReviews\Model\Logger $logger,
-        \Lipscore\RatingsReviews\Model\Config\AbstractConfig $config,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        Logger $logger,
+        Config $config,
+        StoreManagerInterface $storeManager
     ) {
-        $this->lipscoreConfig = $config;
+        $this->config = $config;
         $this->storeManager   = $storeManager;
         $this->logger         = $logger;
-    }
-
-    public function getStore()
-    {
-        return $this->storeManager->getStore($this->lipscoreConfig->storeId);
     }
 }

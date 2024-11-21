@@ -6,5 +6,11 @@
             <block class="Lipscore\RatingsReviews\Block\Product\Review" after="product.attributes" name="lipscore_reviews.tab" as="lipscore-reviews" group="detailed_info" />
             <block class="Lipscore\RatingsReviews\Block\Product\QA" name="lipscore_qa.tab" as="lipscore-qa" group="detailed_info" />
         </referenceBlock>
+
+        <container name="lipscore-product-info-first" label="Lipscore product info first" htmlTag="div"/>
+        <container name="lipscore-product-info-last" label="Lipscore product info last" htmlTag="div"/>
+
+        <move element="lipscore-product-info-first" destination="product.info.form.content" before="-"/>
+        <move element="lipscore-product-info-first" destination="product.info.options.wrapper.bottom" before="-"/>
     </body>
 </page>

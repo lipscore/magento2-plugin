@@ -2,7 +2,9 @@
 
 namespace Lipscore\RatingsReviews\Model\System\Config\Source;
 
-class Locale implements \Magento\Framework\Option\ArrayInterface
+use Magento\Framework\Data\OptionSourceInterface;
+
+class Locale implements OptionSourceInterface
 {
     /**
      * Options getter

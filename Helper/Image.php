@@ -1,7 +1,10 @@
 <?php
+
 namespace Lipscore\RatingsReviews\Helper;
 
-class Image extends \Magento\Catalog\Helper\Image
+use Magento\Catalog\Helper\Image as BaseImage;
+
+class Image extends BaseImage
 {
     protected function initBaseFile()
     {

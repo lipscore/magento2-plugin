@@ -2,20 +2,23 @@
 
 namespace Lipscore\RatingsReviews\Helper;
 
-use Lipscore\RatingsReviews\Helper\AbstractHelper;
+use Lipscore\RatingsReviews\Model\Config;
+use Lipscore\RatingsReviews\Model\Logger;
+use Magento\SalesRule\Model\Coupon\MassgeneratorFactory;
 use Magento\SalesRule\Model\Rule;
-use Magento\Framework\Exception\LocalizedException;
+use Magento\Store\Model\StoreManagerInterface;
 
 class Coupon extends AbstractHelper
 {
     protected $ruleFactory;
+
     protected $massgeneratorFactory;
 
     public function __construct(
-        \Lipscore\RatingsReviews\Model\Logger $logger,
-        \Lipscore\RatingsReviews\Model\Config\AbstractConfig $config,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\SalesRule\Model\Coupon\MassgeneratorFactory $massgeneratorFactory
+        Logger $logger,
+        Config $config,
+        StoreManagerInterface $storeManager,
+        MassgeneratorFactory $massgeneratorFactory
     ) {
         parent::__construct($logger, $config, $storeManager);
 
@@ -44,6 +47,7 @@ class Coupon extends AbstractHelper
         ];
         $generator->setData($data);
         $generatedCodes = $generator->generatePool()->getGeneratedCodes();
+
         return count($generatedCodes) > 0 ? $generatedCodes[0] : null;
     }
 }

@@ -2,33 +2,27 @@
 
 namespace Lipscore\RatingsReviews\Model\Api;
 
-use Lipscore\RatingsReviews\Model\Env;
+use Lipscore\RatingsReviews\Model\Config;
 
 class Request
 {
+    const REMINDER_TIMEOUT = 5;
+
     protected $config;
+
     protected $path;
-    protected $env;
     protected $requestType = 'POST';
+
     protected $timeout     = 5;
+
     protected $response;
+
     protected $client;
 
-    /**
-     * @param Env $env
-     * @param $config
-     * @param $path
-     * @param $params
-     */
     public function __construct(
-        Env $env,
-        $config,
-        $path,
-        $params = []
+        Config $config
     ) {
-        $this->env    = $env;
         $this->config = $config;
-        $this->path   = $path;
 
         if (!empty($params['timeout'])) {
             $this->timeout = $params['timeout'];
@@ -45,15 +39,23 @@ class Request
         } elseif (class_exists(\Zend\Http\Client::class)) {
             $this->client = new \Zend\Http\Client();
         } else {
-            throw new Exception('No HTTP client library available.');
+            throw new \Exception('No HTTP client library available.');
         }
     }
 
-    public function send($data)
+    public function send($data, $path = null)
     {
-        $apiKey = $this->config->apiKey();
-        $secret = $this->config->secret();
-        $apiUrl = $this->env->apiUrl();
+        if (!$path) {
+            $path = 'purchases';
+        }
+        $this->path = $path;
+
+        $timeout = getenv('REMINDER_TIMEOUT');
+        $this->timeout =  $timeout ?: static::REMINDER_TIMEOUT;
+
+        $apiKey = $this->config->getApiKey();
+        $secret = $this->config->getApiSecret();
+        $apiUrl = $this->config->getApiUrl();
         $headers = [
             'X-Authorization' => strval($secret),
             'Content-Type'    => 'application/json',

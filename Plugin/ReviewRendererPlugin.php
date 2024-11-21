@@ -2,31 +2,41 @@
 
 namespace Lipscore\RatingsReviews\Plugin;
 
+use Lipscore\RatingsReviews\Model\Config;
+use Lipscore\RatingsReviews\Model\Logger;
+use Lipscore\RatingsReviews\Block\Product\ReviewRenderer;
+use Magento\Catalog\Model\Product;
+use Magento\Catalog\Block\Product\ReviewRendererInterface;
+use Magento\Review\Block\Product\ReviewRenderer as Subject;
+
+
 class ReviewRendererPlugin
 {
-    protected $moduleHelper;
+    protected $config;
+
     protected $logger;
+
     protected $lipscoreReviewRenderer;
 
     public function __construct(
-        \Lipscore\RatingsReviews\Model\Logger $logger,
-        \Lipscore\RatingsReviews\Helper\Module $moduleHelper,
-        \Lipscore\RatingsReviews\Block\Product\ReviewRenderer $lipscoreReviewRenderer
+        Logger $logger,
+        Config $config,
+        ReviewRenderer $lipscoreReviewRenderer
     ) {
-        $this->moduleHelper           = $moduleHelper;
-        $this->logger                 = $logger;
+        $this->config = $config;
+        $this->logger = $logger;
         $this->lipscoreReviewRenderer = $lipscoreReviewRenderer;
     }
 
     public function aroundGetReviewsSummaryHtml(
-        \Magento\Review\Block\Product\ReviewRenderer $subject,
+        Subject $subject,
         callable $proceed,
-        \Magento\Catalog\Model\Product $product,
-        $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::DEFAULT_VIEW,
+        Product $product,
+        $templateType = ReviewRendererInterface::DEFAULT_VIEW,
         $displayIfNoReviews = false
     ) {
         try {
-            if ($this->moduleHelper->isLipscoreOutputEnabled()) {
+            if ($this->config->isLipscoreOutputEnabled()) {
                  return $this->lipscoreReviewRenderer->getReviewsSummaryHtml(
                      $product, $templateType, $displayIfNoReviews
                  );

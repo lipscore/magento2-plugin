@@ -2,12 +2,11 @@
 
 namespace Lipscore\RatingsReviews\Helper;
 
-use Lipscore\RatingsReviews\Helper\AbstractHelper;
 use Magento\Sales\Model\Order;
 
 class Purchase extends AbstractHelper
 {
-    public function customerEmail(\Magento\Sales\Model\Order $order)
+    public function customerEmail(Order $order)
     {
         $email = $order->getBillingAddress()->getEmail();
         if (!$email) {
@@ -17,7 +16,7 @@ class Purchase extends AbstractHelper
         return $email;
     }
 
-    public function customerName(\Magento\Sales\Model\Order $order)
+    public function customerName(Order $order)
     {
         $addr = $order->getBillingAddress();
         $name = $addr->getFirstname() . ' ' . $addr->getLastname();

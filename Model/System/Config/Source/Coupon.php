@@ -2,15 +2,19 @@
 
 namespace Lipscore\RatingsReviews\Model\System\Config\Source;
 
-use \Magento\SalesRule\Model\ResourceModel\Rule\Collection;
+use Lipscore\RatingsReviews\Model\Logger;
+use Magento\Framework\Data\OptionSourceInterface;
+use Magento\SalesRule\Model\ResourceModel\Rule\Collection;
+use Magento\SalesRule\Model\Rule;
 
-class Coupon implements \Magento\Framework\Option\ArrayInterface
+class Coupon implements OptionSourceInterface
 {
     protected $ruleCollection;
+
     protected $logger;
 
     public function __construct(
-        \Lipscore\RatingsReviews\Model\Logger $logger,
+        Logger $logger,
         Collection $ruleCollection
     ) {
         $this->ruleCollection = $ruleCollection;
@@ -51,8 +55,8 @@ class Coupon implements \Magento\Framework\Option\ArrayInterface
                 'coupon_type',
                 [
                     'in' => [
-                        \Magento\SalesRule\Model\Rule::COUPON_TYPE_AUTO,
-                        \Magento\SalesRule\Model\Rule::COUPON_TYPE_SPECIFIC
+                        Rule::COUPON_TYPE_AUTO,
+                        Rule::COUPON_TYPE_SPECIFIC
                     ]
                 ]
             )

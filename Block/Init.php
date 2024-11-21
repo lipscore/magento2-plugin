@@ -2,49 +2,48 @@
 
 namespace Lipscore\RatingsReviews\Block;
 
-class Init extends \Magento\Framework\View\Element\Template
+use Magento\Framework\View\Element\Template\Context;
+use Lipscore\RatingsReviews\Helper\Locale;
+use Lipscore\RatingsReviews\Model\Config;
+use Magento\Framework\View\Element\Template;
+
+class Init extends Template
 {
-    protected $env;
-    protected $lipscoreConfig;
-    protected $moduleHelper;
+    protected $config;
+
     protected $localeHelper;
-    protected $logger;
 
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Lipscore\RatingsReviews\Model\Logger $logger,
-        \Lipscore\RatingsReviews\Model\Env $env,
-        \Lipscore\RatingsReviews\Model\Config\Front $config,
-        \Lipscore\RatingsReviews\Helper\Locale $localeHelper,
-        \Lipscore\RatingsReviews\Helper\Module $moduleHelper,
+        Context $context,
+        Config $config,
+        Locale $localeHelper,
         array $data = []
     ) {
-        $this->env            = $env;
-        $this->lipscoreConfig = $config;
-        $this->localeHelper   = $localeHelper;
-        $this->moduleHelper   = $moduleHelper;
-        $this->logger         = $logger;
+        $this->config = $config;
+        $this->localeHelper = $localeHelper;
 
         parent::__construct($context, $data);
     }
 
-    protected function _beforeToHtml()
+    public function getApiKey()
     {
-        try {
-            $this->setApiKey($this->lipscoreConfig->apiKey());
-            $this->setAssetsUrl($this->env->assetsUrl());
-            $this->setLocale($this->getLocale());
-            $this->setIsLipscoreActive($this->moduleHelper->isLipscoreActive());
-        } catch (\Exception $e) {
-            $this->logger->log($e);
-        }
+        return $this->config->getApiKey();
+    }
 
-        return parent::_beforeToHtml();
+    public function getAssetsUrl()
+    {
+        return $this->config->getAssetsUrl();
+    }
+
+    public function getIsLipscoreActive()
+    {
+        return $this->config->isLipscoreOutputEnabled() && $this->config->isLipscoreModuleEnabled();
     }
 
     protected function getLocale()
     {
         $locale = $this->localeHelper->getLipscoreLocale();
+
         return $locale ? $locale . '/' : '';
     }
 }

@@ -1,0 +1,20 @@
+<?php
+/**
+ * @var $block \Lipscore\RatingsReviews\Block\Widget\Product
+ */
+?>
+<div id="lipscore-review-list" style="display:<?= $block->getDefaultDisplay() ?>;"
+    <?= /* @noEscape */ $block->getLsProductAttrs() ?>>
+</div>
+
+<?php if ($block->getLipscoreProductCss()) : ?>
+    <style>
+        <?= $block->getLipscoreProductCss() ?>
+    </style>
+<?php endif; ?>
+
+<?php if ($block->getLipscoreProductJs()) : ?>
+    <script>
+        <?= $block->getLipscoreProductJs() ?>
+    </script>
+<?php endif; ?>

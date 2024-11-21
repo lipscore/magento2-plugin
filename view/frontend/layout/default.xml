@@ -11,6 +11,42 @@
             <block template="Lipscore_RatingsReviews::init.phtml" class="Lipscore\RatingsReviews\Block\Init"
                 name="lipscore_ratingsreviews.init" />
         </referenceBlock>
+
+        <container name="lipscore-after-top-links" label="Lipscore After Top Links" htmlTag="div"/>
+        <container name="lipscore-before-header-container" label="Lipscore After Header Container" htmlTag="div"/>
+        <container name="lipscore-after-header-panel-wrapper" label="Lipscore After Header Panel Wrapper" htmlTag="div"/>
+        <container name="lipscore-after-header-panel" label="Lipscore After Header Panel" htmlTag="div"/>
+
+        <move element="lipscore-after-top-links" destination="top.links" after="-"/>
+        <move element="lipscore-after-header-container" destination="header.container" after="-"/>
+        <move element="lipscore-after-header-panel-wrapper" destination="header.panel.wrapper" after="-"/>
+        <move element="lipscore-after-header-panel" destination="header.panel" after="-"/>
+
+        <container name="lipscore-after-navigation" label="Lipscore After Navigation" htmlTag="div"/>
+        <move element="lipscore-after-navigation" destination="page.top" after="navigation.sections"/>
+
+        <container name="lipscore-before-pagetop" label="Lipscore Before Page Top" htmlTag="div"/>
+        <container name="lipscore-after-pagetop" label="Lipscore After Page Top" htmlTag="div"/>
+
+        <move element="lipscore-before-pagetop" destination="page.top" before="-"/>
+        <move element="lipscore-after-pagetop" destination="page.top" after="-"/>
+
+        <container name="lipscore-header-panel-first" label="Lipscore Header Panel First" htmlTag="div"/>
+        <container name="lipscore-header-panel-last" label="Lipscore Header Panel Last" htmlTag="div"/>
+
+        <move element="lipscore-header-panel-first" destination="header.panel" before="-"/>
+        <move element="lipscore-header-panel-last" destination="header.panel" after="-"/>
+
+        <container before="footer-container" name="lipscore-before-footer-container" label="Lipscore Before Footer Container" htmlTag="div"/>
+        <container before="footer" name="lipscore-before-footer" label="Lipscore Before Page Footer" htmlTag="div"/>
+
+        <referenceContainer name="footer">
+            <container name="lipscore-footer-first" label="Lipscore Page Footer First" htmlTag="div"/>
+            <container name="lipscore-footer-last" label="Lipscore Page Footer Last" htmlTag="div"/>
+        </referenceContainer>
+
+        <move element="lipscore-footer-first" destination="footer" before="-"/>
+        <move element="lipscore-footer-last" destination="footer" after="-"/>
     </body>
 </page>
 

@@ -1,16 +1,12 @@
 <?php
 
-/**
- * Review renderer
- */
-
 namespace Lipscore\RatingsReviews\Block\Product;
 
-use Lipscore\RatingsReviews\Block\AbstractWidget;
+use Lipscore\RatingsReviews\Block\AbstractBlock;
 use Magento\Catalog\Block\Product\ReviewRendererInterface;
 use Magento\Catalog\Model\Product;
 
-class ReviewRenderer extends AbstractWidget implements ReviewRendererInterface
+class ReviewRenderer extends AbstractBlock implements ReviewRendererInterface
 {
     const SHORT_WIDGET = 'short';
     const LONG_WIDGET  = 'long';

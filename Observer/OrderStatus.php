@@ -2,40 +2,39 @@
 
 namespace Lipscore\RatingsReviews\Observer;
 
-use Lipscore\RatingsReviews\Observer\AbstractObserver;
+use Lipscore\RatingsReviews\Model\Config;
+use Lipscore\RatingsReviews\Model\Logger;
+use Lipscore\RatingsReviews\Model\Reminder;
 use Magento\Sales\Api\Data\OrderInterface;
-use \Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Event\Observer;
+use Magento\Sales\Model\Order;
 
 class OrderStatus extends AbstractObserver
 {
     protected static $logFile = 'ls_order_status_observer';
 
-    protected $reminderFactory;
-    protected $data = [];
-    protected $_reminder;
+    protected $reminder;
 
     public function __construct(
-        \Lipscore\RatingsReviews\Model\Logger $logger,
-        \Lipscore\RatingsReviews\Helper\ModuleFactory $moduleHelperFactory,
-        \Lipscore\RatingsReviews\Model\Config\AdminFactory $adminConfigFactory,
-        \Lipscore\RatingsReviews\Model\ReminderFactory $reminderFactory
+        Config $config,
+        Logger $logger,
+        Reminder $reminder
     ) {
-        parent::__construct($logger, $moduleHelperFactory, $adminConfigFactory);
-        $this->reminderFactory = $reminderFactory;
+        parent::__construct($config, $logger);
+        $this->reminder = $reminder;
     }
 
-    protected function _execute(\Magento\Framework\Event\Observer $observer)
+    protected function _execute(Observer $observer)
     {
+        /** @var Order $order */
         $order = $observer->getData('order');
 
-        $this->init($order->getStoreId());
-
-        if (!$this->isReminderEnabled()) {
+        if (!$this->config->isLipscoreModuleEnabled()) {
             $this->log('extension is disabled');
             return;
         }
 
-        if (!$this->config->isValidApiKey()) {
+        if (!$this->config->getApiKey()) {
             $this->log('API key is invalid');
             return;
         }
@@ -53,24 +52,14 @@ class OrderStatus extends AbstractObserver
         $this->log('proper status: ' . (int) $properStatus);
         if ($properStatus) {
             $this->log('SEND!');
-            $result = $this->reminder()->send($order);
+            $result = $this->reminder->send($order);
             $this->log($result);
         }
     }
 
-    protected function init($storeId)
-    {
-        $this->data['config'] = $this->adminConfigFactory->create(
-            [
-                'storeId'   => $storeId,
-                'websiteId' => null
-            ]
-        );
-    }
-
     protected function isReminderableStatus($status)
     {
-        $reminderableStatus = $this->config->reminderStatus();
+        $reminderableStatus = $this->config->getEmailsOrderStatus();
         $this->log('reminderable status: ' . $reminderableStatus);
         if (!$reminderableStatus) {
             return false;
@@ -79,45 +68,8 @@ class OrderStatus extends AbstractObserver
         }
     }
 
-    protected function reminder()
-    {
-        return $this->reminderFactory->create(
-            [
-                'config' => $this->config
-            ]
-        );
-    }
-
-    protected function isReminderEnabled()
-    {
-        return $this->moduleHelper()->isLipscoreModuleEnabled();
-    }
-
-    protected function moduleHelper()
-    {
-        if (!$this->_moduleHelper) {
-            $this->_moduleHelper = $this->moduleHelperFactory->create(
-                [
-                    'config' => $this->config
-                ]
-            );
-        }
-        return $this->_moduleHelper;
-    }
-
     protected function methodAvailable()
     {
         return true;
-    }
-
-    public function __get($name)
-    {
-        if (isset($this->data[$name])) {
-            return $this->data[$name];
-        } elseif ($name == 'config') {
-            throw new LocalizedException(__('No config is set'));
-        } else {
-            throw new LocalizedException(__('Undefined property on ') . get_class($this) . ': ' . $name);
-        }
     }
 }

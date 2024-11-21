@@ -2,46 +2,34 @@
 
 namespace Lipscore\RatingsReviews\Model;
 
+use Lipscore\RatingsReviews\Model\Api\Request;
+
 class Reminder
 {
-    protected $dataHelper;
+    protected $helper;
+
     protected $config;
-    protected $senderFactory;
+
+    protected $sender;
 
     public function __construct(
-        \Lipscore\RatingsReviews\Helper\ReminderFactory $reminderHelperFactory,
-        \Lipscore\RatingsReviews\Model\Api\RequestFactory $senderFactory,
-        $config
+        \Lipscore\RatingsReviews\Helper\Reminder $helper,
+        Request $sender,
+        Config $config
     ) {
         $this->config = $config;
-        $this->dataHelper = $reminderHelperFactory->create(
-            [
-                'config' => $this->config
-            ]
-        );
-        $this->senderFactory = $senderFactory;
+        $this->helper = $helper;
+        $this->sender = $sender;
     }
 
     public function send($order)
     {
-        if (!$this->config->isValidApiKey()) {
+        if (!$this->config->getApiKey()) {
             return false;
         }
 
-        $data = $this->dataHelper->data($order);
-        return $this->sender()->send($data);
-    }
+        $data = $this->helper->data($order);
 
-    protected function sender()
-    {
-        return $this->senderFactory->create(
-            [
-                'config' => $this->config,
-                'path'   => 'purchases',
-                'params' => [
-                    'timeout' => $this->config->reminderTimeout()
-                ]
-            ]
-        );
+        return $this->sender->send($data);
     }
 }

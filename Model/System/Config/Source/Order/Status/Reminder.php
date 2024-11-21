@@ -2,10 +2,9 @@
 
 namespace Lipscore\RatingsReviews\Model\System\Config\Source\Order\Status;
 
-use Lipscore\RatingsReviews\Model\System\Config\Source\Order\Status\AbstractStatus;
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class Reminder extends AbstractStatus implements ArrayInterface
+class Reminder extends AbstractStatus implements OptionSourceInterface
 {
     /**
      * Options getter

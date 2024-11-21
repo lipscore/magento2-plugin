@@ -2,21 +2,29 @@
 
 namespace Lipscore\RatingsReviews\Block;
 
-abstract class AbstractWidget extends \Magento\Framework\View\Element\Template
-{
-    protected $productAttrs;
+use Lipscore\RatingsReviews\Helper\Product;
+use Lipscore\RatingsReviews\Helper\Widget;
+use Lipscore\RatingsReviews\Model\Logger;
+use Magento\Framework\Registry;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
 
+abstract class AbstractBlock extends Template
+{
     protected $coreRegistry;
+
     protected $productHelper;
+
     protected $widgetHelper;
+
     protected $logger;
 
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Lipscore\RatingsReviews\Model\Logger $logger,
-        \Magento\Framework\Registry $registry,
-        \Lipscore\RatingsReviews\Helper\Product $productHelper,
-        \Lipscore\RatingsReviews\Helper\Widget $widgetHelper,
+        Context $context,
+        Logger $logger,
+        Registry $registry,
+        Product $productHelper,
+        Widget $widgetHelper,
         array $data = []
     ) {
         $this->coreRegistry  = $registry;

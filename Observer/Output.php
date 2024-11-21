@@ -2,14 +2,12 @@
 
 namespace Lipscore\RatingsReviews\Observer;
 
-use Lipscore\RatingsReviews\Observer\AbstractObserver;
-
 class Output extends AbstractObserver
 {
-    protected static $logFile = 'ls_output_observer';
-
     const MAGENTO_REVIEW_MODULE = 'Magento_Review';
     const MODULE = 'Lipscore_RatingsReviews';
+
+    protected static $logFile = 'ls_output_observer';
 
     protected function _execute(\Magento\Framework\Event\Observer $observer)
     {
@@ -23,7 +21,7 @@ class Output extends AbstractObserver
             return;
         }
 
-        $lipscoreEnabled = $this->moduleHelper()->isLipscoreOutputEnabled();
+        $lipscoreEnabled = $this->config->isLipscoreOutputEnabled();
         $hideLipscore    = $isLipscore && !$lipscoreEnabled;
         $hideMagento     = $isMagentoReview && $lipscoreEnabled;
 

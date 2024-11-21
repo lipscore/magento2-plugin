@@ -1,0 +1,344 @@
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget class="Lipscore\RatingsReviews\Block\Widget\Service" id="lipscore_service_widget">
+        <label>Lipscore Service review widgets</label>
+        <description>Displays Lipscore Service review widget</description>
+        <parameters>
+
+            <parameter name="template" xsi:type="select" visible="false">
+                <label translate="true">Template</label>
+                <options>
+                    <option name="default"
+                            value="widget/service/badge.phtml"
+                            selected="true">
+                        <label translate="true">Lipscore Template</label>
+                    </option>
+                </options>
+            </parameter>
+            <parameter name="widget_template" xsi:type="select" required="true" visible="true" sort_order="10">
+                <label>Type</label>
+                <options>
+                    <option name="review_list" value="review_list">
+                        <label translate="true">Service Review list widget</label>
+                    </option>
+                    <option name="badge" value="badge" selected="true">
+                        <label translate="true">Service reviews badge</label>
+                    </option>
+                    <option name="small_badge_short" value="small_badge_short" selected="true">
+                        <label translate="true">Small service reviews badge short</label>
+                    </option>
+                    <option name="small_badge_long" value="small_badge_long" selected="true">
+                        <label translate="true">Small service reviews badge long</label>
+                    </option>
+                    <option name="testimonial_banner" value="testimonial_banner">
+                        <label translate="true">Testimonial banner</label>
+                    </option>
+                    <option name="testimonial_widget" value="testimonial_widget">
+                        <label translate="true">Testimonial widget</label>
+                    </option>
+                    <option name="rating_distribution" value="rating_distribution">
+                        <label translate="true">Rating distribution widget</label>
+                    </option>
+                    <option name="big_rating" value="big_rating">
+                        <label translate="true">Big rating widget</label>
+                    </option>
+                </options>
+            </parameter>
+
+            <parameter name="badge_height" xsi:type="text" required="false" visible="true" sort_order="30">
+                <label>Height</label>
+                <depends>
+                    <parameter name="widget_template" value="badge"/>
+                </depends>
+            </parameter>
+            <parameter name="badge_width" xsi:type="text" required="false" visible="true" sort_order="40">
+                <label>Width</label>
+                <depends>
+                    <parameter name="widget_template" value="badge"/>
+                </depends>
+            </parameter>
+
+            <parameter name="testimonial_banner_long_height" xsi:type="text" required="false" visible="true" sort_order="30">
+                <label>Height</label>
+                <depends>
+                    <parameter name="widget_template" value="testimonial_banner"/>
+                </depends>
+            </parameter>
+            <parameter name="testimonial_banner_long_width" xsi:type="text" required="false" visible="true" sort_order="40">
+                <label>Width</label>
+                <depends>
+                    <parameter name="widget_template" value="testimonial_banner"/>
+                </depends>
+            </parameter>
+
+
+            <parameter name="testimonial_widget_width" xsi:type="text" required="false" visible="true" sort_order="40">
+                <label>Width</label>
+                <depends>
+                    <parameter name="widget_template" value="testimonial_widget"/>
+                </depends>
+            </parameter>
+            <parameter name="testimonial_widget_height" xsi:type="text" required="false" visible="true" sort_order="40">
+                <label>Height</label>
+                <depends>
+                    <parameter name="widget_template" value="testimonial_widget"/>
+                </depends>
+            </parameter>
+
+            <parameter name="small_badge_long_height" xsi:type="text" required="false" visible="true" sort_order="30">
+                <label>Height</label>
+                <depends>
+                    <parameter name="widget_template" value="small_badge_long"/>
+                </depends>
+            </parameter>
+            <parameter name="small_badge_long_width" xsi:type="text" required="false" visible="true" sort_order="40">
+                <label>Width</label>
+                <depends>
+                    <parameter name="widget_template" value="small_badge_long"/>
+                </depends>
+            </parameter>
+
+            <parameter name="small_badge_short_height" xsi:type="text" required="false" visible="true" sort_order="30">
+                <label>Height</label>
+                <depends>
+                    <parameter name="widget_template" value="small_badge_short"/>
+                </depends>
+            </parameter>
+            <parameter name="small_badge_short_width" xsi:type="text" required="false" visible="true" sort_order="40">
+                <label>Width</label>
+                <depends>
+                    <parameter name="widget_template" value="small_badge_short"/>
+                </depends>
+            </parameter>
+
+            <parameter name="small_badge_short_option_noborder" xsi:type="select" required="false" visible="true" sort_order="50">
+                <label>Hide borders</label>
+                <depends>
+                    <parameter name="widget_template" value="small_badge_short"/>
+                </depends>
+                <options>
+                    <option name="normal" value="lipscore-no-border" selected="true">
+                        <label translate="true">Yes</label>
+                    </option>
+                    <option name="small" value="">
+                        <label translate="true">No</label>
+                    </option>
+                </options>
+            </parameter>
+
+            <parameter name="small_badge_short_option_noseparator" xsi:type="select" required="false" visible="true" sort_order="60">
+                <label>Hide separator</label>
+                <depends>
+                    <parameter name="widget_template" value="small_badge_short"/>
+                </depends>
+                <options>
+                    <option name="normal" value="lipscore-no-separator" selected="true">
+                        <label translate="true">Yes</label>
+                    </option>
+                    <option name="small" value="">
+                        <label translate="true">No</label>
+                    </option>
+                </options>
+            </parameter>
+
+            <parameter name="small_badge_long-option_noborder" xsi:type="select" required="false" visible="true" sort_order="50">
+                <label>Hide borders</label>
+                <depends>
+                    <parameter name="widget_template" value="small_badge_long"/>
+                </depends>
+                <options>
+                    <option name="normal" value="lipscore-no-border" selected="true">
+                        <label translate="true">Yes</label>
+                    </option>
+                    <option name="small" value="">
+                        <label translate="true">No</label>
+                    </option>
+                </options>
+            </parameter>
+
+            <parameter name="small_badge_long_option_noseparator" xsi:type="select" required="false" visible="true" sort_order="60">
+                <label>Hide separator</label>
+                <depends>
+                    <parameter name="widget_template" value="small_badge_long"/>
+                </depends>
+                <options>
+                    <option name="normal" value="lipscore-no-separator" selected="true">
+                        <label translate="true">Yes</label>
+                    </option>
+                    <option name="small" value="">
+                        <label translate="true">No</label>
+                    </option>
+                </options>
+            </parameter>
+
+            <parameter name="testimonial_widget_product-name" xsi:type="text" required="false" visible="true" sort_order="70">
+                <label>Product name</label>
+                <depends>
+                    <parameter name="widget_template" value="testimonial_widget"/>
+                </depends>
+            </parameter>
+            <parameter name="testimonial_widget_product-id" xsi:type="text" required="false" visible="true" sort_order="80">
+                <label>Product ID</label>
+                <depends>
+                    <parameter name="widget_template" value="testimonial_widget"/>
+                </depends>
+            </parameter>
+            <parameter name="testimonial_widget_product-url" xsi:type="text" required="false" visible="true" sort_order="90">
+                <label>Product URL</label>
+                <depends>
+                    <parameter name="widget_template" value="testimonial_widget"/>
+                </depends>
+            </parameter>
+
+            <parameter name="rating_distribution_product-name" xsi:type="text" required="false" visible="true" sort_order="70">
+                <label>Product name</label>
+                <depends>
+                    <parameter name="widget_template" value="rating_distribution"/>
+                </depends>
+            </parameter>
+            <parameter name="rating_distribution_product-id" xsi:type="text" required="false" visible="true" sort_order="80">
+                <label>Product ID</label>
+                <depends>
+                    <parameter name="widget_template" value="rating_distribution"/>
+                </depends>
+            </parameter>
+            <parameter name="rating_distribution_product-url" xsi:type="text" required="false" visible="true" sort_order="90">
+                <label>Product URL</label>
+                <depends>
+                    <parameter name="widget_template" value="rating_distribution"/>
+                </depends>
+            </parameter>
+
+            <parameter name="big_rating_product-name" xsi:type="text" required="false" visible="true" sort_order="70">
+                <label>Product name</label>
+                <depends>
+                    <parameter name="widget_template" value="big_rating"/>
+                </depends>
+            </parameter>
+            <parameter name="big_rating_product-id" xsi:type="text" required="false" visible="true" sort_order="80">
+                <label>Product ID</label>
+                <depends>
+                    <parameter name="widget_template" value="big_rating"/>
+                </depends>
+            </parameter>
+            <parameter name="big_rating_product-url" xsi:type="text" required="false" visible="true" sort_order="90">
+                <label>Product URL</label>
+                <depends>
+                    <parameter name="widget_template" value="big_rating"/>
+                </depends>
+            </parameter>
+
+            <parameter name="default_display" xsi:type="select" required="false" visible="true" sort_order="100">
+                <label translate="true">Display by default</label>
+                <options>
+                    <option name="normal" value="block" selected="true">
+                        <label translate="true">Yes</label>
+                    </option>
+                    <option name="small" value="none">
+                        <label translate="true">No</label>
+                    </option>
+                </options>
+            </parameter>
+
+            <parameter name="lipscore_css" xsi:type="block" required="false" visible="true" sort_order="290">
+                <label translate="true">Custom CSS</label>
+
+                <block class="Lipscore\RatingsReviews\Block\Adminhtml\Widget\TextareaField"/>
+            </parameter>
+            <parameter name="lipscore_js" xsi:type="block" required="false" visible="true" sort_order="300">
+                <label translate="true">Custom JS</label>
+
+                <block class="Lipscore\RatingsReviews\Block\Adminhtml\Widget\TextareaField"/>
+            </parameter>
+        </parameters>
+    </widget>
+
+    <widget class="Lipscore\RatingsReviews\Block\Widget\Product" id="lipscore_product_widget">
+        <label>Lipscore Product review widgets</label>
+        <description>Displays Lipscore Product review widget</description>
+        <parameters>
+            <parameter name="template" xsi:type="select" visible="false">
+                <label translate="true">Template</label>
+                <options>
+                    <option name="default"
+                            value="widget/product/rating.phtml"
+                            selected="true">
+                        <label translate="true">Lipscore Template</label>
+                    </option>
+                </options>
+            </parameter>
+
+            <parameter name="widget_template" xsi:type="select" required="true" visible="true" sort_order="10">
+                <label>Type</label>
+                <options>
+                    <option name="rating" value="rating">
+                        <label translate="true">Rating widget</label>
+                    </option>
+                    <option name="small_rating" value="small_rating">
+                        <label translate="true">Small rating widget</label>
+                    </option>
+                    <option name="big_rating" value="big_rating">
+                        <label translate="true">Big Rating widget</label>
+                    </option>
+                    <option name="review_list" value="review_list" selected="true">
+                        <label translate="true">Review list widget</label>
+                    </option>
+                    <option name="review_count" value="review_count" selected="true">
+                        <label translate="true">Review count widget</label>
+                    </option>
+                    <option name="testimonial" value="testimonial">
+                        <label translate="true">Testimonial widget</label>
+                    </option>
+                    <option name="rating_distribution" value="rating_distribution">
+                        <label translate="true">Rating distribution widget</label>
+                    </option>
+                    <option name="attributes_distribution" value="attributes_distribution">
+                        <label translate="true">Attributes distribution widget</label>
+                    </option>
+                </options>
+            </parameter>
+
+            <parameter name="default_display" xsi:type="select" required="false" visible="true" sort_order="50">
+                <label translate="true">Display by default</label>
+                <options>
+                    <option name="normal" value="block" selected="true">
+                        <label translate="true">Yes</label>
+                    </option>
+                    <option name="small" value="none">
+                        <label translate="true">No</label>
+                    </option>
+                </options>
+            </parameter>
+
+            <parameter name="lipscore_product_css" xsi:type="block" required="false" visible="true" sort_order="290">
+                <label translate="true">Custom CSS</label>
+
+                <block class="Lipscore\RatingsReviews\Block\Adminhtml\Widget\TextareaField"/>
+            </parameter>
+
+            <parameter name="lipscore_product_js" xsi:type="block" required="false" visible="true" sort_order="300">
+                <label translate="true">Custom JS</label>
+
+                <block class="Lipscore\RatingsReviews\Block\Adminhtml\Widget\TextareaField"/>
+            </parameter>
+        </parameters>
+    </widget>
+
+    <widget class="Lipscore\RatingsReviews\Block\Widget\CustomCode" id="lipscore_custom_widget">
+        <label>Lipscore Custom code widget</label>
+        <description>Displays Lipscore custom code widget</description>
+        <parameters>
+            <parameter name="lipscore_custom_css" xsi:type="block" required="false" visible="true" sort_order="100">
+                <label translate="true">Custom CSS</label>
+
+                <block class="Lipscore\RatingsReviews\Block\Adminhtml\Widget\TextareaField"/>
+            </parameter>
+
+            <parameter name="lipscore_custom_js" xsi:type="block" required="false" visible="true" sort_order="200">
+                <label translate="true">Custom JS</label>
+
+                <block class="Lipscore\RatingsReviews\Block\Adminhtml\Widget\TextareaField"/>
+            </parameter>
+        </parameters>
+    </widget>
+</widgets>

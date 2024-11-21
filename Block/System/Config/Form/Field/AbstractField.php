@@ -2,26 +2,21 @@
 
 namespace Lipscore\RatingsReviews\Block\System\Config\Form\Field;
 
+use Lipscore\RatingsReviews\Model\Config;
 use Magento\Config\Block\System\Config\Form\Field;
-use Lipscore\RatingsReviews\Model\Config\AdminFactory;
+use Magento\Backend\Block\Template\Context;
 
 class AbstractField extends Field
 {
-    protected $lipscoreConfig;
+    protected $config;
 
     public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Lipscore\RatingsReviews\Model\Config\AdminFactory $adminConfigFactory,
+        Context $context,
+        Config $config,
         array $data = []
     ) {
-        // order is important, should be before config initialization
-        parent::__construct($context, $data);
+        $this->config = $config;
 
-        $this->lipscoreConfig = $adminConfigFactory->create(
-            [
-                'websiteId' => $this->getRequest()->getParam('website', ''),
-                'storeId'   => $this->getRequest()->getParam('store', '')
-            ]
-        );
+        parent::__construct($context, $data);
     }
 }

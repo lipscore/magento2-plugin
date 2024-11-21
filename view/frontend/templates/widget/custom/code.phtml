@@ -1,0 +1,16 @@
+<?php
+/**
+ * @var $block \Lipscore\RatingsReviews\Block\Widget\CustomCode
+ */
+?>
+<?php if ($block->getLipscoreCustomCss()) : ?>
+    <style>
+        <?= $block->getLipscoreCustomCss() ?>
+    </style>
+<?php endif; ?>
+
+<?php if ($block->getLipscoreCustomJs()) : ?>
+    <script>
+        <?= $block->getLipscoreCustomJs() ?>
+    </script>
+<?php endif; ?>

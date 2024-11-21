@@ -2,8 +2,6 @@
 
 namespace Lipscore\RatingsReviews\Helper;
 
-use Lipscore\RatingsReviews\Helper\AbstractHelper;
-
 class Widget extends AbstractHelper
 {
     public function getProductAttrs($productData)
@@ -14,6 +12,7 @@ class Widget extends AbstractHelper
         } catch (\Exception $e) {
             $this->logger->log($e);
         }
+
         return $attrs;
     }
 
@@ -30,8 +29,10 @@ class Widget extends AbstractHelper
             'data-ls-category'       => $productData['category'],
             'data-ls-description'    => $productData['description'],
             'data-ls-availability'   => $productData['availability'],
-            'data-ls-gtin'           => implode(';', $productData['gtin'])
+            'data-ls-gtin'           => implode(';', $productData['gtin']),
+            'data-ls-mpn'            => $productData['mpn'],
         ];
+
         return $this->toString($attrs);
     }
 
@@ -43,6 +44,7 @@ class Widget extends AbstractHelper
             $value = htmlspecialchars($value);
             $strAttrs[] = "$attr=\"$value\"";
         }
+
         return implode(' ', $strAttrs);
     }
 }

@@ -2,23 +2,27 @@
 
 namespace Lipscore\RatingsReviews\Model;
 
-use Magento\Framework\UrlInterface;
-use Magento\Store\Model\Store;
+use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Framework\Mail\Template\TransportBuilder;
+use Magento\Store\Model\StoreManagerInterface;
 
 class Logger
 {
     protected static $ignoredWords = ['SQLSTATE'];
 
     protected $logger;
+
     protected $storeManager;
+
     protected $productMetadata;
+
     protected $transportBuilder;
 
     public function __construct(
         \Lipscore\RatingsReviews\Model\Logger\Logger $logger,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\App\ProductMetadataInterface $productMetadata,
-        \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder
+        StoreManagerInterface $storeManager,
+        ProductMetadataInterface $productMetadata,
+        TransportBuilder $transportBuilder
     ) {
         $this->logger           = $logger;
         $this->storeManager     = $storeManager;
@@ -37,7 +41,7 @@ class Logger
 
     protected static function url($url)
     {
-        return $url ? $url : 'N/A';
+        return $url ?: 'N/A';
     }
 
     protected static function isIgnoredException($e)
