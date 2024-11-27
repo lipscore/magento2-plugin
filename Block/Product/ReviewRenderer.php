@@ -15,6 +15,8 @@ class ReviewRenderer extends AbstractWidget implements ReviewRendererInterface
     const SHORT_WIDGET = 'short';
     const LONG_WIDGET  = 'long';
 
+    protected $mainProductRatingDisplayed = false;
+
     protected static $defaultWidgetType = self::SHORT_WIDGET;
 
     protected static $availableRatings = [
@@ -54,7 +56,7 @@ class ReviewRenderer extends AbstractWidget implements ReviewRendererInterface
 
         $ratingType = self::defaultRatingType();
         try {
-            $ratingType = $this->findRatingType($templateType);
+            $ratingType = $this->findRatingType($product, $templateType);
         } catch (\Exception $e) {
             $this->logger->log($e);
         }
@@ -63,11 +65,12 @@ class ReviewRenderer extends AbstractWidget implements ReviewRendererInterface
         $this->setIsShortType($templateType == self::SHORT_VIEW);
     }
 
-    protected function findRatingType($templateType)
+    protected function findRatingType($product, $templateType)
     {
         $layoutHandles = $this->getLayout()->getUpdate()->getHandles();
         $isProductView = in_array('catalog_product_view', $layoutHandles);
-        if ($isProductView) {
+        if ($isProductView && $this->isMainProductRating($product)) {
+            $this->mainProductRatingDisplayed = true;
             return self::$availableRatings[self::LONG_WIDGET];
         }
 
@@ -76,6 +79,21 @@ class ReviewRenderer extends AbstractWidget implements ReviewRendererInterface
         } else {
             return self::defaultRatingType();
         }
+    }
+
+    protected function isMainProductRating($product)
+    {
+        $mainProductRating = false;
+        $mainProduct = $this->coreRegistry->registry('current_product');
+        if (!$mainProduct) {
+            return false;
+        }
+
+        if ($product->getId() == $mainProduct->getId() && !$this->mainProductRatingDisplayed) {
+            $mainProductRating = true;
+        }
+
+        return $mainProductRating;
     }
 
     protected static function defaultRatingType()
