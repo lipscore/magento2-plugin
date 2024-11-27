@@ -7,6 +7,8 @@ use Lipscore\RatingsReviews\Model\Config\AccessorFactory;
 abstract class AbstractConfig
 {
     const REMINDER_TIMEOUT = 5;
+    const PARENT_SOURCE_ID = 'magento2';
+    const PARENT_SOURCE_NAME = 'Magento 2';
 
     public $storeId;
 
@@ -22,6 +24,16 @@ abstract class AbstractConfig
                 'storeId'   => $this->storeId
             ]
         );
+    }
+
+    public function parentSourceId()
+    {
+        return self::PARENT_SOURCE_ID;
+    }
+
+    public function parentSourceName()
+    {
+        return self::PARENT_SOURCE_NAME;
     }
 
     public function apiKey()
