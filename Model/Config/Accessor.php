@@ -13,10 +13,10 @@ class Accessor
     protected $scopeConfig;
     protected $resourceConfig;
 
-    protected static $paths = [ 
+    protected static $paths = [
         'coupon'             => 'lipscore_coupons/coupons/',
         'product_attributes' => 'lipscore_general/product_attributes/',
-        'apiKey'             => 'lipscore_general/api_key/', 
+        'apiKey'             => 'lipscore_general/api_key/',
         'locale'             => 'lipscore_general/locale/',
         'emails'             => 'lipscore_general/emails/',
         'module'             => 'lipscore_general/module/',
@@ -25,6 +25,19 @@ class Accessor
         'storeGeneral'       => 'general/',
         'appearance'         => 'lipscore_general/appearance/'
     ];
+
+    protected static $paths = [
+      'coupon'             => 'lipscore_coupons/coupons/',
+      'product_attributes' => 'lipscore_general/product_attributes/',
+      'apiKey'             => 'lipscore_general/api_key/',
+      'locale'             => 'lipscore_general/locale/',
+      'emails'             => 'lipscore_general/emails/',
+      'module'             => 'lipscore_general/module/',
+      'coupons'            => 'lipscore_general/coupons/',
+      'tracking'           => 'lipscore_plugin/',
+      'storeGeneral'       => 'general/',
+      'appearance'         => 'lipscore_general/appearance/'
+  ];
 
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
