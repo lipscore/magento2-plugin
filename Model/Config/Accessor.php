@@ -13,10 +13,10 @@ class Accessor
     protected $scopeConfig;
     protected $resourceConfig;
 
-    protected static $paths = [
+    protected static $paths = [ 
         'coupon'             => 'lipscore_coupons/coupons/',
         'product_attributes' => 'lipscore_general/product_attributes/',
-        'apiKey'             => 'lipscore_general/api_key/',
+        'apiKey'             => 'lipscore_general/api_key/', 
         'locale'             => 'lipscore_general/locale/',
         'emails'             => 'lipscore_general/emails/',
         'module'             => 'lipscore_general/module/',
