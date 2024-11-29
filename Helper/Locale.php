@@ -7,7 +7,7 @@ use Lipscore\RatingsReviews\Helper\AbstractHelper;
 class Locale extends AbstractHelper
 {
     protected static $availableLocales = [
-        'en', 'it', 'no', 'es', 'br', 'ru', 'se', 'cz', 'nl', 'dk', 'ja', 'de', 'fi', 'fr'
+        'br', 'cz', 'dk', 'nl', 'en', 'et', 'fi', 'fr', 'de', 'it', 'ja', 'lv', 'no', 'pl', 'br', 'ru', 'sk', 'es', 'se'
     ];
 
     public function getLipscoreLocale()
