@@ -26,6 +26,9 @@ class Config
     const XML_PATH_LIPSCORE_APPEARANCE_QA = 'lipscore_general/appearance/qa';
     const XML_PATH_LIPSCORE_MODULE_ACTIVE = 'lipscore_general/module/active';
 
+    const PARENT_SOURCE_ID = 'magento2';
+    const PARENT_SOURCE_NAME = 'Magento 2';
+
     protected $scopeConfig;
 
     protected $manager;
@@ -40,6 +43,16 @@ class Config
         $this->logger = $logger;
         $this->scopeConfig = $scopeConfig;
         $this->manager = $manager;
+    }
+
+    public function getParentSourceId()
+    {
+        return self::PARENT_SOURCE_ID;
+    }
+
+    public function getParentSourceName()
+    {
+        return self::PARENT_SOURCE_NAME;
     }
 
     public function isDemoKey()
