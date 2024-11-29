@@ -60,6 +60,7 @@ class Reminder extends AbstractHelper
         $email      = $this->purchaseHelper->customerEmail($order);
         $name       = $this->purchaseHelper->customerName($order);
         $lang       = $this->localeHelper->getStoreLocale();
+        $store      = $this->storeManager->getStore($order->getStoreId());
         $date       = $this->purchaseHelper->createdAt($order);
         $customerId = $order->getCustomerId() ? $order->getCustomerId() : '';
 
@@ -71,7 +72,11 @@ class Reminder extends AbstractHelper
                 'buyer_email'   => $email,
                 'buyer_name'    => $name,
                 'purchased_at'  => $date,
-                'lang'          => $lang
+                'lang'          => $lang,
+                'parent_source_id' => (string) $this->lipscoreConfig->parentSourceId(),
+                'parent_source_name' => (string) $this->lipscoreConfig->parentSourceName(),
+                'source_id' => (string) $store->getId(),
+                'source_name' => (string) $store->getName(),
             ]
         );
     }
