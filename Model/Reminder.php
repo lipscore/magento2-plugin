@@ -39,8 +39,9 @@ class Reminder
                 'config' => $this->config,
                 'path'   => 'purchases',
                 'params' => [
-                    'timeout' => $this->config->reminderTimeout()
-                ]
+                    'timeout' => $this->config->reminderTimeout(),
+                    'requestType' => 'POST'
+                ],
             ]
         );
     }

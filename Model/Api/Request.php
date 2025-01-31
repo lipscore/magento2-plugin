@@ -12,6 +12,7 @@ class Request
     protected $requestType = 'POST';
     protected $timeout     = 5;
     protected $response;
+    protected $additionalQueryParams;
     protected $client;
 
     /**
@@ -38,6 +39,10 @@ class Request
             $this->requestType = $params['requestType'];
         }
 
+        if (!empty($params['additionalQueryParams'])) {
+            $this->additionalQueryParams = $params['additionalQueryParams'];
+        }
+
         if (class_exists(\Laminas\Http\Client::class)) {
             $this->client = new \Laminas\Http\Client();
         } elseif (class_exists(\GuzzleHttp\Client::class)) {
@@ -59,13 +64,19 @@ class Request
             'Content-Type'    => 'application/json',
         ];
         $url = "$apiUrl/{$this->path}?api_key=$apiKey";
+        if ($this->requestType == 'GET') {
+            $query = $this->prepareDataForUri($data);
+            $url = $url . '&' . $query . $this->additionalQueryParams;
+        }
 
         if ($this->client instanceof \GuzzleHttp\Client) {
             $options = [
                 'headers' => $headers,
-                'json'    => $data,
                 'timeout' => $this->timeout,
             ];
+            if ($this->requestType == 'POST') {
+                $options['json'] = $data;
+            }
             $response = $this->client->request($this->requestType, $url, $options);
             $this->response = $response;
             $result = $response->getStatusCode() === 200 ? json_decode($response->getBody(), true) : false;
@@ -73,7 +84,10 @@ class Request
             $this->client->setUri($url);
             $this->client->setOptions(['timeout' => $this->timeout]);
             $this->client->setMethod($this->requestType);
-            $this->client->setRawBody(json_encode($data));
+            if ($this->requestType == 'POST') {
+                $this->client->setRawBody(json_encode($data));
+            }
+
             $this->client->setHeaders($headers);
             $this->response = $this->client->send();
             $result = $this->response->isSuccess() ? json_decode($this->response->getBody(), true) : false;
@@ -81,8 +95,8 @@ class Request
         return $result;
     }
 
-    public function responseMsg()
+    protected function prepareDataForUri($data)
     {
-        return $this->response ? $this->response->__toString() : '';
+        return urldecode(preg_replace('/(%5B)\d+(%5D=)/i', '$1$2', http_build_query($data)));
     }
 }

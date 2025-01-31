@@ -38,4 +38,12 @@
     <type name="Magento\Review\Block\Product\ReviewRenderer">
         <plugin name="Lipscore_RatingsReviews_Plugin_ReviewRendererPlugin" type="Lipscore\RatingsReviews\Plugin\ReviewRendererPlugin" disabled="false" sortOrder="10" />
     </type>
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="lipscoreImportRatings" xsi:type="object">Lipscore\RatingsReviews\Console\ImportRatings</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

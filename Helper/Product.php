@@ -2,12 +2,15 @@
 
 namespace Lipscore\RatingsReviews\Helper;
 
-use Lipscore\RatingsReviews\Helper\AbstractHelper;
 use Magento\Catalog\Model\Product as MagentoProduct;
 use Magento\Catalog\Pricing\Price;
 
 class Product extends AbstractHelper
 {
+    const MAGENTO_PRODUCT_ATTRIBUTE_RATING = 'lipscore_rating';
+    const MAGENTO_PRODUCT_ATTRIBUTE_REVIEW_COUNT = 'lipscore_review_count';
+    const MAGENTO_PRODUCT_ATTRIBUTE_VOTE_COUNT = 'lipscore_vote_count';
+
     protected $productRepository;
     protected $imageHelper;
     protected $registry;
