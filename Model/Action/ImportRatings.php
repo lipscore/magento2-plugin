@@ -38,6 +38,60 @@ class ImportRatings
         $this->senderFactory = $senderFactory;
     }
 
+    public function process()
+    {
+        if (!$this->config->isImportActive()) {
+            return;
+        }
+
+        $collection = $this->getProductCollection();
+        $pages = $collection->getLastPageNumber();
+        for ($pageNum = 1; $pageNum <= $pages; $pageNum++) {
+            $collection->setCurPage($pageNum);
+            $productIds = $collection->getColumnValues($this->config->productIdAttrMapped());
+
+            $apiProducts = $this->getApiProducts($productIds);
+            $this->updateProducts($apiProducts);
+
+            $collection->clear();
+        }
+    }
+
+    protected function getApiProducts($products)
+    {
+        $apiData = $this->getApi()->send([self::LIPSCORE_API_PRODUCT_ID_PARAM => $products]);
+
+        return $this->parseApiResponse($apiData);
+    }
+
+    protected function parseApiResponse($response)
+    {
+        if (!$response) {
+            return [];
+        }
+
+        $parsedData = [];
+        foreach ($response as $product) {
+            $parsedData[$product[self::LIPSCORE_API_PRODUCT_ID_PARAM]] = [
+                Product::MAGENTO_PRODUCT_ATTRIBUTE_VOTE_COUNT => $product['votes'] ?? 0,
+                Product::MAGENTO_PRODUCT_ATTRIBUTE_RATING => (float) $product['rating'] ?? 0,
+                Product::MAGENTO_PRODUCT_ATTRIBUTE_REVIEW_COUNT => $product['review_count'] ?? 0,
+            ];
+        }
+        return $parsedData;
+    }
+
+    protected function updateProducts($products)
+    {
+        if (!$products) {
+            return;
+        }
+
+        foreach ($products as $productId => $attributes) {
+            $this->productActionResource->updateAttributes([$productId], $attributes, 0);
+        }
+    }
+
     protected function getApi()
     {
         if (!$this->api) {
@@ -57,62 +111,13 @@ class ImportRatings
         return $this->api;
     }
 
-    public function process()
-    {
-        $collection = $this->getProductCollection();
-        $pages = $collection->getLastPageNumber();
-        for ($pageNum = 1; $pageNum <= $pages; $pageNum++) {
-            $collection->setCurPage($pageNum);
-            $productIds = $collection->getColumnValues('entity_id');
-
-            $apiProducts = $this->getApiProducts($productIds);
-            $this->updateProducts($apiProducts);
-
-            $collection->clear();
-        }
-    }
-
-    public function getProductCollection()
+    protected function getProductCollection()
     {
         /** @var ProductCollectionResource $collection  */
         $collection = $this->collectionFactory->create();
         $collection->setPageSize(80);
+        $collection->addAttributeToSelect($this->config->productIdAttrMapped());
 
         return $collection;
-    }
-
-    public function getApiProducts($products)
-    {
-        $apiData = $this->getApi()->send([self::LIPSCORE_API_PRODUCT_ID_PARAM => $products]);
-
-        return $this->parseApiResponse($apiData);
-    }
-
-    public function parseApiResponse($response)
-    {
-        if (!$response) {
-            return [];
-        }
-
-        $parsedData = [];
-        foreach ($response as $product) {
-            $parsedData[$product[self::LIPSCORE_API_PRODUCT_ID_PARAM]] = [
-                Product::MAGENTO_PRODUCT_ATTRIBUTE_VOTE_COUNT => $product['votes'] ?? 0,
-                Product::MAGENTO_PRODUCT_ATTRIBUTE_RATING => (float) $product['rating'] ?? 0,
-                Product::MAGENTO_PRODUCT_ATTRIBUTE_REVIEW_COUNT => $product['review_count'] ?? 0,
-            ];
-        }
-        return $parsedData;
-    }
-
-    public function updateProducts($products)
-    {
-        if (!$products) {
-            return;
-        }
-
-        foreach ($products as $productId => $attributes) {
-            $this->productActionResource->updateAttributes([$productId], $attributes, 0);
-        }
     }
 }

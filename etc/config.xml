@@ -22,6 +22,9 @@
             <appearance>
                 <qa>0</qa>
             </appearance>
+            <import>
+                <active>0</active>
+            </import>
         </lipscore_general>
     </default>
 </config>

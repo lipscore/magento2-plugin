@@ -41,7 +41,5 @@ class ImportRatings extends Command
         }
 
         return Cli::RETURN_SUCCESS;
-
-
     }
 }

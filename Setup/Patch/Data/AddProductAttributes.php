@@ -144,17 +144,6 @@ class AddProductAttributes implements DataPatchInterface
         $this->moduleDataSetup->getConnection()->endSetup();
     }
 
-    protected function createAttributeGroup($attributeGroupName)
-    {
-        $attributeSetId = $this->product->getDefaultAttributeSetId();
-
-        $attributeGroup = $this->attributeGroupFactory->create();
-        $attributeGroup->setAttributeSetId($attributeSetId);
-        $attributeGroup->setAttributeGroupName($attributeGroupName);
-
-        $this->attributeGroupRepository->save($attributeGroup);
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -168,8 +157,17 @@ class AddProductAttributes implements DataPatchInterface
      */
     public static function getDependencies()
     {
-        return [
+        return [];
+    }
 
-        ];
+    protected function createAttributeGroup($attributeGroupName)
+    {
+        $attributeSetId = $this->product->getDefaultAttributeSetId();
+
+        $attributeGroup = $this->attributeGroupFactory->create();
+        $attributeGroup->setAttributeSetId($attributeSetId);
+        $attributeGroup->setAttributeGroupName($attributeGroupName);
+
+        $this->attributeGroupRepository->save($attributeGroup);
     }
 }

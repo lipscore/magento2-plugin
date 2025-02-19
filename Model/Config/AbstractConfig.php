@@ -9,6 +9,9 @@ abstract class AbstractConfig
     const REMINDER_TIMEOUT = 5;
     const PARENT_SOURCE_ID = 'magento2';
     const PARENT_SOURCE_NAME = 'Magento 2';
+    const ID_MAPPING = [
+        'id' => 'entity_id'
+    ];
 
     public $storeId;
 
@@ -71,6 +74,17 @@ abstract class AbstractConfig
         return $this->accessor->get('id', 'product_attributes');
     }
 
+    public function productIdAttrMapped()
+    {
+        $idAttributeName = $this->productIdAttr();
+        $mapping = self::ID_MAPPING;
+        if (isset($mapping[$idAttributeName])) {
+            return $mapping[$idAttributeName];
+        }
+
+        return $idAttributeName;
+    }
+
     public function gtinAttr()
     {
         return $this->accessor->get('gtin', 'product_attributes');
@@ -110,6 +124,11 @@ abstract class AbstractConfig
     public function isModuleActive()
     {
         return $this->accessor->get('active', 'module');
+    }
+
+    public function isImportActive()
+    {
+        return true;
     }
 
     public function isDemoKey()
