@@ -20,6 +20,7 @@ class Widget extends AbstractHelper
     {
         $attrs = [
             'data-ls-product-name'   => $productData['name'],
+            'data-ls-product-url'    => $productData['url'],
             'data-ls-brand'          => $productData['brand'],
             'data-ls-sku'            => implode(';', $productData['sku_values']),
             'data-ls-product-id'     => $productData['internal_id'],
