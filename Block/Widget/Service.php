@@ -39,8 +39,8 @@ class Service extends AbstractBlock
     public function getBadgeOptions()
     {
         return [
-            $this->getData('widget_template') . '_option_noborder',
-            $this->getData('widget_template') . '_option_noseparator'
+            'option_noborder',
+            'option_noseparator'
         ];
     }
 

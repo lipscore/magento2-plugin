@@ -21,13 +21,13 @@
                     <option name="review_list" value="review_list">
                         <label translate="true">Service Review list widget</label>
                     </option>
-                    <option name="badge" value="badge" selected="true">
+                    <option name="badge" value="badge">
                         <label translate="true">Service reviews badge</label>
                     </option>
-                    <option name="small_badge_short" value="small_badge_short" selected="true">
+                    <option name="small_badge_short" value="small_badge_short">
                         <label translate="true">Small service reviews badge short</label>
                     </option>
-                    <option name="small_badge_long" value="small_badge_long" selected="true">
+                    <option name="small_badge_long" value="small_badge_long">
                         <label translate="true">Small service reviews badge long</label>
                     </option>
                     <option name="testimonial_banner" value="testimonial_banner">
@@ -141,7 +141,7 @@
                 </options>
             </parameter>
 
-            <parameter name="small_badge_long-option_noborder" xsi:type="select" required="false" visible="true" sort_order="50">
+            <parameter name="small_badge_long_option_noborder" xsi:type="select" required="false" visible="true" sort_order="50">
                 <label>Hide borders</label>
                 <depends>
                     <parameter name="widget_template" value="small_badge_long"/>
@@ -280,10 +280,10 @@
                     <option name="big_rating" value="big_rating">
                         <label translate="true">Big Rating widget</label>
                     </option>
-                    <option name="review_list" value="review_list" selected="true">
+                    <option name="review_list" value="review_list">
                         <label translate="true">Review list widget</label>
                     </option>
-                    <option name="review_count" value="review_count" selected="true">
+                    <option name="review_count" value="review_count">
                         <label translate="true">Review count widget</label>
                     </option>
                     <option name="testimonial" value="testimonial">
