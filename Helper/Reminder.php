@@ -115,7 +115,7 @@ class Reminder extends AbstractHelper
     {
         $productsData = [];
         $storeId = $order->getStoreId();
-        $orderItems = $order->getAllVisibleItems();
+        $orderItems = $order->getAllItems();
 
         foreach ($orderItems as $orderItem) {
             if ($orderItem->getProductType() == Configurable::TYPE_CODE) {
@@ -143,8 +143,7 @@ class Reminder extends AbstractHelper
             }
 
             if ($data) {
-                $dataProductId = $variantProduct ? $variantProduct->getId() : $mainProduct->getId();
-                $productsData[$dataProductId] = $data;
+                $productsData[] = $data;
             }
 
             gc_collect_cycles();
