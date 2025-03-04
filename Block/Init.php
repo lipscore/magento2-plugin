@@ -40,7 +40,7 @@ class Init extends Template
         return $this->config->isLipscoreOutputEnabled() && $this->config->isLipscoreModuleEnabled();
     }
 
-    protected function getLocale()
+    public function getLocale()
     {
         $locale = $this->localeHelper->getLipscoreLocale();
 

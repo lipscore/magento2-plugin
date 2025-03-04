@@ -19,6 +19,8 @@ class Request
 
     protected $client;
 
+    protected $storeId = null;
+
     public function __construct(
         Config $config
     ) {
@@ -53,9 +55,9 @@ class Request
         $timeout = getenv('REMINDER_TIMEOUT');
         $this->timeout =  $timeout ?: static::REMINDER_TIMEOUT;
 
-        $apiKey = $this->config->getApiKey();
-        $secret = $this->config->getApiSecret();
-        $apiUrl = $this->config->getApiUrl();
+        $apiKey = $this->config->getApiKey($this->storeId);
+        $secret = $this->config->getApiSecret($this->storeId);
+        $apiUrl = $this->config->getApiUrl($this->storeId);
         $headers = [
             'X-Authorization' => strval($secret),
             'Content-Type'    => 'application/json',
@@ -81,6 +83,11 @@ class Request
             $result = $this->response->isSuccess() ? json_decode($this->response->getBody(), true) : false;
         }
         return $result;
+    }
+
+    public function setStoreId($storeId)
+    {
+        $this->storeId = $storeId;
     }
 
     public function responseMsg()

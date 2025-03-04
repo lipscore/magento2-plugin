@@ -112,21 +112,21 @@ class Product extends AbstractHelper
 
     protected function getBrand(MagentoProduct $product)
     {
-        $brandAttr = $this->config->getProductAttributeBrand();
+        $brandAttr = $this->config->getProductAttributeBrand($product->getStoreId());
         $brand = $this->getAttributeValue($product, $brandAttr);
         return $this->filterText($brand);
     }
 
     protected function getId(MagentoProduct $product)
     {
-        $idAttr = $this->config->getProductAttributeId();
+        $idAttr = $this->config->getProductAttributeId($product->getStoreId());
         $id = $this->getAttributeValue($product, $idAttr);
         return "{$id}";
     }
 
     protected function getGtin(MagentoProduct $product)
     {
-        $gtinAttr = $this->config->getProductAttributeGtin();
+        $gtinAttr = $this->config->getProductAttributeGtin($product->getStoreId());
         $gtin = $this->getAttributeValue($product, $gtinAttr);
         $delimiters = array(",", "_", " ");
         $gtinArray = $this->multiExplode($delimiters, $gtin);
@@ -136,7 +136,7 @@ class Product extends AbstractHelper
 
     protected function getMpn(MagentoProduct $product)
     {
-        $attr = $this->config->getProductAttributeMpn();
+        $attr = $this->config->getProductAttributeMpn($product->getStoreId());
 
         return $this->getAttributeValue($product, $attr) ?? '';
     }

@@ -115,7 +115,7 @@ class Reminder extends AbstractHelper
     {
         $productsData = [];
         $storeId = $order->getStoreId();
-        $orderItems = $order->getAllVisibleItems();
+        $orderItems = $order->getAllItems();
 
         foreach ($orderItems as $orderItem) {
             if ($orderItem->getProductType() == Configurable::TYPE_CODE) {

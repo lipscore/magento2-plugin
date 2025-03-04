@@ -24,11 +24,12 @@ class Reminder
 
     public function send($order)
     {
-        if (!$this->config->getApiKey()) {
+        if (!$this->config->getApiKey($order->getStoreId())) {
             return false;
         }
 
         $data = $this->helper->data($order);
+        $this->sender->setStoreId($order->getStoreId());
 
         return $this->sender->send($data);
     }
