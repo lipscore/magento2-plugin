@@ -143,7 +143,8 @@ class Reminder extends AbstractHelper
             }
 
             if ($data) {
-                $productsData[] = $data;
+                $dataProductId = $variantProduct ? $variantProduct->getId() : $mainProduct->getId();
+                $productsData[$dataProductId] = $data;
             }
 
             gc_collect_cycles();
