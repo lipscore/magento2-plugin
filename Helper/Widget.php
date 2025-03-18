@@ -4,6 +4,8 @@ namespace Lipscore\RatingsReviews\Helper;
 
 class Widget extends AbstractHelper
 {
+    public const WIDGET_SEPARATOR = ';';
+
     public function getProductAttrs($productData)
     {
         $attrs = '';
@@ -22,7 +24,7 @@ class Widget extends AbstractHelper
             'data-ls-product-name'   => $productData['name'],
             'data-ls-product-url'    => $productData['url'],
             'data-ls-brand'          => $productData['brand'],
-            'data-ls-sku'            => implode(';', $productData['sku_values']),
+            'data-ls-sku'            => implode(self::WIDGET_SEPARATOR, $productData['sku_values']),
             'data-ls-product-id'     => $productData['internal_id'],
             'data-ls-image-url'      => $productData['image_url'],
             'data-ls-price'          => $productData['price'],
@@ -30,7 +32,7 @@ class Widget extends AbstractHelper
             'data-ls-category'       => $productData['category'],
             'data-ls-description'    => $productData['description'],
             'data-ls-availability'   => $productData['availability'],
-            'data-ls-gtin'           => implode(';', $productData['gtin']),
+            'data-ls-gtin'           => implode(self::WIDGET_SEPARATOR, $productData['gtin']),
             'data-ls-mpn'            => $productData['mpn'],
         ];
 

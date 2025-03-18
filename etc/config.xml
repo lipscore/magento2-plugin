@@ -21,6 +21,8 @@
             </module>
             <appearance>
                 <qa>0</qa>
+                <review>0</review>
+                <ratings>0</ratings>
             </appearance>
         </lipscore_general>
     </default>

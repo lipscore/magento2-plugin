@@ -9,6 +9,7 @@ use Magento\Catalog\Model\Product as MagentoProduct;
 use Magento\Catalog\Model\Product\UrlFactory;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Catalog\Pricing\Price;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Framework\Registry;
 use Magento\Framework\Url;
 use Magento\Framework\UrlFactoryFactory;
@@ -25,6 +26,10 @@ class Product extends AbstractHelper
     protected $catalogCategory;
 
     protected $urlModel;
+
+    protected $productCache = [];
+
+    protected $childProductCache = [];
 
     public function __construct(
         Logger $logger,
@@ -48,11 +53,14 @@ class Product extends AbstractHelper
         );
     }
 
-    public function getProductData(MagentoProduct $product)
+    public function getProductData(MagentoProduct $product, $withChildProducts = false)
     {
         $data = [];
         try {
             $data = $this->_getProductData($product);
+            if ($withChildProducts) {
+                $data = array_merge($data, $this->_getChildProductsData($product));
+            }
         } catch (\Exception $e) {
             $this->logger->log($e);
         }
@@ -75,21 +83,61 @@ class Product extends AbstractHelper
 
     protected function _getProductData(MagentoProduct $product)
     {
-        return [
-            'name'         => $this->getName($product),
-            'brand'        => $this->getBrand($product),
-            'sku_values'   => [$this->getSku($product)],
-            'internal_id'  => $this->getId($product),
-            'url'          => $this->getUrl($product),
-            'image_url'    => $this->getImageUrl($product),
-            'price'        => $this->getPrice($product),
-            'currency'     => $this->getCurrency($product),
-            'category'     => $this->getCategory($product),
-            'description'  => $this->getDescription($product),
-            'availability' => $this->getAvailability($product),
-            'gtin'         => $this->getGtin($product),
-            'mpn'          => $this->getMpn($product)
-        ];
+        if (!isset($this->productCache[$product->getId()])) {
+            $this->productCache[$product->getId()] = [
+                'name'         => $this->getName($product),
+                'brand'        => $this->getBrand($product),
+                'sku_values'   => [$this->getSku($product)],
+                'internal_id'  => $this->getId($product),
+                'url'          => $this->getUrl($product),
+                'image_url'    => $this->getImageUrl($product),
+                'price'        => $this->getPrice($product),
+                'currency'     => $this->getCurrency($product),
+                'category'     => $this->getCategory($product),
+                'description'  => $this->getDescription($product),
+                'availability' => $this->getAvailability($product),
+                'gtin'         => $this->getGtin($product),
+                'mpn'          => $this->getMpn($product)
+            ];
+        }
+
+        return $this->productCache[$product->getId()];
+    }
+
+    protected function _getChildProductsData(MagentoProduct $product)
+    {
+        if (!isset($this->childProductCache[$product->getId()])) {
+            $data = [];
+            $productType = $product->getTypeId();
+            if ($productType === Configurable::TYPE_CODE) {
+                $children = $product->getTypeInstance()->getUsedProducts($product);
+                $childGtins = $childMpns = $childSkus = [];
+                foreach ($children as $child) {
+                    $gtin = $this->getGtin($child);
+                    if (!empty($gtin)) {
+                        $childGtins = array_merge($childGtins, $gtin);
+                    }
+                    $childMpns[] = $this->getMpn($child);
+                    $childSkus[] = $this->getSku($child);
+                }
+
+                if ($childGtins) {
+                    $data['gtin'] = $childGtins;
+                }
+
+                if ($childMpns) {
+                    $data['mpn'] = implode(Widget::WIDGET_SEPARATOR, $childMpns);
+                }
+
+                if ($childSkus) {
+                    $data['sku_values'] = $childSkus;
+                }
+            }
+
+            $this->childProductCache[$product->getId()] = $data;
+        }
+
+        return $this->childProductCache[$product->getId()];
     }
 
     protected function _getVariantData($product)
@@ -98,11 +146,27 @@ class Product extends AbstractHelper
             return [];
         }
 
-        return [
+        $data = [
             'variant_id'   => $this->getId($product),
             'variant_name' => $this->getName($product),
-            'variant_sku'  => $this->getSku($product)
         ];
+
+        $mpn = $this->getMpn($product);
+        if ($mpn) {
+            $data['mpn'] = $mpn;
+        }
+
+        $gtin = $this->getGtin($product);
+        if ($gtin) {
+            $data['gtin'] = $gtin;
+        }
+
+        $sku = $this->getSku($product);
+        if ($sku) {
+            $data['sku_values'] = [$sku];
+        }
+
+        return $data;
     }
 
     protected function getName(MagentoProduct $product)
@@ -128,6 +192,9 @@ class Product extends AbstractHelper
     {
         $gtinAttr = $this->config->getProductAttributeGtin($product->getStoreId());
         $gtin = $this->getAttributeValue($product, $gtinAttr);
+        if (!$gtin) {
+            return [];
+        }
         $delimiters = array(",", "_", " ");
         $gtinArray = $this->multiExplode($delimiters, $gtin);
 

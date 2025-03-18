@@ -11,21 +11,8 @@ class Review extends AbstractBlock
 
     protected function _beforeToHtml()
     {
-        try {
-            $this->setTabTitle();
-        } catch (\Exception $e) {
-            $this->logger->log($e);
-            $this->setTitle(__('Reviews'));
-        }
+        $this->setTitle(__('Reviews'));
         parent::_beforeToHtml();
         return $this;
-    }
-
-    protected function setTabTitle()
-    {
-        $title = $this->getLayout()
-            ->createBlock(Title::class)
-            ->toHtml();
-        $this->setTitle($title);
     }
 }
