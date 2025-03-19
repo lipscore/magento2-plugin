@@ -2,10 +2,11 @@
 
 namespace Lipscore\RatingsReviews\Observer;
 
+use Lipscore\RatingsReviews\Block\Product\QA\Single;
+
 class QATab extends AbstractObserver
 {
     protected static $logFile = 'ls_qa_tab_observer';
-
 
     protected function _execute(\Magento\Framework\Event\Observer $observer)
     {
@@ -15,7 +16,7 @@ class QATab extends AbstractObserver
             return;
         }
 
-        if ($this->config->canShowQa() && $layout->hasElement('lipscore_qa.tab')) {
+        if (!$this->config->canShowQa() && $layout->hasElement('lipscore_qa.tab')) {
           $layout->unsetElement('lipscore_qa.tab');
           return;
         }
@@ -27,9 +28,9 @@ class QATab extends AbstractObserver
             return;
         }
 
-        if (!$layout->hasElement('lipscore_qa.tab')) {
+        if ($this->config->canShowQa() && !$layout->hasElement('lipscore_qa.tab')) {
             $layout->addBlock(
-                \Lipscore\RatingsReviews\Block\Product\QA\Single::class,
+                Single::class,
                 'qa.single',
                 'content',
                 'lipscore_qa_single'

@@ -23,6 +23,8 @@ class Config
     const XML_PATH_LIPSCORE_EMAILS_ORDER_STATUS = 'lipscore_general/emails/order_status';
     const XML_PATH_LIPSCORE_COUPONS_TEXT = 'lipscore_general/coupons/coupons_text';
     const XML_PATH_LIPSCORE_COUPONS_PRICE_RULE_ID = 'lipscore_general/coupons/price_rule_id';
+    const XML_PATH_LIPSCORE_APPEARANCE_RATINGS = 'lipscore_general/appearance/ratings';
+    const XML_PATH_LIPSCORE_APPEARANCE_REVIEW = 'lipscore_general/appearance/review';
     const XML_PATH_LIPSCORE_APPEARANCE_QA = 'lipscore_general/appearance/qa';
     const XML_PATH_LIPSCORE_MODULE_ACTIVE = 'lipscore_general/module/active';
 
@@ -217,6 +219,24 @@ class Config
     {
         return $this->scopeConfig->getValue(
             self::XML_PATH_LIPSCORE_APPEARANCE_QA,
+            ScopeInterface::SCOPE_STORE,
+            $store
+        );
+    }
+
+    public function canShowReviewTab($store = null)
+    {
+        return $this->scopeConfig->getValue(
+            self::XML_PATH_LIPSCORE_APPEARANCE_REVIEW,
+            ScopeInterface::SCOPE_STORE,
+            $store
+        );
+    }
+
+    public function canShowRatings($store = null)
+    {
+        return $this->scopeConfig->getValue(
+            self::XML_PATH_LIPSCORE_APPEARANCE_RATINGS,
             ScopeInterface::SCOPE_STORE,
             $store
         );

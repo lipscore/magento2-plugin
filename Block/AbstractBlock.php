@@ -56,7 +56,7 @@ abstract class AbstractBlock extends Template
             return;
         }
 
-        $productData = $this->productHelper->getProductData($product);
+        $productData = $this->productHelper->getProductData($product, true);
         return $this->widgetHelper->getProductAttrs($productData);
     }
 

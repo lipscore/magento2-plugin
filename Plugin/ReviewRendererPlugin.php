@@ -36,7 +36,7 @@ class ReviewRendererPlugin
         $displayIfNoReviews = false
     ) {
         try {
-            if ($this->config->isLipscoreOutputEnabled()) {
+            if ($this->config->isLipscoreOutputEnabled() && $this->config->canShowRatings()) {
                  return $this->lipscoreReviewRenderer->getReviewsSummaryHtml(
                      $product, $templateType, $displayIfNoReviews
                  );

@@ -3,6 +3,61 @@
  * @var $block Lipscore\RatingsReviews\Block\Product\Review
  */
 ?>
+<span id="js-lipscore-reviews-tab">
+    <?php echo $block->escapeHtml(__('Reviews')) ?><span id="js-lipscore-reviews-tab-count" style='display: none;'>&nbsp;(<span class="lipscore-review-count" <?php echo $block->getLsProductAttrs() ?>></span>)</span>
+</span>
+<script>
+    const titleSelector = document.getElementById('tab-label-lipscore-reviews-title');
+    const tabSelector = document.getElementById('js-lipscore-reviews-tab');
+    if (tabSelector && titleSelector) {
+        titleSelector.innerHTML = tabSelector.outerHTML;
+        tabSelector.remove();
+    }
+
+    function magentoLipscoreInit () {
+        const tabSelector = document.getElementById('js-lipscore-reviews-tab');
+        if (tabSelector && tabSelector.innerHTML != '') {
+            lipscore.on('review-count-set', (data) => {
+                if (data.value > 0) {
+                    const reviewCount = document.getElementById('js-lipscore-reviews-tab-count');
+                    if (reviewCount) {
+                        reviewCount.style.display = 'contents';
+                    }
+                }
+            });
+
+            lipscore.on('review-count-link-clicked', () => {
+                const el = document.getElementById('js-lipscore-reviews-tab').parentNode;
+                if (el.onclick) {
+                    el.onclick();
+                } else if (el.click) {
+                    el.click();
+                }
+            });
+        }
+
+        const tabSelectorQa = document.getElementById('js-lipscore-qa-tab');
+        if (tabSelectorQa && tabSelectorQa.innerHTML != '') {
+            lipscore.on('question-count-set', (data) => {
+                if (data.value > 0) {
+                    const reviewCount = document.getElementById('js-lipscore-reviews-tab-count');
+                    if (reviewCount) {
+                        reviewCount.style.display = 'contents';
+                    }
+                }
+            });
+        }
+    };
+
+    if (typeof lipscore !== 'undefined') {
+        magentoLipscoreInit();
+    } else {
+        document.addEventListener('lipscore-created', function (event) {
+            magentoLipscoreInit();
+        });
+    }
+</script>
+
 <div style="display: none !important;"><?php echo $block->escapeHtml(__('Reviews')) ?></div>
 <?php if ($block->getLsProductAttrs()) { ?>
     <div id="lipscore-review-post" <?php echo $block->getLsProductAttrs() ?>></div>
