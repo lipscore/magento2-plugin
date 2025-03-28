@@ -30,6 +30,9 @@
                     <option name="small_badge_long" value="small_badge_long">
                         <label translate="true">Small service reviews badge long</label>
                     </option>
+                    <option name="sticky_badge" value="sticky_badge">
+                        <label translate="true">Sticky service reviews badge</label>
+                    </option>
                     <option name="testimonial_banner" value="testimonial_banner">
                         <label translate="true">Testimonial banner</label>
                     </option>

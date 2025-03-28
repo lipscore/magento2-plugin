@@ -10,6 +10,21 @@
             <tab>lipscore</tab>
             <resource>Lipscore_RatingsReviews::lipscore_ratingsreviews</resource>
 
+            <group id="general_info" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Informations</label>
+                <attribute type="expanded">1</attribute>
+                <comment>
+                    <![CDATA[
+                    <a style="href="https://www.lipscore.com" target="_blank"><img src="//lipscore.com/wp-content/uploads/2023/04/Real-Reviews_Logos_Original.svg" style="border: 0; width: 400px;" /></a>
+                    <div style="margin-top: 10px">Haven't found what you were looking for? Contact support <a href="https://lipscore.com/support">here</a>.
+                    ]]>
+                </comment>
+                <field  id="version" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Version</label>
+                    <frontend_model>Lipscore\RatingsReviews\Block\System\Config\Form\Field\Version</frontend_model>
+                </field>
+            </group>
+
             <group id="api_key" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>API Key</label>
                 <frontend_model>Lipscore\RatingsReviews\Block\System\Config\Form\Fieldset\ApiKey</frontend_model>

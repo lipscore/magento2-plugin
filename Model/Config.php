@@ -9,7 +9,6 @@ use Magento\Directory\Helper\Data;
 
 class Config
 {
-    const MODULE_NAME = 'Lipscore_RatingsReviews';
     const XML_PATH_LIPSCORE_API_KEY = 'lipscore_general/api_key/api_key';
     const XML_PATH_LIPSCORE_API_SECRET = 'lipscore_general/api_key/secret';
     const XML_PATH_LIPSCORE_ASSETS_URL = 'lipscore_general/api_key/assets_url';
@@ -27,9 +26,6 @@ class Config
     const XML_PATH_LIPSCORE_APPEARANCE_REVIEW = 'lipscore_general/appearance/review';
     const XML_PATH_LIPSCORE_APPEARANCE_QA = 'lipscore_general/appearance/qa';
     const XML_PATH_LIPSCORE_MODULE_ACTIVE = 'lipscore_general/module/active';
-
-    const PARENT_SOURCE_ID = 'magento2';
-    const PARENT_SOURCE_NAME = 'Magento 2';
 
     protected $scopeConfig;
 
@@ -49,20 +45,14 @@ class Config
 
     public function getParentSourceId()
     {
-        return self::PARENT_SOURCE_ID;
+        return Module::PARENT_SOURCE_ID;
     }
 
     public function getParentSourceName()
     {
-        return self::PARENT_SOURCE_NAME;
+        return Module::PARENT_SOURCE_NAME;
     }
 
-    public function isDemoKey()
-    {
-        $currentKey = $this->getApiKey();
-        $demokey    = $this->demoApiKey();
-        return $currentKey == $demokey;
-    }
 
     public function isValidApiKey()
     {
@@ -72,7 +62,7 @@ class Config
     public function isLipscoreModuleEnabled()
     {
         try {
-            return $this->manager->isEnabled(self::MODULE_NAME) && $this->isActive();
+            return $this->manager->isEnabled(Module::MODULE_NAME) && $this->isActive();
         } catch (\Exception $e) {
             $this->logger->log($e);
             return false;
@@ -82,7 +72,7 @@ class Config
     public function isLipscoreOutputEnabled()
     {
         try {
-            return $this->manager->isOutputEnabled(self::MODULE_NAME) && $this->isActive();
+            return $this->manager->isOutputEnabled(Module::MODULE_NAME) && $this->isActive();
         } catch (\Exception $e) {
             $this->logger->log($e);
             return false;
