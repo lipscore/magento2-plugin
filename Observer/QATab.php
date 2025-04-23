@@ -3,6 +3,7 @@
 namespace Lipscore\RatingsReviews\Observer;
 
 use Lipscore\RatingsReviews\Block\Product\QA\Single;
+use Magento\Framework\View\Layout;
 
 class QATab extends AbstractObserver
 {
@@ -10,15 +11,14 @@ class QATab extends AbstractObserver
 
     protected function _execute(\Magento\Framework\Event\Observer $observer)
     {
-        $layout = $observer->getData('layout');
-
-        if (!$layout) {
+        if (!$this->checkIfEnabled()) {
             return;
         }
 
-        if (!$this->config->canShowQa() && $layout->hasElement('lipscore_qa.tab')) {
-          $layout->unsetElement('lipscore_qa.tab');
-          return;
+        /** @var Layout $layout */
+        $layout = $observer->getData('layout');
+        if (!$layout) {
+            return;
         }
 
         $layoutHandles = $layout->getUpdate()->getHandles();
@@ -28,7 +28,7 @@ class QATab extends AbstractObserver
             return;
         }
 
-        if ($this->config->canShowQa() && !$layout->hasElement('lipscore_qa.tab')) {
+        if ($this->config->canShowQa() && $this->checkIfBlockContentIsEmpty($layout, 'lipscore_qa.tab')) {
             $layout->addBlock(
                 Single::class,
                 'qa.single',

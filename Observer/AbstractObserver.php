@@ -39,6 +39,27 @@ abstract class AbstractObserver implements ObserverInterface
 
     abstract protected function methodAvailable();
 
+    protected function checkIfEnabled($store = null)
+    {
+        $enabled = true;
+        if (!$this->config->isLipscoreModuleEnabled($store)) {
+            $this->log('extension is disabled');
+            $enabled = false;
+        }
+
+        if (!$this->config->getApiKey($store)) {
+            $this->log('API key is invalid');
+            $enabled = false;
+        }
+
+        return $enabled;
+    }
+
+    protected function checkIfBlockContentIsEmpty($layout, $blockName)
+    {
+        return !$layout->getBlock($blockName) || !$layout->getBlock($blockName)->toHtml();
+    }
+
     protected function defaultLogMessage()
     {
         return get_class($this);

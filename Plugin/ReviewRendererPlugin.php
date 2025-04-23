@@ -2,13 +2,12 @@
 
 namespace Lipscore\RatingsReviews\Plugin;
 
+use Lipscore\RatingsReviews\Block\Product\ReviewRenderer;
 use Lipscore\RatingsReviews\Model\Config;
 use Lipscore\RatingsReviews\Model\Logger;
-use Lipscore\RatingsReviews\Block\Product\ReviewRenderer;
-use Magento\Catalog\Model\Product;
 use Magento\Catalog\Block\Product\ReviewRendererInterface;
+use Magento\Catalog\Model\Product;
 use Magento\Review\Block\Product\ReviewRenderer as Subject;
-
 
 class ReviewRendererPlugin
 {
@@ -37,9 +36,11 @@ class ReviewRendererPlugin
     ) {
         try {
             if ($this->config->isLipscoreOutputEnabled() && $this->config->canShowRatings()) {
-                 return $this->lipscoreReviewRenderer->getReviewsSummaryHtml(
-                     $product, $templateType, $displayIfNoReviews
-                 );
+                return $this->lipscoreReviewRenderer->getReviewsSummaryHtml(
+                    $product,
+                    $templateType,
+                    $displayIfNoReviews
+                );
             }
         } catch (\Exception $e) {
             $this->logger->log($e);

@@ -2,35 +2,30 @@
 
 namespace Lipscore\RatingsReviews\Block;
 
-use Lipscore\RatingsReviews\Helper\Product;
-use Lipscore\RatingsReviews\Helper\Widget;
+use Lipscore\RatingsReviews\Model\Config;
 use Lipscore\RatingsReviews\Model\Logger;
-use Magento\Framework\Registry;
+use Lipscore\RatingsReviews\Model\ProductData;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 
 abstract class AbstractBlock extends Template
 {
-    protected $coreRegistry;
-
-    protected $productHelper;
-
-    protected $widgetHelper;
+    protected $productData;
 
     protected $logger;
+
+    protected $config;
 
     public function __construct(
         Context $context,
         Logger $logger,
-        Registry $registry,
-        Product $productHelper,
-        Widget $widgetHelper,
+        ProductData $productData,
+        Config $config,
         array $data = []
     ) {
-        $this->coreRegistry  = $registry;
-        $this->productHelper = $productHelper;
-        $this->widgetHelper  = $widgetHelper;
-        $this->logger        = $logger;
+        $this->productData = $productData;
+        $this->logger = $logger;
+        $this->config = $config;
 
         parent::__construct($context, $data);
     }
@@ -40,32 +35,11 @@ abstract class AbstractBlock extends Template
         $productAttrs = '';
 
         try {
-            $productAttrs = $this->createProductAttrs();
+            $productAttrs = $this->productData->getCurrentProductLsAttributes();
         } catch (\Exception $e) {
             $this->logger->log($e);
         }
 
         return $productAttrs;
-    }
-
-    protected function createProductAttrs()
-    {
-        $product = $this->getCurrentProduct();
-
-        if (!$product) {
-            return;
-        }
-
-        $productData = $this->productHelper->getProductData($product, true);
-        return $this->widgetHelper->getProductAttrs($productData);
-    }
-
-    protected function getCurrentProduct()
-    {
-        if ($this->getProduct()) {
-            return $this->getProduct();
-        } else {
-            return $this->coreRegistry->registry('product');
-        }
     }
 }

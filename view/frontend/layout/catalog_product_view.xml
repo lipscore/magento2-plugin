@@ -3,8 +3,17 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceBlock name="product.info.details">
-            <block class="Lipscore\RatingsReviews\Block\Product\Review" after="product.attributes" name="lipscore_reviews.tab" as="lipscore-reviews" group="detailed_info" />
-            <block class="Lipscore\RatingsReviews\Block\Product\QA" name="lipscore_qa.tab" as="lipscore-qa" group="detailed_info" />
+            <block ifconfig="lipscore_general/module/active" class="Lipscore\RatingsReviews\Block\Product\QA" name="lipscore_qa.tab" as="lipscore-qa" after="product.attributes" group="detailed_info">
+                <arguments>
+                    <argument name="sort_order" xsi:type="string">50</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+
+        <referenceBlock name="reviews.tab">
+            <action method="setTemplate" ifconfig="lipscore_general/module/active">
+                <argument name="template" xsi:type="string">Lipscore_RatingsReviews::reviews/view.phtml</argument>
+            </action>
         </referenceBlock>
 
         <container name="lipscore-product-info-first" label="Lipscore product info first" htmlTag="div"/>

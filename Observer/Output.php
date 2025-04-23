@@ -2,6 +2,8 @@
 
 namespace Lipscore\RatingsReviews\Observer;
 
+use Magento\Framework\View\Element\Template;
+
 class Output extends AbstractObserver
 {
     const MAGENTO_REVIEW_MODULE = 'Magento_Review';
@@ -11,6 +13,10 @@ class Output extends AbstractObserver
 
     protected function _execute(\Magento\Framework\Event\Observer $observer)
     {
+        if (!$this->checkIfEnabled()) {
+            return;
+        }
+
         $block = $observer->getData('block');
         $module = $block->getModuleName();
 
@@ -21,12 +27,14 @@ class Output extends AbstractObserver
             return;
         }
 
+        $blockName       = $block->getNameInLayout();
         $lipscoreEnabled = $this->config->isLipscoreOutputEnabled();
         $hideLipscore    = $isLipscore && !$lipscoreEnabled;
         $hideMagento     = $isMagentoReview && $lipscoreEnabled;
+        //compatibility with different themes
+        $isNotReviewTab  = $blockName !== 'reviews.tab';
 
-        if ($hideMagento || $hideLipscore) {
-            $blockName = $block->getNameInLayout();
+        if (($hideMagento || $hideLipscore) && $isNotReviewTab) {
             $block->getLayout()->renameElement($blockName, $blockName . '_ls_hidden');
         }
     }
