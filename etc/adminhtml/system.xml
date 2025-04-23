@@ -106,12 +106,12 @@
             <group id="appearance" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Appearance</label>
                 <field id="qa" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Display Q&amp;A</label>
+                    <label>Display Q&amp;A Tab in Product Page</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Please make sure that Q&amp;A is also enabled in your Lipscore Dashboard on https://members.lipscore.com</comment>
                 </field>
                 <field id="review" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Display Reviews</label>
+                    <label>Display Reviews Tab in Product Page</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="ratings" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">

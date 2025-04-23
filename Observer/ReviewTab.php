@@ -3,6 +3,7 @@
 namespace Lipscore\RatingsReviews\Observer;
 
 use Lipscore\RatingsReviews\Block\Product\Review\Single;
+use Magento\Framework\View\Layout;
 
 class ReviewTab extends AbstractObserver
 {
@@ -10,14 +11,12 @@ class ReviewTab extends AbstractObserver
 
     protected function _execute(\Magento\Framework\Event\Observer $observer)
     {
-        $layout = $observer->getData('layout');
-
-        if (!$layout) {
+        if (!$this->checkIfEnabled()) {
             return;
         }
 
-        if (!$this->config->canShowReviewTab() && $layout->hasElement('lipscore_reviews.tab')) {
-            $layout->unsetElement('lipscore_reviews.tab');
+        $layout = $observer->getData('layout');
+        if (!$layout) {
             return;
         }
 
@@ -28,7 +27,8 @@ class ReviewTab extends AbstractObserver
             return;
         }
 
-        if ($this->config->canShowReviewTab() && !$layout->hasElement('lipscore_reviews.tab')) {
+        /** @var $layout Layout */
+        if ($this->config->canShowReviewTab() && $this->checkIfBlockContentIsEmpty($layout, 'reviews.tab')) {
             $layout->addBlock(
                 Single::class,
                 'reviews.single',

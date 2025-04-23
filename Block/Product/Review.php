@@ -3,7 +3,6 @@
 namespace Lipscore\RatingsReviews\Block\Product;
 
 use Lipscore\RatingsReviews\Block\AbstractBlock;
-use Lipscore\RatingsReviews\Block\Product\Review\Title;
 
 class Review extends AbstractBlock
 {

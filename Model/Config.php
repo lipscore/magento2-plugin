@@ -2,10 +2,10 @@
 
 namespace Lipscore\RatingsReviews\Model;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Store\Model\ScopeInterface;
-use Magento\Framework\Module\Manager;
 use Magento\Directory\Helper\Data;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Module\Manager;
+use Magento\Store\Model\ScopeInterface;
 
 class Config
 {
@@ -59,10 +59,10 @@ class Config
         return $this->getApiKey() && !$this->isDemoKey();
     }
 
-    public function isLipscoreModuleEnabled()
+    public function isLipscoreModuleEnabled($store = null)
     {
         try {
-            return $this->manager->isEnabled(Module::MODULE_NAME) && $this->isActive();
+            return $this->manager->isEnabled(Module::MODULE_NAME) && $this->isActive($store);
         } catch (\Exception $e) {
             $this->logger->log($e);
             return false;
@@ -207,7 +207,7 @@ class Config
 
     public function canShowQa($store = null)
     {
-        return $this->scopeConfig->getValue(
+        return $this->scopeConfig->isSetFlag(
             self::XML_PATH_LIPSCORE_APPEARANCE_QA,
             ScopeInterface::SCOPE_STORE,
             $store
@@ -216,7 +216,7 @@ class Config
 
     public function canShowReviewTab($store = null)
     {
-        return $this->scopeConfig->getValue(
+        return $this->scopeConfig->isSetFlag(
             self::XML_PATH_LIPSCORE_APPEARANCE_REVIEW,
             ScopeInterface::SCOPE_STORE,
             $store
@@ -225,7 +225,7 @@ class Config
 
     public function canShowRatings($store = null)
     {
-        return $this->scopeConfig->getValue(
+        return $this->scopeConfig->isSetFlag(
             self::XML_PATH_LIPSCORE_APPEARANCE_RATINGS,
             ScopeInterface::SCOPE_STORE,
             $store

@@ -2,9 +2,10 @@
 
 namespace Lipscore\RatingsReviews\Model\System\Config\Source;
 
+use Magento\Framework\Data\OptionSourceInterface;
 use Magento\Widget\Model\ResourceModel\Widget\Instance\CollectionFactory;
 
-class LipscoreWidget implements \Magento\Framework\Option\ArrayInterface
+class LipscoreWidget implements OptionSourceInterface
 {
     protected $options;
 

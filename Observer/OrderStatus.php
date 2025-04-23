@@ -29,13 +29,7 @@ class OrderStatus extends AbstractObserver
         /** @var Order $order */
         $order = $observer->getData('order');
 
-        if (!$this->config->isLipscoreModuleEnabled()) {
-            $this->log('extension is disabled');
-            return;
-        }
-
-        if (!$this->config->getApiKey()) {
-            $this->log('API key is invalid');
+        if (!$this->checkIfEnabled($order->getStoreId())) {
             return;
         }
 
