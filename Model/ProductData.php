@@ -24,9 +24,12 @@ class ProductData
         $this->widgetHelper = $widgetHelper;
     }
 
-    public function getCurrentProductLsAttributes()
+    public function getCurrentProductLsAttributes($product = null)
     {
-        $product = $this->getCurrentProduct();
+        if (!$product) {
+            $product = $this->getCurrentProduct();
+        }
+
         if (!$product) {
             return;
         }
