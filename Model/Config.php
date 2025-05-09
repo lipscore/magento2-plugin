@@ -17,6 +17,7 @@ class Config
     const XML_PATH_LIPSCORE_PRODUCT_ATTR_BRAND = 'lipscore_general/product_attributes/brand';
     const XML_PATH_LIPSCORE_PRODUCT_ATTR_GTIN = 'lipscore_general/product_attributes/gtin';
     const XML_PATH_LIPSCORE_PRODUCT_ATTR_MPN = 'lipscore_general/product_attributes/mpn';
+    const XML_PATH_LIPSCORE_SHOW_CHILD_DATA_IN_PARENT = 'lipscore_general/product_attributes/show_child_data_in_parent';
     const XML_PATH_LIPSCORE_LOCALE_LOCALE = 'lipscore_general/locale/locale';
     const XML_PATH_LIPSCORE_EMAILS_TEXT = 'lipscore_general/emails/emails_text';
     const XML_PATH_LIPSCORE_EMAILS_ORDER_STATUS = 'lipscore_general/emails/order_status';
@@ -119,6 +120,15 @@ class Config
     {
         return $this->scopeConfig->getValue(
             self::XML_PATH_LIPSCORE_API_SECRET,
+            ScopeInterface::SCOPE_STORE,
+            $store
+        );
+    }
+
+    public function canShowChildDataInParent($store = null)
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_PATH_LIPSCORE_SHOW_CHILD_DATA_IN_PARENT,
             ScopeInterface::SCOPE_STORE,
             $store
         );

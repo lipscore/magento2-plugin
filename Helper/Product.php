@@ -55,10 +55,11 @@ class Product extends AbstractHelper
 
     public function getProductData(MagentoProduct $product, $withChildProducts = false)
     {
+        $canShowChildData = $this->config->canShowChildDataInParent($product->getStoreId());
         $data = [];
         try {
             $data = $this->_getProductData($product);
-            if ($withChildProducts) {
+            if ($withChildProducts && $canShowChildData) {
                 $data = array_merge($data, $this->_getChildProductsData($product));
             }
         } catch (\Exception $e) {
