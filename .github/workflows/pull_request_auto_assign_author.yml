@@ -1,0 +1,12 @@
+name: Pull Request Auto Assign Author
+on:
+  pull_request:
+    types: [opened, reopened]
+
+jobs:
+  AssignAuthor:
+    permissions: write-all
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: toshimaru/auto-author-assign@v2.1.1
