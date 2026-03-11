@@ -3,6 +3,7 @@
 namespace Lipscore\RatingsReviews\Model;
 
 use Lipscore\RatingsReviews\Model\Api\Request;
+use Lipscore\RatingsReviews\Helper\Reminder as Helper;
 
 class Reminder
 {
@@ -13,7 +14,7 @@ class Reminder
     protected $sender;
 
     public function __construct(
-        \Lipscore\RatingsReviews\Helper\Reminder $helper,
+        Helper $helper,
         Request $sender,
         Config $config
     ) {
@@ -29,8 +30,7 @@ class Reminder
         }
 
         $data = $this->helper->data($order);
-        $this->sender->setStoreId($order->getStoreId());
 
-        return $this->sender->send($data);
+        return $this->sender->send($data, 'purchases', $order->getStoreId());
     }
 }

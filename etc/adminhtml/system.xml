@@ -138,6 +138,56 @@
             <group id="dashboard_link" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                 <frontend_model>Lipscore\RatingsReviews\Block\System\Config\Form\Fieldset\Dashboard\Link</frontend_model>
             </group>
+
+            <group id="webhook" translate="label" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Webhooks</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Webhook Product Notification</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <backend_model>Lipscore\RatingsReviews\Model\System\Config\Backend\WebhookEnabled</backend_model>
+                </field>
+                <field id="hmac_secret" translate="label comment" type="password" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>HMAC Secret</label>
+                    <comment>Secret key used to verify webhook signatures.</comment>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                </field>
+
+            </group>
+
+            <group id="cache" translate="label" sortOrder="80" showInDefault="1" showInWebsite="1">
+                <label>Cache</label>
+                <field id="fresh_threshold_hours" translate="label" type="text" sortOrder="10" showInDefault="1">
+                    <label>Fresh data threshold (hours)</label>
+                </field>
+                <field id="stale_threshold_hours" translate="label" type="text" sortOrder="20" showInDefault="1">
+                    <label>Stale data threshold (hours)</label>
+                </field>
+                <field id="ttl_hours" translate="label comment" type="text" sortOrder="30" showInDefault="1">
+                    <label>Cache TTL (hours)</label>
+                </field>
+                <field id="refresh_fpc" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1">
+                    <label>Refresh Full Page Cache for Updated Products</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If Yes, FPC for product pages will be cleared when review/rating is updated.</comment>
+                </field>
+            </group>
+
+            <group id="jsonld" translate="label" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Rich Snippets (JSON-LD)</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Server-Side JSON-LD</label>
+                    <comment>Renders rating and review structured data in the initial HTML response for AI and search engine crawlers.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+
+            <group id="debug" translate="label" sortOrder="100" showInDefault="1">
+                <label>Logging</label>
+                <field id="logging" translate="label" type="select" sortOrder="10" showInDefault="1">
+                    <label>Enable Debug logging</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
         </section>
     </system>
 </config>

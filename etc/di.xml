@@ -15,6 +15,7 @@
             <argument name="handlers" xsi:type="array">
                 <item name="system" xsi:type="object">\Lipscore\RatingsReviews\Model\Logger\Handler</item>
             </argument>
+            <argument name="config" xsi:type="object">\Lipscore\RatingsReviews\Model\Config</argument>
         </arguments>
     </type>
 
@@ -24,5 +25,38 @@
 
     <type name="Magento\Review\Block\Product\ReviewRenderer">
         <plugin name="Lipscore_RatingsReviews_Plugin_ReviewRendererPlugin" type="Lipscore\RatingsReviews\Plugin\ReviewRendererPlugin" disabled="false" sortOrder="10" />
+    </type>
+
+    <preference for="Lipscore\RatingsReviews\Api\WebhookManagementInterface" type="Lipscore\RatingsReviews\Model\WebhookManagement"/>
+
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="lipscoreQueue" xsi:type="object">Lipscore\RatingsReviews\Console\Command\ProcessQueue</item>
+                <item name="lipscoreProductDataSyncWebhook" xsi:type="object">Lipscore\RatingsReviews\Console\Command\SyncHooks</item>
+                <item name="lipscoreDeleteExistingHooks" xsi:type="object">Lipscore\RatingsReviews\Console\Command\DeleteAllHooks</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="LipscoreGuzzleClient" type="GuzzleHttp\Client">
+        <arguments>
+            <argument name="config" xsi:type="array">
+                <item name="timeout" xsi:type="number">15</item>
+                <item name="http_errors" xsi:type="boolean">false</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Lipscore\RatingsReviews\Model\Api\HookRequest">
+        <arguments>
+            <argument name="client" xsi:type="object">LipscoreGuzzleClient</argument>
+        </arguments>
+    </type>
+
+    <type name="Lipscore\RatingsReviews\Model\Api\ProductRequest">
+        <arguments>
+            <argument name="client" xsi:type="object">LipscoreGuzzleClient</argument>
+        </arguments>
     </type>
 </config>

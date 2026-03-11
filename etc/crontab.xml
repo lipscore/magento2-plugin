@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="lipscore_process_queue"
+             instance="Lipscore\RatingsReviews\Cron\ProcessQueue"
+             method="execute">
+            <schedule>* * * * *</schedule>
+        </job>
+        <job name="lipscore_cleanup_queue"
+             instance="Lipscore\RatingsReviews\Cron\ProcessQueue"
+             method="cleanup">
+            <schedule>0 3 * * *</schedule>
+        </job>
+    </group>
+</config>

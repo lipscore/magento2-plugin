@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <table name="lipscore_api_key" resource="default" engine="innodb" comment="Lipscore API Keys">
+        <column xsi:type="int" name="api_key_id" unsigned="true" nullable="false" identity="true" comment="Key ID"/>
+        <column xsi:type="varchar" name="key" length="255" nullable="false" comment="API Key"/>
+        <column xsi:type="varchar" name="external_hook_ids" length="255" nullable="true" comment="External Hooks IDs"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="api_key_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="LIPSCORE_API_KEY_UNIQUE">
+            <column name="key"/>
+        </constraint>
+    </table>
+
+    <table name="lipscore_product_data" resource="default" engine="innodb" comment="Lipscore Product Data">
+        <column xsi:type="int" name="lipscore_product_id" padding="11" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="int" name="key_id" unsigned="true" nullable="true" comment="API Key ID"/>
+        <constraint xsi:type="foreign" referenceId="LIPSCORE_PRODUCT_DATA_KEY_ID" table="lipscore_product_data" column="key_id" referenceTable="lipscore_api_key" referenceColumn="api_key_id" onDelete="CASCADE"/>
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="false" comment="Product ID"/>
+        <column xsi:type="text" name="last_reviews" nullable="false" comment="JSON-LD Reviews"/>
+        <column xsi:type="decimal" name="rating_value" scale="2" precision="3" nullable="true" comment="Average Rating Value"/>
+        <column xsi:type="int" name="review_count" unsigned="true" nullable="true" comment="Review Count"/>
+        <column xsi:type="int" name="rating_count" unsigned="true" nullable="true" comment="Votes Count"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="lipscore_product_id"/>
+        </constraint>
+
+        <constraint xsi:type="unique" referenceId="LIPSCORE_PRODUCT_DATA_UNIQUE_PRODUCT_KEY">
+            <column name="product_id"/>
+            <column name="key_id"/>
+        </constraint>
+
+        <index referenceId="LIPSCORE_PRODUCT_UPDATED_AT" indexType="btree">
+            <column name="updated_at"/>
+        </index>
+    </table>
+
+    <table name="lipscore_queue" resource="default" engine="innodb" comment="Lipscore Queue">
+        <column xsi:type="int" name="queue_id" padding="11" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="false" comment="Magento Product ID"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="smallint" name="retries" default="0" nullable="false" comment="Retry attempts"/>
+        <column xsi:type="smallint" name="status" default="0" nullable="false" comment="0=pending,1=done,2=failed"/>
+        <column xsi:type="varchar" name="priority" nullable="false" default="low" length="10" comment="Priority"/>
+        <column xsi:type="int" name="key_id" unsigned="true" nullable="true" comment="API Key ID"/>
+        <constraint xsi:type="foreign" referenceId="LIPSCORE_QUEUE_KEY_ID" table="lipscore_queue" column="key_id" referenceTable="lipscore_api_key" referenceColumn="api_key_id" onDelete="CASCADE"/>
+        <index referenceId="LIPSCORE_QUEUE_KEY_ID_IDX" indexType="btree">
+            <column name="key_id"/>
+        </index>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="queue_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="LIPSCORE_QUEUE_UNIQUE_PRODUCT_KEY">
+            <column name="product_id"/>
+            <column name="key_id"/>
+        </constraint>
+        <index referenceId="LIPSCORE_QUEUE_PRIORITY" indexType="btree">
+            <column name="priority"/>
+        </index>
+        <index referenceId="STATUS_CREATED" indexType="btree">
+            <column name="status"/>
+            <column name="created_at"/>
+        </index>
+
+        <index referenceId="PRODUCT_ID" indexType="btree">
+            <column name="product_id"/>
+        </index>
+    </table>
+</schema>
