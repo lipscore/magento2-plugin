@@ -1,0 +1,19 @@
+<?php
+
+/** @var \Lipscore\RatingsReviews\Block\Product\JsonLd $block */
+
+$productJsonLd   = $block->getProductJsonLd();
+$productReviewsJsonLd  = $block->getReviewsJsonLd();
+?>
+
+<?php if ($productJsonLd): ?>
+    <script type="application/ld+json" id="lipscore-richsnippet-product">
+<?= /* @noEscape */ json_encode($productJsonLd, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) ?>
+</script>
+<?php endif; ?>
+
+<?php if ($productReviewsJsonLd): ?>
+    <script type="application/ld+json" id="lipscore-richsnippet-ratings">
+<?= /* @noEscape */ json_encode($productReviewsJsonLd, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) ?>
+</script>
+<?php endif; ?>

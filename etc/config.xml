@@ -25,6 +25,22 @@
                 <review>0</review>
                 <ratings>0</ratings>
             </appearance>
+            <cache>
+                <fresh_threshold_hours>24</fresh_threshold_hours>
+                <stale_threshold_hours>72</stale_threshold_hours>
+                <ttl_hours>24</ttl_hours>
+                <refresh_fpc>0</refresh_fpc>
+            </cache>
+            <webhook>
+                <enabled>0</enabled>
+                <hmac_secret/>
+            </webhook>
+            <log>
+                <enabled>0</enabled>
+            </log>
+            <jsonld>
+                <enabled>0</enabled>
+            </jsonld>
         </lipscore_general>
     </default>
 </config>
