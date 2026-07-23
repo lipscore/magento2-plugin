@@ -45,6 +45,9 @@
                     <option name="big_rating" value="big_rating">
                         <label translate="true">Big rating widget</label>
                     </option>
+                    <option name="ai_summary" value="ai_summary">
+                        <label translate="true">Service AI Summary widget</label>
+                    </option>
                 </options>
             </parameter>
 
@@ -297,6 +300,9 @@
                     </option>
                     <option name="attributes_distribution" value="attributes_distribution">
                         <label translate="true">Attributes distribution widget</label>
+                    </option>
+                    <option name="ai_summary" value="ai_summary">
+                        <label translate="true">AI Summary widget</label>
                     </option>
                 </options>
             </parameter>
