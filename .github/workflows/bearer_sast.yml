@@ -7,9 +7,9 @@ permissions:
 
 jobs:
   Bearer:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install reviewdog
         uses: reviewdog/action-setup@v1
