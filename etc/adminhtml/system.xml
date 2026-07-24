@@ -41,6 +41,7 @@
                 <field id="secret" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Secret Api Key</label>
                     <frontend_class>js-ls-no-autocomplete-field</frontend_class>
+                    <backend_model>Lipscore\RatingsReviews\Model\System\Config\Backend\OutputValue</backend_model>
                 </field>
             </group>
 
