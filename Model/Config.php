@@ -91,11 +91,11 @@ class Config
 
     public function getApiKey($store = null)
     {
-        return $this->scopeConfig->getValue(
+        return trim((string) $this->scopeConfig->getValue(
             self::XML_PATH_LIPSCORE_API_KEY,
             ScopeInterface::SCOPE_STORE,
             $store
-        );
+        ));
     }
 
     public function getAssetsUrl($store = null)
@@ -118,11 +118,11 @@ class Config
 
     public function getApiSecret($store = null)
     {
-        return $this->scopeConfig->getValue(
+        return trim((string) $this->scopeConfig->getValue(
             self::XML_PATH_LIPSCORE_API_SECRET,
             ScopeInterface::SCOPE_STORE,
             $store
-        );
+        ));
     }
 
     public function canShowChildDataInParent($store = null)

@@ -17,6 +17,13 @@ class OutputValue extends Value
         Type::TYPE_IDENTIFIER
     ];
 
+    public function beforeSave()
+    {
+        $this->setValue(trim((string) $this->getValue()));
+
+        return parent::beforeSave();
+    }
+
     public function afterSave()
     {
         if ($this->isValueChanged()) {
