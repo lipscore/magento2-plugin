@@ -5,7 +5,7 @@ namespace Lipscore\RatingsReviews\Helper;
 class Locale extends AbstractHelper
 {
     public const AVAILABLE_LOCALES = [
-        'br', 'cz', 'dk', 'nl', 'en', 'et', 'fi', 'fr', 'de', 'it', 'ja', 'lv', 'no', 'pl', 'br', 'ru', 'sk', 'es', 'se'
+        'cs', 'da', 'nl', 'en', 'et', 'fi', 'fr', 'de', 'it', 'ja', 'ko', 'lv', 'no', 'pl', 'pt-BR', 'pt-PT', 'ru', 'sk', 'es', 'sv'
     ];
 
     public function getLipscoreLocale($storeId = null)
@@ -33,7 +33,10 @@ class Locale extends AbstractHelper
         $localeCode = $this->config->getStoreLocale($storeId);
         list($language, $region) = explode('_', $localeCode);
 
-        $locale = $this->getAvailableLocale($language);
+        $locale = $this->getAvailableLocale($language . '-' . $region);
+        if ($locale === null) {
+            $locale = $this->getAvailableLocale($language);
+        }
         if ($locale === null) {
             $locale = $this->getAvailableLocale($region);
         }
@@ -43,8 +46,12 @@ class Locale extends AbstractHelper
 
     protected function getAvailableLocale($locale)
     {
-        $locale = strtolower($locale);
+        foreach (self::AVAILABLE_LOCALES as $availableLocale) {
+            if (strcasecmp($availableLocale, $locale) === 0) {
+                return $availableLocale;
+            }
+        }
 
-        return in_array($locale, self::AVAILABLE_LOCALES) ? $locale : null;
+        return null;
     }
 }
