@@ -1,0 +1,13 @@
+{
+    "name": "lipscore/ratingsreviews-dev-tools",
+    "description": "Local coding-standard tooling for the RatingsReviews module",
+    "type": "project",
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "require-dev": {
+        "magento/magento-coding-standard": "^40.0"
+    }
+}

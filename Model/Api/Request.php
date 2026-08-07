@@ -3,24 +3,51 @@
 namespace Lipscore\RatingsReviews\Model\Api;
 
 use Lipscore\RatingsReviews\Model\Config;
+use Magento\Framework\Exception\LocalizedException;
 
 class Request
 {
-    const REMINDER_TIMEOUT = 5;
+    public const REMINDER_TIMEOUT = 5;
 
+    /**
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * @var string|null
+     */
     protected $path;
+    /**
+     * @var string
+     */
     protected $requestType = 'POST';
 
+    /**
+     * @var int
+     */
     protected $timeout     = 5;
 
+    /**
+     * @var mixed
+     */
     protected $response;
 
+    /**
+     * @var mixed
+     */
     protected $client;
 
+    /**
+     * @var int|null
+     */
     protected $storeId = null;
 
+    /**
+     * Request constructor.
+     *
+     * @param Config $config
+     */
     public function __construct(
         Config $config
     ) {
@@ -41,10 +68,17 @@ class Request
         } elseif (class_exists(\Zend\Http\Client::class)) {
             $this->client = new \Zend\Http\Client();
         } else {
-            throw new \Exception('No HTTP client library available.');
+            throw new LocalizedException(__('No HTTP client library available.'));
         }
     }
 
+    /**
+     * Send data to the Lipscore API and return the decoded response.
+     *
+     * @param mixed $data
+     * @param string|null $path
+     * @return array|false
+     */
     public function send($data, $path = null)
     {
         if (!$path) {
@@ -52,6 +86,7 @@ class Request
         }
         $this->path = $path;
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
         $timeout = getenv('REMINDER_TIMEOUT');
         $this->timeout =  $timeout ?: static::REMINDER_TIMEOUT;
 
@@ -59,7 +94,7 @@ class Request
         $secret = $this->config->getApiSecret($this->storeId);
         $apiUrl = $this->config->getApiUrl($this->storeId);
         $headers = [
-            'X-Authorization' => strval($secret),
+            'X-Authorization' => (string) $secret,
             'Content-Type'    => 'application/json',
         ];
         $url = "$apiUrl/{$this->path}?api_key=$apiKey";
@@ -85,11 +120,22 @@ class Request
         return $result;
     }
 
+    /**
+     * Set the store id used for API requests.
+     *
+     * @param int|null $storeId
+     * @return void
+     */
     public function setStoreId($storeId)
     {
         $this->storeId = $storeId;
     }
 
+    /**
+     * Return the raw response body as a string.
+     *
+     * @return string
+     */
     public function responseMsg()
     {
         return $this->response ? $this->response->__toString() : '';

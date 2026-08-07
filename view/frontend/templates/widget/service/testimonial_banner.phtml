@@ -3,18 +3,19 @@
  * @var $block \Lipscore\RatingsReviews\Block\Widget\Service
  */
 ?>
-<div class="lipscore-service-review-testimonial" style="display:<?= $block->getDefaultDisplay() ?>;"
-    <?= $block->getProductWidgetAttributes() ?>>
+<div class="lipscore-service-review-testimonial"
+    style="display:<?= $escaper->escapeHtmlAttr($block->getDefaultDisplay()) ?>;"
+    <?= /* @noEscape */ $block->getProductWidgetAttributes() ?>>
 </div>
 
-<?php if ($block->getLipscoreCss()) : ?>
+<?php if ($block->getLipscoreCss()): ?>
     <style>
-        <?= $block->getLipscoreCss() ?>
+        <?= /* @noEscape */ $block->getLipscoreCss() ?>
     </style>
 <?php endif; ?>
 
-<?php if ($block->getLipscoreJs()) : ?>
+<?php if ($block->getLipscoreJs()): ?>
     <script>
-        <?= $block->getLipscoreJs() ?>
+        <?= /* @noEscape */ $block->getLipscoreJs() ?>
     </script>
 <?php endif; ?>

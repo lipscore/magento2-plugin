@@ -6,6 +6,12 @@ use Magento\Sales\Model\Order;
 
 class Purchase extends AbstractHelper
 {
+    /**
+     * Get the customer email from the order, falling back to the customer's own email.
+     *
+     * @param Order $order
+     * @return string
+     */
     public function customerEmail(Order $order)
     {
         $email = $order->getBillingAddress()->getEmail();
@@ -16,6 +22,12 @@ class Purchase extends AbstractHelper
         return $email;
     }
 
+    /**
+     * Get the customer's full name from the order billing address, falling back to the customer's own name.
+     *
+     * @param Order $order
+     * @return string
+     */
     public function customerName(Order $order)
     {
         $addr = $order->getBillingAddress();
@@ -29,6 +41,9 @@ class Purchase extends AbstractHelper
     }
 
     /**
+     * Get the order creation timestamp.
+     *
+     * @param Order $order
      * @return int
      */
     public function createdAt($order)

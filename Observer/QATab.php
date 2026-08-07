@@ -7,8 +7,17 @@ use Magento\Framework\View\Layout;
 
 class QATab extends AbstractObserver
 {
+    /**
+     * @var string
+     */
     protected static $logFile = 'ls_qa_tab_observer';
 
+    /**
+     * Add the Lipscore Q&A block to the product view layout.
+     *
+     * @param \Magento\Framework\Event\Observer $observer
+     * @return void
+     */
     protected function _execute(\Magento\Framework\Event\Observer $observer)
     {
         if (!$this->checkIfEnabled()) {
@@ -38,6 +47,11 @@ class QATab extends AbstractObserver
         }
     }
 
+    /**
+     * Check whether the observer method is available to run.
+     *
+     * @return bool
+     */
     protected function methodAvailable()
     {
         return $this->config->isActive();

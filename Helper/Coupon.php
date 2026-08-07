@@ -10,10 +10,24 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class Coupon extends AbstractHelper
 {
+    /**
+     * @var mixed
+     */
     protected $ruleFactory;
 
+    /**
+     * @var MassgeneratorFactory
+     */
     protected $massgeneratorFactory;
 
+    /**
+     * Initialize dependencies.
+     *
+     * @param Logger $logger
+     * @param Config $config
+     * @param StoreManagerInterface $storeManager
+     * @param MassgeneratorFactory $massgeneratorFactory
+     */
     public function __construct(
         Logger $logger,
         Config $config,
@@ -25,6 +39,12 @@ class Coupon extends AbstractHelper
         $this->massgeneratorFactory = $massgeneratorFactory;
     }
 
+    /**
+     * Acquire a coupon code for the given price rule.
+     *
+     * @param \Magento\SalesRule\Model\Rule $priceRule
+     * @return string|null
+     */
     public function acquireCouponCode(\Magento\SalesRule\Model\Rule $priceRule)
     {
         if ($priceRule->getCouponType() == Rule::COUPON_TYPE_NO_COUPON) {

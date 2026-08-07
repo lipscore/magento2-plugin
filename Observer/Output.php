@@ -6,11 +6,20 @@ use Magento\Framework\View\Element\Template;
 
 class Output extends AbstractObserver
 {
-    const MAGENTO_REVIEW_MODULE = 'Magento_Review';
-    const MODULE = 'Lipscore_RatingsReviews';
+    public const MAGENTO_REVIEW_MODULE = 'Magento_Review';
+    public const MODULE = 'Lipscore_RatingsReviews';
 
+    /**
+     * @var string
+     */
     protected static $logFile = 'ls_output_observer';
 
+    /**
+     * Hide the Magento or Lipscore review block based on module configuration.
+     *
+     * @param \Magento\Framework\Event\Observer $observer
+     * @return void
+     */
     protected function _execute(\Magento\Framework\Event\Observer $observer)
     {
         if (!$this->checkIfEnabled()) {
@@ -39,6 +48,11 @@ class Output extends AbstractObserver
         }
     }
 
+    /**
+     * Check whether the observer method is available to run.
+     *
+     * @return bool
+     */
     protected function methodAvailable()
     {
         return true;

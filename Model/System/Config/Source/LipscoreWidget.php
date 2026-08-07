@@ -7,16 +7,32 @@ use Magento\Widget\Model\ResourceModel\Widget\Instance\CollectionFactory;
 
 class LipscoreWidget implements OptionSourceInterface
 {
+    /**
+     * @var array
+     */
     protected $options;
 
+    /**
+     * @var CollectionFactory
+     */
     protected $collectionFactory;
 
+    /**
+     * Constructor.
+     *
+     * @param CollectionFactory $collectionFactory
+     */
     public function __construct(
         CollectionFactory $collectionFactory
     ) {
         $this->collectionFactory = $collectionFactory;
     }
 
+    /**
+     * Get the list of available options.
+     *
+     * @return array
+     */
     public function toOptionArray()
     {
         if (!$this->options) {
@@ -27,12 +43,14 @@ class LipscoreWidget implements OptionSourceInterface
     }
 
     /**
+     * Get widget instance options keyed by instance id.
+     *
      * @return array
      */
     public function getOptionIdArray()
     {
         $options = $this->collectionFactory->create()
-            ->addFieldToFilter('instance_type', array('like' => '%Lipscore%'));
+            ->addFieldToFilter('instance_type', ['like' => '%Lipscore%']);
 
         $array = [];
         $array[''] = __('Not selected');

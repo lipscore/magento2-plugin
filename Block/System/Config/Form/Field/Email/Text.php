@@ -7,6 +7,12 @@ use Magento\Framework\Data\Form\Element\AbstractElement;
 
 class Text extends AbstractField
 {
+    /**
+     * Render the review request email field description.
+     *
+     * @param AbstractElement $element
+     * @return string
+     */
     public function render(AbstractElement $element)
     {
         return '<p>The single most important feature to get ratings and reviews is to send existing customers Review

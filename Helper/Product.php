@@ -17,20 +17,54 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class Product extends AbstractHelper
 {
+    /**
+     * @var ProductRepository
+     */
     protected $productRepository;
 
+    /**
+     * @var Image
+     */
     protected $imageHelper;
 
+    /**
+     * @var Registry
+     */
     protected $registry;
 
+    /**
+     * @var Category
+     */
     protected $catalogCategory;
 
+    /**
+     * @var \Magento\Catalog\Model\Product\Url
+     */
     protected $urlModel;
 
+    /**
+     * @var array
+     */
     protected $productCache = [];
 
+    /**
+     * @var array
+     */
     protected $childProductCache = [];
 
+    /**
+     * Product helper constructor.
+     *
+     * @param Logger $logger
+     * @param Config $config
+     * @param StoreManagerInterface $storeManager
+     * @param ProductRepository $productRepository
+     * @param Image $imageHelper
+     * @param Registry $registry
+     * @param Category $catalogCategory
+     * @param UrlFactory $urlModelFactory
+     * @param UrlFactoryFactory $urlFactoryFactory
+     */
     public function __construct(
         Logger $logger,
         Config $config,
@@ -53,6 +87,13 @@ class Product extends AbstractHelper
         );
     }
 
+    /**
+     * Get product data for Lipscore, optionally including child product data.
+     *
+     * @param MagentoProduct $product
+     * @param bool $withChildProducts
+     * @return array
+     */
     public function getProductData(MagentoProduct $product, $withChildProducts = false)
     {
         $canShowChildData = $this->config->canShowChildDataInParent($product->getStoreId());
@@ -68,6 +109,13 @@ class Product extends AbstractHelper
         return $data;
     }
 
+    /**
+     * Get full product data including variant data.
+     *
+     * @param MagentoProduct $parentProduct
+     * @param MagentoProduct|null $variant
+     * @return array
+     */
     public function getProductFullData($parentProduct, $variant = null)
     {
         $data = [];
@@ -82,6 +130,12 @@ class Product extends AbstractHelper
         return $data;
     }
 
+    /**
+     * Build and cache the product data array for the given product.
+     *
+     * @param MagentoProduct $product
+     * @return array
+     */
     protected function _getProductData(MagentoProduct $product)
     {
         if (!isset($this->productCache[$product->getId()])) {
@@ -105,6 +159,12 @@ class Product extends AbstractHelper
         return $this->productCache[$product->getId()];
     }
 
+    /**
+     * Build and cache child product data for configurable products.
+     *
+     * @param MagentoProduct $product
+     * @return array
+     */
     protected function _getChildProductsData(MagentoProduct $product)
     {
         if (!isset($this->childProductCache[$product->getId()])) {
@@ -112,15 +172,17 @@ class Product extends AbstractHelper
             $productType = $product->getTypeId();
             if ($productType === Configurable::TYPE_CODE) {
                 $children = $product->getTypeInstance()->getUsedProducts($product);
-                $childGtins = $childMpns = $childSkus = [];
+                $childGtinGroups = [];
+                $childMpns = $childSkus = [];
                 foreach ($children as $child) {
                     $gtin = $this->getGtin($child);
                     if (!empty($gtin)) {
-                        $childGtins = array_merge($childGtins, $gtin);
+                        $childGtinGroups[] = $gtin;
                     }
                     $childMpns[] = $this->getMpn($child);
                     $childSkus[] = $this->getSku($child);
                 }
+                $childGtins = $childGtinGroups ? array_merge(...$childGtinGroups) : [];
 
                 if ($childGtins) {
                     $data['gtin'] = $childGtins;
@@ -141,6 +203,12 @@ class Product extends AbstractHelper
         return $this->childProductCache[$product->getId()];
     }
 
+    /**
+     * Get variant-specific data for the given product.
+     *
+     * @param MagentoProduct|null $product
+     * @return array
+     */
     protected function _getVariantData($product)
     {
         if (!$product) {
@@ -170,11 +238,23 @@ class Product extends AbstractHelper
         return $data;
     }
 
+    /**
+     * Get the filtered product name.
+     *
+     * @param MagentoProduct $product
+     * @return string
+     */
     protected function getName(MagentoProduct $product)
     {
         return $this->filterText($product->getName());
     }
 
+    /**
+     * Get the filtered product brand attribute value.
+     *
+     * @param MagentoProduct $product
+     * @return string
+     */
     protected function getBrand(MagentoProduct $product)
     {
         $brandAttr = $this->config->getProductAttributeBrand($product->getStoreId());
@@ -182,6 +262,12 @@ class Product extends AbstractHelper
         return $this->filterText($brand);
     }
 
+    /**
+     * Get the product id attribute value as a string.
+     *
+     * @param MagentoProduct $product
+     * @return string
+     */
     protected function getId(MagentoProduct $product)
     {
         $idAttr = $this->config->getProductAttributeId($product->getStoreId());
@@ -189,6 +275,12 @@ class Product extends AbstractHelper
         return "{$id}";
     }
 
+    /**
+     * Get the product GTIN values as an array.
+     *
+     * @param MagentoProduct $product
+     * @return array
+     */
     protected function getGtin(MagentoProduct $product)
     {
         $gtinAttr = $this->config->getProductAttributeGtin($product->getStoreId());
@@ -196,12 +288,18 @@ class Product extends AbstractHelper
         if (!$gtin) {
             return [];
         }
-        $delimiters = array(",", "_", " ");
+        $delimiters = [",", "_", " "];
         $gtinArray = $this->multiExplode($delimiters, $gtin);
 
         return $gtinArray;
     }
 
+    /**
+     * Get the product MPN attribute value.
+     *
+     * @param MagentoProduct $product
+     * @return string
+     */
     protected function getMpn(MagentoProduct $product)
     {
         $attr = $this->config->getProductAttributeMpn($product->getStoreId());
@@ -209,7 +307,14 @@ class Product extends AbstractHelper
         return $this->getAttributeValue($product, $attr) ?? '';
     }
 
-    public function multiExplode ($delimiters, $data)
+    /**
+     * Explode a string using multiple delimiters.
+     *
+     * @param array $delimiters
+     * @param string $data
+     * @return array
+     */
+    public function multiExplode($delimiters, $data)
     {
         $data          = isset($data) ? $data : '';
         $processedData = str_replace($delimiters, $delimiters[0], $data);
@@ -218,6 +323,12 @@ class Product extends AbstractHelper
         return $return;
     }
 
+    /**
+     * Get the product URL.
+     *
+     * @param MagentoProduct $product
+     * @return string
+     */
     public function getUrl(MagentoProduct $product)
     {
         return $this->urlModel->getUrl(
@@ -229,11 +340,23 @@ class Product extends AbstractHelper
         );
     }
 
+    /**
+     * Get the product image URL.
+     *
+     * @param MagentoProduct $product
+     * @return string
+     */
     protected function getImageUrl(MagentoProduct $product)
     {
         return $this->imageHelper->init($product, 'product_page_image_medium')->getUrl();
     }
 
+    /**
+     * Get the filtered product category name.
+     *
+     * @param MagentoProduct $product
+     * @return string
+     */
     protected function getCategory(MagentoProduct $product)
     {
         $category = $this->registry->registry('current_category');
@@ -246,11 +369,23 @@ class Product extends AbstractHelper
         return $this->filterText($category ? $category->getName() : '');
     }
 
+    /**
+     * Get product availability as an integer flag.
+     *
+     * @param MagentoProduct $product
+     * @return int
+     */
     protected function getAvailability(MagentoProduct $product)
     {
         return (int) $product->getIsSalable();
     }
 
+    /**
+     * Get the filtered product description.
+     *
+     * @param MagentoProduct $product
+     * @return string
+     */
     protected function getDescription(MagentoProduct $product)
     {
         $description = $product->getShortDescription();
@@ -260,12 +395,24 @@ class Product extends AbstractHelper
         return $this->filterText($description);
     }
 
+    /**
+     * Get the product's final price value.
+     *
+     * @param MagentoProduct $product
+     * @return float
+     */
     protected function getPrice(MagentoProduct $product)
     {
         $finalPrice = $product->getPriceInfo()->getPrice(Price\FinalPrice::PRICE_CODE);
         return $finalPrice->getMinimalPrice()->getValue();
     }
 
+    /**
+     * Get the store's current currency code.
+     *
+     * @param MagentoProduct $product
+     * @return string
+     */
     protected function getCurrency(MagentoProduct $product)
     {
         return $this->storeManager->getStore($product->getStoreId())
@@ -273,6 +420,12 @@ class Product extends AbstractHelper
             ->getCode();
     }
 
+    /**
+     * Get the product SKU.
+     *
+     * @param MagentoProduct $product
+     * @return string
+     */
     protected function getSku(MagentoProduct $product)
     {
         $sku = $product->getSku();
@@ -282,6 +435,13 @@ class Product extends AbstractHelper
         return $sku;
     }
 
+    /**
+     * Get an attribute value for the given product and attribute code.
+     *
+     * @param MagentoProduct $product
+     * @param string $attrCode
+     * @return mixed
+     */
     protected function getAttributeValue(MagentoProduct $product, $attrCode)
     {
         if (!$attrCode) {
@@ -311,9 +471,16 @@ class Product extends AbstractHelper
         return $value ?: null;
     }
 
+    /**
+     * Filter text by decoding entities and stripping tags.
+     *
+     * @param mixed $text
+     * @return mixed
+     */
     protected function filterText($text)
     {
         if (is_string($text)) {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
             return html_entity_decode(strip_tags($text));
         } else {
             return $text;

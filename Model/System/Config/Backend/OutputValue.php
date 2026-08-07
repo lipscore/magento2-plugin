@@ -9,14 +9,25 @@ use Magento\PageCache\Model\Cache\Type;
 
 class OutputValue extends Value
 {
+    /**
+     * @var bool
+     */
     protected $isChanged = false;
 
+    /**
+     * @var array
+     */
     protected static $cacheTypes = [
         Block::TYPE_IDENTIFIER,
         Layout::TYPE_IDENTIFIER,
         Type::TYPE_IDENTIFIER
     ];
 
+    /**
+     * Trim the value before saving.
+     *
+     * @return $this
+     */
     public function beforeSave()
     {
         $this->setValue(trim((string) $this->getValue()));
@@ -24,6 +35,11 @@ class OutputValue extends Value
         return parent::beforeSave();
     }
 
+    /**
+     * Invalidate relevant cache types after saving, if the value changed.
+     *
+     * @return $this
+     */
     public function afterSave()
     {
         if ($this->isValueChanged()) {

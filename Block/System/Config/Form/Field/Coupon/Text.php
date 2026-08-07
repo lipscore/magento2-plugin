@@ -7,6 +7,12 @@ use Magento\Framework\Data\Form\Element\AbstractElement;
 
 class Text extends AbstractField
 {
+    /**
+     * Render the coupon field description.
+     *
+     * @param AbstractElement $element
+     * @return string
+     */
     public function render(AbstractElement $element)
     {
         return <<<EOT
