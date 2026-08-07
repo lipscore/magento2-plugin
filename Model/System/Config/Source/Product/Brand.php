@@ -11,12 +11,28 @@ use Magento\Framework\Data\OptionSourceInterface;
 
 class Brand implements OptionSourceInterface
 {
+    /**
+     * @var CollectionFactory
+     */
     protected $attributeFactory;
 
+    /**
+     * @var Type
+     */
     protected $type;
 
+    /**
+     * @var Logger
+     */
     protected $logger;
 
+    /**
+     * Constructor.
+     *
+     * @param Logger $logger
+     * @param CollectionFactory $attributeFactory
+     * @param Type $type
+     */
     public function __construct(
         Logger $logger,
         CollectionFactory $attributeFactory,
@@ -53,7 +69,7 @@ class Brand implements OptionSourceInterface
         return $options;
     }
 
-     /**
+    /**
      * Find attributes to render
      *
      * @return array

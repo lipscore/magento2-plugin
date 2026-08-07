@@ -7,10 +7,20 @@ use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Data\Form\Element\Factory;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
-Class TextareaField extends Template
+class TextareaField extends Template
 {
+    /**
+     * @var Factory
+     */
     protected $elementFactory;
 
+    /**
+     * Constructor.
+     *
+     * @param Context $context
+     * @param Factory $elementFactory
+     * @param array $data
+     */
     public function __construct(
         Context $context,
         Factory $elementFactory,
@@ -21,6 +31,12 @@ Class TextareaField extends Template
         parent::__construct($context, $data);
     }
 
+    /**
+     * Prepare the element HTML.
+     *
+     * @param AbstractElement $element
+     * @return AbstractElement
+     */
     public function prepareElementHtml(AbstractElement $element)
     {
         $input = $this->elementFactory->create("textarea", ['data' => $element->getData()]);

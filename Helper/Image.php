@@ -6,6 +6,11 @@ use Magento\Catalog\Helper\Image as BaseImage;
 
 class Image extends BaseImage
 {
+    /**
+     * Initialize the base image file if it is not already set.
+     *
+     * @return $this
+     */
     protected function initBaseFile()
     {
         $model = $this->_getModel();

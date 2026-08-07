@@ -7,6 +7,12 @@ use Magento\Framework\Data\Form\Element\AbstractElement;
 
 class Link extends Fieldset
 {
+    /**
+     * Render the Lipscore dashboard link.
+     *
+     * @param AbstractElement $element
+     * @return string
+     */
     public function render(AbstractElement $element)
     {
         return <<<EOT

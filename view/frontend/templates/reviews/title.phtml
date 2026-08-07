@@ -4,7 +4,9 @@
  */
 ?>
 <span id='js-lipscore-reviews-tab'>
-    <?php echo $block->escapeHtml(__('Reviews')) ?><span id='js-lipscore-reviews-tab-count' style='display: none;'>&nbsp;(<span class='lipscore-review-count' <?php echo $block->getLsProductAttrs() ?>></span>)</span>
+    <?= $escaper->escapeHtml(__('Reviews')) ?><span
+        id='js-lipscore-reviews-tab-count' style='display: none;'>&nbsp;(<span
+        class='lipscore-review-count' <?= /* @noEscape */ $block->getLsProductAttrs() ?>></span>)</span>
 </span>
 <script>
 

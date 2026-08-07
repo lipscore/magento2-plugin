@@ -4,7 +4,7 @@
  */
 ?>
 <?php if ($block->getLsProductAttrs()) { ?>
-    <div style="display: none !important;"><?php echo $block->escapeHtml(__('Q&A')) ?></div>
-    <div id="lipscore-question-post" <?php echo $block->getLsProductAttrs() ?>></div>
-    <div id="lipscore-question-list" <?php echo $block->getLsProductAttrs() ?>></div>
+    <div style="display: none !important;"><?= $escaper->escapeHtml(__('Q&A')) ?></div>
+    <div id="lipscore-question-post" <?= /* @noEscape */ $block->getLsProductAttrs() ?>></div>
+    <div id="lipscore-question-list" <?= /* @noEscape */ $block->getLsProductAttrs() ?>></div>
 <?php } ?>

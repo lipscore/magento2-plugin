@@ -11,7 +11,7 @@ Magento 2 plugin by [Lipscore](https://lipscore.com/). Tested with Magento 2 ver
 ### 1. b) Install Using Composer
 
 ```bash
-composer require lipscore/ratingsreviews-magento2:2.2.2
+composer require lipscore/ratingsreviews-magento2:2.2.3
 ```
 
 ### 1. c) Install Manually

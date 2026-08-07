@@ -10,10 +10,22 @@ use Magento\Catalog\Model\Product;
 
 class Mpn implements OptionSourceInterface
 {
+    /**
+     * @var Config
+     */
     protected $eavConfig;
 
+    /**
+     * @var Logger
+     */
     protected $logger;
 
+    /**
+     * Constructor.
+     *
+     * @param Logger $logger
+     * @param Config $eavConfig
+     */
     public function __construct(
         Logger $logger,
         Config $eavConfig
@@ -48,6 +60,11 @@ class Mpn implements OptionSourceInterface
         return $options;
     }
 
+    /**
+     * Find eligible attributes to render as options.
+     *
+     * @return array
+     */
     protected function findAttrs()
     {
         $attrs = [];

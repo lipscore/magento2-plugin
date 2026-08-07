@@ -5,14 +5,14 @@
 ?>
 <div class="lipscore-service-ai-summary"></div>
 
-<?php if ($block->getLipscoreCss()) : ?>
+<?php if ($block->getLipscoreCss()): ?>
     <style>
-        <?= $block->getLipscoreCss() ?>
+        <?= /* @noEscape */ $block->getLipscoreCss() ?>
     </style>
 <?php endif; ?>
 
-<?php if ($block->getLipscoreJs()) : ?>
+<?php if ($block->getLipscoreJs()): ?>
     <script>
-        <?= $block->getLipscoreJs() ?>
+        <?= /* @noEscape */ $block->getLipscoreJs() ?>
     </script>
 <?php endif; ?>
