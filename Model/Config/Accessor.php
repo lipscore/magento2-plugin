@@ -20,6 +20,7 @@ class Accessor
         'locale'             => 'lipscore_general/locale/',
         'emails'             => 'lipscore_general/emails/',
         'module'             => 'lipscore_general/module/',
+        'import'             => 'lipscore_general/import/',
         'coupons'            => 'lipscore_general/coupons/',
         'tracking'           => 'lipscore_plugin/',
         'storeGeneral'       => 'general/',

@@ -102,7 +102,15 @@
                 </field>
             </group>
 
-            <group id="dashboard_link" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="import" translate="label" type="text" sortOrder="80" showInDefault="1">
+                <label>Import</label>
+                <field id="active" translate="label comment" type="select" sortOrder="10" showInDefault="1">
+                    <label>Enable import of ratings</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+
+            <group id="dashboard_link" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
                 <frontend_model>Lipscore\RatingsReviews\Block\System\Config\Form\Fieldset\Dashboard\Link</frontend_model>
             </group>
         </section>
