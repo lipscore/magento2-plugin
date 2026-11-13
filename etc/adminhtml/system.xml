@@ -95,6 +95,31 @@
                     <comment>Send emails for orders in this status</comment>
                     <source_model>Lipscore\RatingsReviews\Model\System\Config\Source\Order\Status\Reminder</source_model>
                 </field>
+                <field id="trigger" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Order status detection</label>
+                    <comment><![CDATA[How the extension detects that an order reached the status above.<br/>
+<b>On order save</b> &ndash; real-time, default behaviour.<br/>
+<b>Scheduled check (cron)</b> &ndash; use when order statuses are changed outside of Magento's order save (e.g. directly in the database by an ERP or third-party extension). Failed requests are retried with increasing delays for about 32 hours. Requires Magento cron.]]></comment>
+                    <source_model>Lipscore\RatingsReviews\Model\System\Config\Source\Order\Trigger</source_model>
+                </field>
+                <field id="cron_schedule" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Check for new orders every</label>
+                    <comment>Applies to all store views using the scheduled check.</comment>
+                    <source_model>Lipscore\RatingsReviews\Model\System\Config\Source\Cron\Frequency</source_model>
+                    <depends>
+                        <field id="trigger">cron</field>
+                    </depends>
+                </field>
+                <field id="cron_lookback_days" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Check orders updated within the last (days)</label>
+                    <comment><![CDATA[How far back to look for orders in the status above that have not been sent yet. Default: 7 days.<br/>
+Failed requests are only retried within this period, so set at least 2 days.<br/>
+After switching to the scheduled check, orders from this period are sent even if a version before 2.3.0 already sent them. The duplicate settings in your Lipscore account decide whether the customer gets a second request.]]></comment>
+                    <validate>required-entry validate-digits validate-digits-range digits-range-1-365</validate>
+                    <depends>
+                        <field id="trigger">cron</field>
+                    </depends>
+                </field>
             </group>
 
             <group id="coupons" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">

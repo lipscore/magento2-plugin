@@ -9,3 +9,6 @@
 /vendor/
 /composer.lock
 !/dev-tools/composer.lock
+
+# Coding standard reports (generated locally, not part of the extension)
+magento_code_sniffer_report.json

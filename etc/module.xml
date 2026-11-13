@@ -4,6 +4,8 @@
     <module name="Lipscore_RatingsReviews" setup_version="0.0.1">
         <sequence>
              <module name="Magento_Review"/>
+             <module name="Magento_Sales"/>
+             <module name="Magento_Ui"/>
         </sequence>
     </module>
 </config>

@@ -22,12 +22,20 @@ class Config
     public const XML_PATH_LIPSCORE_LOCALE_LOCALE = 'lipscore_general/locale/locale';
     public const XML_PATH_LIPSCORE_EMAILS_TEXT = 'lipscore_general/emails/emails_text';
     public const XML_PATH_LIPSCORE_EMAILS_ORDER_STATUS = 'lipscore_general/emails/order_status';
+    public const XML_PATH_LIPSCORE_EMAILS_TRIGGER = 'lipscore_general/emails/trigger';
+    public const XML_PATH_LIPSCORE_EMAILS_CRON_SCHEDULE = 'lipscore_general/emails/cron_schedule';
+    public const XML_PATH_LIPSCORE_EMAILS_CRON_LOOKBACK_DAYS = 'lipscore_general/emails/cron_lookback_days';
     public const XML_PATH_LIPSCORE_COUPONS_TEXT = 'lipscore_general/coupons/coupons_text';
     public const XML_PATH_LIPSCORE_COUPONS_PRICE_RULE_ID = 'lipscore_general/coupons/price_rule_id';
     public const XML_PATH_LIPSCORE_APPEARANCE_RATINGS = 'lipscore_general/appearance/ratings';
     public const XML_PATH_LIPSCORE_APPEARANCE_REVIEW = 'lipscore_general/appearance/review';
     public const XML_PATH_LIPSCORE_APPEARANCE_QA = 'lipscore_general/appearance/qa';
     public const XML_PATH_LIPSCORE_MODULE_ACTIVE = 'lipscore_general/module/active';
+
+    public const EMAILS_TRIGGER_EVENT = 'event';
+    public const EMAILS_TRIGGER_CRON = 'cron';
+
+    public const EMAILS_CRON_LOOKBACK_DEFAULT_DAYS = 7;
 
     /**
      * @var ScopeConfigInterface
@@ -315,6 +323,64 @@ class Config
             ScopeInterface::SCOPE_STORE,
             $store
         );
+    }
+
+    /**
+     * Get how order status changes are detected; unknown values fall back to "event".
+     *
+     * @param string|int|null $store Store code or ID
+     * @return string
+     */
+    public function getEmailsTrigger($store = null)
+    {
+        $trigger = (string) $this->scopeConfig->getValue(
+            self::XML_PATH_LIPSCORE_EMAILS_TRIGGER,
+            ScopeInterface::SCOPE_STORE,
+            $store
+        );
+
+        $allowed = [self::EMAILS_TRIGGER_EVENT, self::EMAILS_TRIGGER_CRON];
+
+        return in_array($trigger, $allowed, true) ? $trigger : self::EMAILS_TRIGGER_EVENT;
+    }
+
+    /**
+     * Check whether review requests are sent on order save.
+     *
+     * @param string|int|null $store Store code or ID
+     * @return bool
+     */
+    public function isEmailsEventTriggerEnabled($store = null)
+    {
+        return $this->getEmailsTrigger($store) === self::EMAILS_TRIGGER_EVENT;
+    }
+
+    /**
+     * Check whether review requests are sent by the scheduled check.
+     *
+     * @param string|int|null $store Store code or ID
+     * @return bool
+     */
+    public function isEmailsCronTriggerEnabled($store = null)
+    {
+        return $this->getEmailsTrigger($store) === self::EMAILS_TRIGGER_CRON;
+    }
+
+    /**
+     * Get how many days back the scheduled check looks for orders.
+     *
+     * @param string|int|null $store Store code or ID
+     * @return int
+     */
+    public function getEmailsCronLookbackDays($store = null)
+    {
+        $days = (int) $this->scopeConfig->getValue(
+            self::XML_PATH_LIPSCORE_EMAILS_CRON_LOOKBACK_DAYS,
+            ScopeInterface::SCOPE_STORE,
+            $store
+        );
+
+        return $days > 0 ? $days : self::EMAILS_CRON_LOOKBACK_DEFAULT_DAYS;
     }
 
     /**

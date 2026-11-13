@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <listingToolbar name="listing_top">
+        <massaction name="listing_massaction">
+            <action name="lipscore_send_review_request" class="Lipscore\RatingsReviews\Ui\Component\MassAction\SendReviewRequest">
+                <settings>
+                    <confirm>
+                        <message translate="true">Send Lipscore review requests for the selected orders? Requests are sent regardless of the order status, also for canceled or closed orders. Orders already sent by this extension (since version 2.3.0) are skipped.</message>
+                        <title translate="true">Send Lipscore review request</title>
+                    </confirm>
+                    <url path="lipscore/order/massSendReviewRequest"/>
+                    <type>lipscore_send_review_request</type>
+                    <label translate="true">Send Lipscore review request</label>
+                </settings>
+            </action>
+        </massaction>
+    </listingToolbar>
+    <columns name="sales_order_columns">
+        <column name="lipscore_review_status" component="Magento_Ui/js/grid/columns/select" sortOrder="250">
+            <settings>
+                <filter>select</filter>
+                <options class="Lipscore\RatingsReviews\Model\System\Config\Source\Order\ReviewRequestStatus"/>
+                <dataType>select</dataType>
+                <label translate="true">Lipscore Review Request</label>
+            </settings>
+        </column>
+        <column name="lipscore_review_date" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date" sortOrder="251">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Lipscore Review Request Date</label>
+                <visible>false</visible>
+            </settings>
+        </column>
+    </columns>
+</listing>
