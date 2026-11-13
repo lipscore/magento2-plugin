@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Blocks commits that violate the Magento2 coding standard.
+# Installed via dev-tools/install-hooks.sh (git config core.hooksPath dev-tools/git-hooks).
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+
+files=$(git diff --cached --name-only --diff-filter=ACMR -- '*.php' '*.phtml')
+if [ -z "$files" ]; then
+    exit 0
+fi
+
+if [ ! -x dev-tools/vendor/bin/phpcs ]; then
+    echo "phpcs is not installed. Run: (cd dev-tools && composer install)" >&2
+    exit 1
+fi
+
+echo "Running Magento2 coding standard check on staged files..."
+if ! dev-tools/vendor/bin/phpcs --standard=phpcs.xml.dist $files; then
+    echo "" >&2
+    echo "Coding standard check failed. Fix the issues above before committing." >&2
+    echo "Auto-fixable issues can be resolved with: dev-tools/vendor/bin/phpcbf --standard=phpcs.xml.dist $files" >&2
+    exit 1
+fi

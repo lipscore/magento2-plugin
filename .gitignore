@@ -5,10 +5,15 @@
 *.zip
 
 # Coding-standard tooling (see dev-tools/)
-/dev-tools/vendor/
+/dev-tools/vendor
 /vendor/
 /composer.lock
 !/dev-tools/composer.lock
+
+# Local notes and test output, not shared
+/dev-tools/*.md
+/dev-tools/*.png
+/dev-tools/mftfmagento/
 
 # Coding standard reports (generated locally, not part of the extension)
 magento_code_sniffer_report.json
