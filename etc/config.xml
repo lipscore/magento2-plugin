@@ -16,6 +16,9 @@
             </locale>
             <emails>
                 <order_status>pending</order_status>
+                <trigger>event</trigger>
+                <cron_schedule>*/10 * * * *</cron_schedule>
+                <cron_lookback_days>7</cron_lookback_days>
             </emails>
             <module>
                 <active>1</active>

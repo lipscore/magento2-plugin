@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="lipscore_order_reminder" resource="default" engine="innodb"
+           comment="Lipscore review request delivery log (used by the scheduled order status check)">
+        <column xsi:type="int" name="order_id" unsigned="true" nullable="false" identity="false"
+                comment="Sales order entity ID"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="true" identity="false"
+                comment="Store ID"/>
+        <column xsi:type="smallint" name="status" unsigned="true" nullable="false" identity="false"
+                comment="Delivery status, see Lipscore\RatingsReviews\Model\Reminder\Status"/>
+        <column xsi:type="smallint" name="source" unsigned="true" nullable="false" identity="false"
+                comment="Record source, see Lipscore\RatingsReviews\Model\Reminder\Source"/>
+        <column xsi:type="smallint" name="attempts" unsigned="true" nullable="false" identity="false" default="0"
+                comment="Number of delivery attempts"/>
+        <column xsi:type="smallint" name="cron_attempts" unsigned="true" nullable="false" identity="false" default="0"
+                comment="Failed attempts of the scheduled check, limits its retries"/>
+        <column xsi:type="text" name="last_error" nullable="true" comment="Last delivery error"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="order_id"/>
+        </constraint>
+        <index referenceId="LIPSCORE_ORDER_REMINDER_STATUS" indexType="btree">
+            <column name="status"/>
+        </index>
+    </table>
+</schema>

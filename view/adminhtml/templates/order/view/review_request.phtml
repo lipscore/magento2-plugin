@@ -1,0 +1,40 @@
+<?php
+/** @var \Lipscore\RatingsReviews\Block\Adminhtml\Order\View\ReviewRequest $block */
+/** @var \Magento\Framework\Escaper|null $escaper */
+
+use Lipscore\RatingsReviews\Model\Reminder\Status;
+
+// $escaper is passed to templates since Magento 2.4.0; the block provides the same escape methods before that.
+$escaper = $escaper ?? $block;
+
+$record = $block->getRecord();
+$status = $record ? (int) $record['status'] : Status::NONE;
+$date = $record ? $block->formatDate($record['updated_at'], \IntlDateFormatter::MEDIUM, true) : '';
+?>
+<section class="admin__page-section lipscore-review-request">
+    <div class="admin__page-section-title">
+        <span class="title"><?= $escaper->escapeHtml(__('Lipscore Review Request')) ?></span>
+    </div>
+    <div class="admin__page-section-content">
+        <?php if (!$record): ?>
+            <p><?= $escaper->escapeHtml(__('No review request recorded for this order.')) ?></p>
+            <?php $note = __('Review requests sent by extension versions before 2.3.0 are not recorded.'); ?>
+            <p class="note"><?= $escaper->escapeHtml($note) ?></p>
+        <?php elseif ($status === Status::SENT): ?>
+            <p><?= $escaper->escapeHtml(__(
+                'Sent on %1, %2.',
+                $date,
+                $block->getSourceLabel($record['source'])
+            )) ?></p>
+        <?php elseif ($status === Status::FAILED): ?>
+            <p><?= $escaper->escapeHtml(__(
+                'Failed on %1 after %2 attempt(s).',
+                $date,
+                (int) $record['attempts']
+            )) ?></p>
+            <?php if (!empty($record['last_error'])): ?>
+                <p class="note"><?= $escaper->escapeHtml($record['last_error']) ?></p>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+</section>

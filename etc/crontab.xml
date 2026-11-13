@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <!-- Schedule is taken from the admin setting; <schedule> is only a fallback. -->
+        <job name="lipscore_send_review_requests" instance="Lipscore\RatingsReviews\Cron\SendReviewRequests" method="execute">
+            <schedule>*/10 * * * *</schedule>
+            <config_path>lipscore_general/emails/cron_schedule</config_path>
+        </job>
+    </group>
+</config>

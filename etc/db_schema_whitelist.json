@@ -1,0 +1,21 @@
+{
+    "lipscore_order_reminder": {
+        "column": {
+            "order_id": true,
+            "store_id": true,
+            "status": true,
+            "source": true,
+            "attempts": true,
+            "cron_attempts": true,
+            "last_error": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "LIPSCORE_ORDER_REMINDER_STATUS": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}
