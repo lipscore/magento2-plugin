@@ -11,14 +11,36 @@ use Magento\Framework\View\Element\Template\Context;
 
 abstract class AbstractBlock extends Template
 {
+    /**
+     * @var Registry
+     */
     protected $coreRegistry;
 
+    /**
+     * @var ProductData
+     */
     protected $productData;
 
+    /**
+     * @var Logger
+     */
     protected $logger;
 
+    /**
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * Constructor.
+     *
+     * @param Context $context
+     * @param Logger $logger
+     * @param Registry $registry
+     * @param ProductData $productData
+     * @param Config $config
+     * @param array $data
+     */
     public function __construct(
         Context $context,
         Logger $logger,
@@ -35,6 +57,11 @@ abstract class AbstractBlock extends Template
         parent::__construct($context, $data);
     }
 
+    /**
+     * Get Lipscore attributes for the current product.
+     *
+     * @return string
+     */
     public function getLsProductAttrs()
     {
         $productAttrs = '';

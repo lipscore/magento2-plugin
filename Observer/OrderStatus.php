@@ -11,10 +11,23 @@ use Magento\Sales\Model\Order;
 
 class OrderStatus extends AbstractObserver
 {
+    /**
+     * @var string
+     */
     protected static $logFile = 'ls_order_status_observer';
 
+    /**
+     * @var Reminder
+     */
     protected $reminder;
 
+    /**
+     * Initialize observer dependencies.
+     *
+     * @param Config $config
+     * @param Logger $logger
+     * @param Reminder $reminder
+     */
     public function __construct(
         Config $config,
         Logger $logger,
@@ -24,6 +37,12 @@ class OrderStatus extends AbstractObserver
         $this->reminder = $reminder;
     }
 
+    /**
+     * Send a review reminder when the order status changes to a configured status.
+     *
+     * @param Observer $observer
+     * @return void
+     */
     protected function _execute(Observer $observer)
     {
         /** @var Order $order */
@@ -51,6 +70,12 @@ class OrderStatus extends AbstractObserver
         }
     }
 
+    /**
+     * Check whether the given status is configured to trigger a reminder.
+     *
+     * @param string $status
+     * @return bool
+     */
     protected function isReminderableStatus($status)
     {
         $reminderableStatus = $this->config->getEmailsOrderStatus();
@@ -62,6 +87,11 @@ class OrderStatus extends AbstractObserver
         }
     }
 
+    /**
+     * Check whether the observer method is available to run.
+     *
+     * @return bool
+     */
     protected function methodAvailable()
     {
         return true;

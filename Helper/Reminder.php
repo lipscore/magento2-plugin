@@ -18,20 +18,55 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class Reminder extends AbstractHelper
 {
+    /**
+     * @var RuleFactory
+     */
     protected $ruleFactory;
 
+    /**
+     * @var ProductRepositoryInterface
+     */
     protected $productRepository;
 
+    /**
+     * @var ProductHelper
+     */
     protected $productHelper;
 
+    /**
+     * @var LocaleHelper
+     */
     protected $localeHelper;
 
+    /**
+     * @var CouponHelper
+     */
     protected $couponHelper;
 
+    /**
+     * @var PurchaseHelper
+     */
     protected $purchaseHelper;
 
+    /**
+     * @var ProductTypeHelper
+     */
     protected $productTypeHelper;
 
+    /**
+     * Reminder constructor.
+     *
+     * @param Logger $logger
+     * @param Config $config
+     * @param StoreManagerInterface $storeManager
+     * @param RuleFactory $ruleFactory
+     * @param ProductRepositoryInterface $productRepository
+     * @param ProductHelper $productHelper
+     * @param LocaleHelper $localeHelper
+     * @param CouponHelper $couponHelper
+     * @param PurchaseHelper $purchaseHelper
+     * @param ProductTypeHelper $productTypeHelper
+     */
     public function __construct(
         Logger $logger,
         Config $config,
@@ -55,6 +90,12 @@ class Reminder extends AbstractHelper
         $this->purchaseHelper    = $purchaseHelper;
     }
 
+    /**
+     * Build reminder data for an order.
+     *
+     * @param Order $order
+     * @return array
+     */
     public function data(Order $order)
     {
         return [
@@ -63,6 +104,12 @@ class Reminder extends AbstractHelper
         ];
     }
 
+    /**
+     * Build purchase data for an order.
+     *
+     * @param Order $order
+     * @return array
+     */
     protected function purchaseData(Order $order)
     {
         $couponData = $this->couponData();
@@ -91,6 +138,11 @@ class Reminder extends AbstractHelper
         );
     }
 
+    /**
+     * Get coupon data for the configured price rule.
+     *
+     * @return array
+     */
     protected function couponData()
     {
         $data = [];
@@ -111,6 +163,12 @@ class Reminder extends AbstractHelper
         return $data;
     }
 
+    /**
+     * Build products data for an order.
+     *
+     * @param Order $order
+     * @return array
+     */
     protected function productsData(Order $order)
     {
         $productsData = [];
@@ -153,9 +211,15 @@ class Reminder extends AbstractHelper
         return array_values($productsData);
     }
 
+    /**
+     * Get the parent product id for an order item.
+     *
+     * @param \Magento\Catalog\Model\Product $product
+     * @param \Magento\Sales\Model\Order\Item $item
+     * @return int|null
+     */
     protected function getParentProductId($product, $item)
     {
         return $item->getParentItem() ? $item->getParentItem()->getProductId() : null;
     }
-
 }

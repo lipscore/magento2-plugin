@@ -2,10 +2,45 @@
 
 namespace Lipscore\RatingsReviews\Helper;
 
+use Lipscore\RatingsReviews\Model\Config;
+use Lipscore\RatingsReviews\Model\Logger;
+use Magento\Framework\Escaper;
+use Magento\Store\Model\StoreManagerInterface;
+
 class Widget extends AbstractHelper
 {
     public const WIDGET_SEPARATOR = ';';
 
+    /**
+     * @var Escaper
+     */
+    protected $escaper;
+
+    /**
+     * Initialize dependencies.
+     *
+     * @param Logger $logger
+     * @param Config $config
+     * @param StoreManagerInterface $storeManager
+     * @param Escaper $escaper
+     */
+    public function __construct(
+        Logger $logger,
+        Config $config,
+        StoreManagerInterface $storeManager,
+        Escaper $escaper
+    ) {
+        parent::__construct($logger, $config, $storeManager);
+
+        $this->escaper = $escaper;
+    }
+
+    /**
+     * Get the widget data attributes string for the given product data.
+     *
+     * @param array $productData
+     * @return string
+     */
     public function getProductAttrs($productData)
     {
         $attrs = '';
@@ -18,6 +53,12 @@ class Widget extends AbstractHelper
         return $attrs;
     }
 
+    /**
+     * Build the widget data attributes string for the given product data.
+     *
+     * @param array $productData
+     * @return string
+     */
     protected function _getProductAttrs($productData)
     {
         $attrs = [
@@ -39,12 +80,18 @@ class Widget extends AbstractHelper
         return $this->toString($attrs);
     }
 
+    /**
+     * Convert an array of attributes into an escaped HTML attribute string.
+     *
+     * @param array $attrs
+     * @return string
+     */
     protected function toString($attrs)
     {
         $strAttrs = [];
         foreach ($attrs as $attr => $value) {
             $value = isset($value) ? $value : '';
-            $value = htmlspecialchars($value);
+            $value = $this->escaper->escapeHtml($value);
             $strAttrs[] = "$attr=\"$value\"";
         }
 

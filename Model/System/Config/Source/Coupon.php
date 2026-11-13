@@ -9,10 +9,22 @@ use Magento\SalesRule\Model\Rule;
 
 class Coupon implements OptionSourceInterface
 {
+    /**
+     * @var Collection
+     */
     protected $ruleCollection;
 
+    /**
+     * @var Logger
+     */
     protected $logger;
 
+    /**
+     * Constructor.
+     *
+     * @param Logger $logger
+     * @param Collection $ruleCollection
+     */
     public function __construct(
         Logger $logger,
         Collection $ruleCollection
@@ -47,6 +59,11 @@ class Coupon implements OptionSourceInterface
         return $options;
     }
 
+    /**
+     * Find active price rules eligible for coupon selection.
+     *
+     * @return Collection
+     */
     protected function findPriceRules()
     {
         $this->ruleCollection

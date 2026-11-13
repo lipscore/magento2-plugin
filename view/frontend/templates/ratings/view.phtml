@@ -4,10 +4,11 @@
  */
 ?>
 <?php if ($block->getLsProductAttrs()) { ?>
-    <div class="product-reviews-summary <?php echo $block->getIsShortType() ? 'short ' : '' ?>mg-lipscore-rating-wrapper">
+    <div class="product-reviews-summary
+        <?= $block->getIsShortType() ? 'short ' : '' ?>mg-lipscore-rating-wrapper">
         <div class="rating-summary">
-            <div <?php echo $block->getRatingType() ?>
-                 <?php echo $block->getLsProductAttrs() ?>>
+            <div <?= /* @noEscape */ $block->getRatingType() ?>
+                 <?= /* @noEscape */ $block->getLsProductAttrs() ?>>
             </div>
         </div>
      </div>

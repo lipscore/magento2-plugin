@@ -3,3 +3,9 @@
 
 # Packages
 *.zip
+
+# Coding-standard tooling (see dev-tools/)
+/dev-tools/vendor/
+/vendor/
+/composer.lock
+!/dev-tools/composer.lock

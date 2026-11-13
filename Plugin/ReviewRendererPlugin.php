@@ -11,12 +11,28 @@ use Magento\Review\Block\Product\ReviewRenderer as Subject;
 
 class ReviewRendererPlugin
 {
+    /**
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * @var Logger
+     */
     protected $logger;
 
+    /**
+     * @var ReviewRenderer
+     */
     protected $lipscoreReviewRenderer;
 
+    /**
+     * Initialize plugin dependencies.
+     *
+     * @param Logger $logger
+     * @param Config $config
+     * @param ReviewRenderer $lipscoreReviewRenderer
+     */
     public function __construct(
         Logger $logger,
         Config $config,
@@ -27,6 +43,16 @@ class ReviewRendererPlugin
         $this->lipscoreReviewRenderer = $lipscoreReviewRenderer;
     }
 
+    /**
+     * Replace the reviews summary HTML with the Lipscore renderer's output when enabled.
+     *
+     * @param Subject $subject
+     * @param callable $proceed
+     * @param Product $product
+     * @param string $templateType
+     * @param bool $displayIfNoReviews
+     * @return string
+     */
     public function aroundGetReviewsSummaryHtml(
         Subject $subject,
         callable $proceed,

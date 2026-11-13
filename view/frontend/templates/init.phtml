@@ -7,17 +7,18 @@
 ?>
 
 <?php if ($block->getIsLipscoreActive() && $block->getApiKey()) { ?>
-    <script data-cfasync="false" type="text/javascript">
+    <script data-cfasync="false">
     //<![CDATA[
     window.lipscoreInit = function() {
         lipscore.init({
-            apiKey: "<?php echo $block->getApiKey() ?>"
+            apiKey: "<?= $escaper->escapeJs($block->getApiKey()) ?>"
         });
     };
     (function() {
         var scr = document.createElement('script'); scr.async = 1; scr.setAttribute('data-cfasync', false);
         scr.charset = "utf-8";
-        scr.src = "<?php echo $block->getAssetsUrl() ?>/<?php echo $block->getLocale() ?>lipscore-v1.js";
+        scr.src = "<?= $escaper->escapeJs($block->getAssetsUrl()) ?>/"
+            + "<?= $escaper->escapeJs($block->getLocale()) ?>lipscore-v1.js";
         document.getElementsByTagName('head')[0].appendChild(scr);
     })();
     //]]>

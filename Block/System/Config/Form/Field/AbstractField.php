@@ -9,10 +9,24 @@ use Magento\Backend\Block\Template\Context;
 
 class AbstractField extends Field
 {
+    /**
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * @var Module
+     */
     protected $module;
 
+    /**
+     * Constructor.
+     *
+     * @param Context $context
+     * @param Config $config
+     * @param Module $module
+     * @param array $data
+     */
     public function __construct(
         Context $context,
         Config $config,

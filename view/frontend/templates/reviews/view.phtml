@@ -5,7 +5,9 @@
 ?>
 <?php if ($block->getLsProductAttrs()) { ?>
     <span id="js-lipscore-reviews-tab">
-        <?php echo $block->escapeHtml(__('Reviews')) ?><span id="js-lipscore-reviews-tab-count" style='display: none;'>&nbsp;(<span class="lipscore-review-count" <?php echo $block->getLsProductAttrs() ?>></span>)</span>
+        <?= $escaper->escapeHtml(__('Reviews')) ?><span
+            id="js-lipscore-reviews-tab-count" style='display: none;'>&nbsp;(<span
+            class="lipscore-review-count" <?= /* @noEscape */ $block->getLsProductAttrs() ?>></span>)</span>
     </span>
     <script>
         const titleSelector = document.getElementById('tab-label-reviews-title');
@@ -59,7 +61,7 @@
         }
     </script>
 
-    <div style="display: none !important;"><?php echo $block->escapeHtml(__('Reviews')) ?></div>
-    <div id="lipscore-review-post" <?php echo $block->getLsProductAttrs() ?>></div>
-    <div id="lipscore-review-list" <?php echo $block->getLsProductAttrs() ?>></div>
+    <div style="display: none !important;"><?= $escaper->escapeHtml(__('Reviews')) ?></div>
+    <div id="lipscore-review-post" <?= /* @noEscape */ $block->getLsProductAttrs() ?>></div>
+    <div id="lipscore-review-list" <?= /* @noEscape */ $block->getLsProductAttrs() ?>></div>
 <?php } ?>

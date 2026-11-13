@@ -8,18 +8,30 @@ use Magento\Catalog\Model\Product;
 
 class ReviewRenderer extends AbstractBlock implements ReviewRendererInterface
 {
-    const SHORT_WIDGET = 'short';
-    const LONG_WIDGET  = 'long';
+    public const SHORT_WIDGET = 'short';
+    public const LONG_WIDGET  = 'long';
 
+    /**
+     * @var string
+     */
     protected static $defaultWidgetType = self::SHORT_WIDGET;
 
+    /**
+     * @var array
+     */
     protected static $availableRatings = [
         self::LONG_WIDGET  => 'id="lipscore-rating"',
         self::SHORT_WIDGET => 'class="lipscore-rating-small"'
     ];
 
+    /**
+     * @var bool
+     */
     protected $mainProductRatingDisplayed = false;
 
+    /**
+     * @var string
+     */
     protected $_template = 'ratings/view.phtml';
 
     /**
@@ -46,11 +58,18 @@ class ReviewRenderer extends AbstractBlock implements ReviewRendererInterface
         return $this->toHtml();
     }
 
+    /**
+     * Initialize the review summary state for the given product.
+     *
+     * @param Product $product
+     * @param string $templateType
+     * @return void
+     */
     protected function initReviewSummary($product, $templateType)
     {
         $this->setProduct($product);
 
-        $ratingType = self::defaultRatingType();
+        $ratingType = $this->defaultRatingType();
         try {
             $ratingType = $this->findRatingType($product, $templateType);
         } catch (\Exception $e) {
@@ -61,6 +80,13 @@ class ReviewRenderer extends AbstractBlock implements ReviewRendererInterface
         $this->setIsShortType($templateType == self::SHORT_VIEW);
     }
 
+    /**
+     * Find the rating markup type for the given product and template type.
+     *
+     * @param Product $product
+     * @param string $templateType
+     * @return string
+     */
     protected function findRatingType($product, $templateType)
     {
         $layoutHandles = $this->getLayout()->getUpdate()->getHandles();
@@ -73,10 +99,16 @@ class ReviewRenderer extends AbstractBlock implements ReviewRendererInterface
         if (isset(self::$availableRatings[$templateType])) {
             return self::$availableRatings[$templateType];
         } else {
-            return self::defaultRatingType();
+            return $this->defaultRatingType();
         }
     }
 
+    /**
+     * Check whether the given product is the main product rating.
+     *
+     * @param Product $product
+     * @return bool
+     */
     protected function isMainProductRating($product)
     {
         $mainProductRating = false;
@@ -92,7 +124,12 @@ class ReviewRenderer extends AbstractBlock implements ReviewRendererInterface
         return $mainProductRating;
     }
 
-    protected static function defaultRatingType()
+    /**
+     * Get the default rating markup type.
+     *
+     * @return string
+     */
+    protected function defaultRatingType()
     {
         return self::$availableRatings[static::$defaultWidgetType];
     }

@@ -8,14 +8,33 @@ use Magento\GroupedProduct\Model\Product\Type\Grouped;
 
 class ProductType
 {
+    /**
+     * @var Configurable
+     */
     protected $configurable;
 
+    /**
+     * @var Grouped
+     */
     protected $grouped;
 
+    /**
+     * @var Type
+     */
     protected $bundle;
 
+    /**
+     * @var array
+     */
     protected $types = [];
 
+    /**
+     * ProductType constructor.
+     *
+     * @param Grouped $grouped
+     * @param Configurable $configurable
+     * @param Type $bundle
+     */
     public function __construct(
         Grouped $grouped,
         Configurable $configurable,
@@ -28,6 +47,12 @@ class ProductType
         $this->types = [$this->configurable, $this->grouped, $this->bundle];
     }
 
+    /**
+     * Get the parent product id for a given child product id.
+     *
+     * @param int|string $childId
+     * @return int|string|null
+     */
     public function getParentId($childId)
     {
         $parentId = null;
