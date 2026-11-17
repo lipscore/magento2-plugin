@@ -44,33 +44,46 @@ bin/magento setup:di:compile
 
 [Lipscore Documentation](https://lipscore.com/ikb/magento-guide/)
 
-### Review request emails: order status detection
+### Invitations
 
-`Stores > Configuration > Lipscore > General > Review Request Emails`
+`Stores > Configuration > Lipscore > General > Invitations`
 
-A review request is sent to Lipscore when an order reaches the configured **Order status**. The **Order status detection** setting controls how this is detected:
+When an order reaches the configured **Order status**, the extension schedules an invitation in Lipscore (`POST /invitations`). Lipscore sends the invitation email to the customer later, according to your Lipscore settings. The **Order status detection** setting controls how the status change is detected:
 
 | Option | Behaviour |
 | --- | --- |
-| On order save (real-time) | Default and previous behaviour. Sent immediately when Magento saves the order with the new status. |
-| Scheduled check (cron) | A cron job looks for orders in the configured status. Use it when statuses are changed outside of Magento's order save, e.g. directly in the database by an ERP or third-party extension. Failed requests are retried after 30 minutes, 2, 6 and 24 hours (5 attempts in total). |
+| On order status save | Default and previous behaviour. The invitation is scheduled right after Magento commits the order save with the new status, one API request per order. |
+| Scheduled check (cron) | An hourly cron job looks for orders in the configured status and schedules their invitations in batches of up to 20 per API request. Use it when statuses are changed outside of Magento's order save, e.g. directly in the database by an ERP or third-party extension. |
 
-In real-time mode the request is sent right after the order save is committed. Failed requests are recorded and can be sent again with the mass action.
+The hourly check (`lipscore_schedule_invitations`, requires a working Magento cron) also retries invitations that failed because of a temporary error, in both modes: after 1, 3, 6 and 24 hours (5 attempts in total). It processes up to 500 orders per run.
 
-Settings for the scheduled check:
+**Check orders updated within the last (days)** (scheduled check only): how far back to look for orders in the configured status without a scheduled invitation. 1, 7 (default), 14 or 30 days. Failed invitations are only retried within this period, so set at least 7 days. Older orders can be scheduled with the bulk action described in [Scheduling invitations manually](#scheduling-invitations-manually).
 
-- **Check for new orders every**: 5, 10, 15, 30 or 60 minutes (global). Requires a working Magento cron (`bin/magento cron:run`).
-- **Check orders updated within the last (days)**: how far back to look for orders in the configured status that have not been sent yet. Default: 7 days, up to 365. Failed requests are only retried within this period, so set at least 2 days. When the Lipscore API cannot be reached 3 times in a row, the run stops and continues on the next run. Older orders can be sent with the mass action described in [Sending review requests manually](#sending-review-requests-manually).
+#### How API responses are handled
 
-After switching to the scheduled check, orders from this period are sent even if a version before 2.3.0 already sent them. The duplicate settings in your Lipscore account decide whether the customer gets a second request. Orders sent by version 2.3.0 or later are never sent again.
+| Lipscore response | Status | Retried |
+| --- | --- | --- |
+| 201 Created | Scheduled | – |
+| 409 Conflict (invitation exists, or the customer is within a repeat-block period) | Already scheduled, with the Lipscore message | No |
+| 400, 422 (invalid invitation data, products blocked) | Rejected, with the Lipscore message | No; correct the data and use the bulk action |
+| Timeout, connection error, 5xx, 503, 429, 403 "Feature is not available at the moment" | Failed | Yes, by the hourly check |
+| 401, other 403 (credentials, IP, blocked or cancelled site, master account, invitation limit) | Failed | The store is paused for 24 hours or until its API key, secret or URL changes |
 
-Every review request sent by the extension (in any detection mode, and manually from the order grid) is recorded in the `lipscore_order_reminder` table, together with failed requests. An order is sent automatically at most once: it is not sent again when it returns to the configured status, or after the detection mode is changed. After updating the extension, run `bin/magento setup:upgrade` to create the table.
+Within a batch, Lipscore creates the valid invitations and returns only those. Orders missing from the response are sent again one by one to record their individual result. A timeout, server or account error stops the store for the current run; its remaining orders are processed in the next run. If recording a result fails after Lipscore created the invitation, the order is sent again later and Lipscore answers 409, so no duplicate invitation is created.
 
-The review request status is shown in `Sales > Orders`: the **Lipscore Review Request** column (Sent, Failed or Not recorded, with a filter) and the optional **Lipscore Review Request Date** column. The order view page shows the details in the *Lipscore Review Request* section: when and how the request was sent, or the error of a failed request.
+Lipscore detects duplicate and repeat-purchase invitations according to the settings in *Invitation setup* in the Lipscore dashboard.
 
-### Sending review requests manually
+#### Invitation log
 
-In `Sales > Orders`, select orders and choose **Send Lipscore review request** from the *Actions* menu. Review requests are sent regardless of the order status (also for canceled or closed orders), up to 200 orders at once. When the Lipscore API cannot be reached 3 times in a row, the remaining orders are not processed; run the action again later. Use the **Lipscore Review Request** column filter (*Not recorded* or *Failed*) together with the order status and purchase date filters to find orders that were not sent. Orders already sent by the extension since version 2.3.0 are skipped; orders sent by earlier versions are sent again, subject to the duplicate settings in your Lipscore account. The action requires the *Sales > Operations > Orders > Actions > Send Lipscore Review Request* permission.
+Every invitation scheduled by the extension (in any mode, and from the order grid) is recorded in the `lipscore_invitation` table, together with failed ones. An order is scheduled automatically at most once: not again when it returns to the configured status, or after the detection mode is changed. After updating the extension, run `bin/magento setup:upgrade` to create the table.
+
+The status is shown in `Sales > Orders`: the **Lipscore Invitation** column (Scheduled, Already scheduled, Failed, Rejected or Not recorded, with a filter) and the optional **Lipscore Invitation Date** column. The order view page shows the details in the *Lipscore Invitation* section, including the Lipscore message.
+
+After switching to the scheduled check, orders from the look-back period are scheduled even if a version before 2.3.0 already sent them; Lipscore detects the duplicates.
+
+### Scheduling invitations manually
+
+In `Sales > Orders`, select orders and choose **Schedule Lipscore invitations** from the *Actions* menu. Invitations are scheduled regardless of the order status (also for canceled or closed orders), up to 200 orders at once, in batches of 20. Orders whose invitation is already scheduled (or reported by Lipscore as already scheduled) are skipped; failed and rejected ones are sent again. Use the **Lipscore Invitation** column filter (*Not recorded*, *Failed* or *Rejected*) together with the order status and purchase date filters to find orders without an invitation. The action requires the *Sales > Operations > Orders > Actions > Schedule Lipscore Invitations* permission.
 
 <!--
 ## Local Development

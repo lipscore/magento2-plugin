@@ -2,7 +2,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="order_additional_info">
-            <block class="Lipscore\RatingsReviews\Block\Adminhtml\Order\View\ReviewRequest" name="lipscore_order_review_request"/>
+            <block class="Lipscore\RatingsReviews\Block\Adminhtml\Order\View\Invitation" name="lipscore_order_invitation"/>
         </referenceContainer>
     </body>
 </page>

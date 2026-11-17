@@ -1,9 +1,9 @@
 <?php
 
-namespace Lipscore\RatingsReviews\Model\Reminder;
+namespace Lipscore\RatingsReviews\Model\Invitation;
 
 /**
- * What created a delivery log record, stored as a number in lipscore_order_reminder.source.
+ * What scheduled the invitation, stored as a number in lipscore_invitation.source.
  */
 class Source
 {
@@ -13,7 +13,7 @@ class Source
     /** Scheduled order status check. */
     public const CRON = 2;
 
-    /** Mass action in the sales order grid. */
+    /** Bulk action in the sales order grid. */
     public const MANUAL = 3;
 
     /**
@@ -25,8 +25,8 @@ class Source
     {
         return [
             self::EVENT => __('on order status change'),
-            self::CRON => __('by the scheduled check'),
-            self::MANUAL => __('manually from the order grid'),
+            self::CRON => __('by the hourly check'),
+            self::MANUAL => __('by the bulk action in the order grid'),
         ];
     }
 

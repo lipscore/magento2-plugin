@@ -2,15 +2,15 @@
 
 namespace Lipscore\RatingsReviews\Ui\Component\MassAction;
 
-use Lipscore\RatingsReviews\Controller\Adminhtml\Order\MassSendReviewRequest;
+use Lipscore\RatingsReviews\Controller\Adminhtml\Order\ScheduleInvitations as ScheduleInvitationsAction;
 use Magento\Framework\AuthorizationInterface;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Ui\Component\Action;
 
 /**
- * Hidden for admins without the ACL resource.
+ * Bulk action "Schedule Lipscore invitations", disabled for admins without the ACL resource.
  */
-class SendReviewRequest extends Action
+class ScheduleInvitations extends Action
 {
     /** @var AuthorizationInterface */
     protected $authorization;
@@ -40,7 +40,7 @@ class SendReviewRequest extends Action
     {
         parent::prepare();
 
-        if (!$this->authorization->isAllowed(MassSendReviewRequest::ADMIN_RESOURCE)) {
+        if (!$this->authorization->isAllowed(ScheduleInvitationsAction::ADMIN_RESOURCE)) {
             $config = $this->getConfiguration();
             $config['actionDisable'] = true;
             $this->setData('config', $config);

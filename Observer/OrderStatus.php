@@ -5,9 +5,9 @@ namespace Lipscore\RatingsReviews\Observer;
 use Lipscore\RatingsReviews\Model\Config;
 use Lipscore\RatingsReviews\Model\Logger;
 use Lipscore\RatingsReviews\Model\Reminder;
-use Lipscore\RatingsReviews\Model\Reminder\OrderSender;
-use Lipscore\RatingsReviews\Model\Reminder\Source;
-use Lipscore\RatingsReviews\Model\ResourceModel\OrderReminder as OrderReminderResource;
+use Lipscore\RatingsReviews\Model\Invitation\Scheduler;
+use Lipscore\RatingsReviews\Model\Invitation\Source;
+use Lipscore\RatingsReviews\Model\ResourceModel\Invitation as InvitationResource;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Event\Observer;
 use Magento\Sales\Api\Data\OrderInterface;
@@ -25,16 +25,16 @@ class OrderStatus extends AbstractObserver
 
     /**
      * @var Reminder
-     * @deprecated 2.3.0 Kept for constructor compatibility, sending moved to OrderSender.
-     * @see OrderSender
+     * @deprecated 2.3.0 Kept for constructor compatibility, scheduling moved to Scheduler.
+     * @see Scheduler
      */
     protected $reminder;
 
-    /** @var OrderReminderResource */
-    protected $orderReminderResource;
+    /** @var InvitationResource */
+    protected $invitationResource;
 
-    /** @var OrderSender */
-    protected $orderSender;
+    /** @var Scheduler */
+    protected $scheduler;
 
     /** @var OrderResource */
     protected $orderResource;
@@ -46,29 +46,29 @@ class OrderStatus extends AbstractObserver
      * @param Config $config
      * @param Logger $logger
      * @param Reminder $reminder
-     * @param OrderReminderResource|null $orderReminderResource
-     * @param OrderSender|null $orderSender
+     * @param InvitationResource|null $invitationResource
+     * @param Scheduler|null $scheduler
      * @param OrderResource|null $orderResource
      */
     public function __construct(
         Config $config,
         Logger $logger,
         Reminder $reminder,
-        ?OrderReminderResource $orderReminderResource = null,
-        ?OrderSender $orderSender = null,
+        ?InvitationResource $invitationResource = null,
+        ?Scheduler $scheduler = null,
         ?OrderResource $orderResource = null
     ) {
         parent::__construct($config, $logger);
         $this->reminder = $reminder;
         $objectManager = ObjectManager::getInstance();
-        $this->orderReminderResource = $orderReminderResource
-            ?: $objectManager->get(OrderReminderResource::class);
-        $this->orderSender = $orderSender ?: $objectManager->get(OrderSender::class);
+        $this->invitationResource = $invitationResource
+            ?: $objectManager->get(InvitationResource::class);
+        $this->scheduler = $scheduler ?: $objectManager->get(Scheduler::class);
         $this->orderResource = $orderResource ?: $objectManager->get(OrderResource::class);
     }
 
     /**
-     * Schedule the review request on status change.
+     * Schedule the invitation on status change.
      *
      * @param Observer $observer
      * @return void
@@ -130,7 +130,7 @@ class OrderStatus extends AbstractObserver
     }
 
     /**
-     * Send and record the outcome.
+     * Schedule the invitation and record the outcome.
      *
      * @param Order $order
      * @return void
@@ -143,39 +143,26 @@ class OrderStatus extends AbstractObserver
             return;
         }
 
-        if ($this->isAlreadySent($order)) {
-            $this->log('already sent');
+        if ($this->isAlreadyScheduled($order)) {
+            $this->log('already scheduled');
             return;
         }
 
-        $this->log('SEND!');
-        try {
-            $result = $this->orderSender->send($order);
-        } catch (\Throwable $e) {
-            $this->logger->log($e);
-            $this->markFailed($order, $e->getMessage());
-            return;
-        }
-        $this->log($result);
-
-        if ($result === false) {
-            $this->markFailed($order, 'Lipscore API request was not successful.');
-            return;
-        }
-
-        $this->markSent($order);
+        $this->log('SCHEDULE!');
+        $result = $this->scheduler->schedule([$order], Source::EVENT);
+        $this->log('result status: ' . (int) $result->getOrderStatus($order->getId()));
     }
 
     /**
-     * Whether the order was sent; before setup:upgrade creates the table, it counts as not sent.
+     * Whether the invitation is scheduled; before setup:upgrade creates the table, it counts as not scheduled.
      *
      * @param Order $order
      * @return bool
      */
-    protected function isAlreadySent(Order $order)
+    protected function isAlreadyScheduled(Order $order)
     {
         try {
-            return $this->orderReminderResource->isSent($order->getId());
+            return $this->invitationResource->isScheduled($order->getId());
         } catch (\Exception $e) {
             $this->logger->log($e);
             return false;
@@ -183,47 +170,7 @@ class OrderStatus extends AbstractObserver
     }
 
     /**
-     * Record a sent request.
-     *
-     * @param Order $order
-     * @return void
-     */
-    protected function markSent(Order $order)
-    {
-        try {
-            $this->orderReminderResource->markSent(
-                $order->getId(),
-                $order->getStoreId(),
-                Source::EVENT
-            );
-        } catch (\Exception $e) {
-            $this->logger->log($e);
-        }
-    }
-
-    /**
-     * Record a failed request.
-     *
-     * @param Order $order
-     * @param string $error
-     * @return void
-     */
-    protected function markFailed(Order $order, $error)
-    {
-        try {
-            $this->orderReminderResource->markFailed(
-                $order->getId(),
-                $order->getStoreId(),
-                Source::EVENT,
-                $error
-            );
-        } catch (\Exception $e) {
-            $this->logger->log($e);
-        }
-    }
-
-    /**
-     * Whether review requests are sent for the status.
+     * Whether invitations are scheduled for the status.
      *
      * @param string $status
      * @param int|null $storeId

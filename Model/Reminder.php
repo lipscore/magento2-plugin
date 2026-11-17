@@ -39,10 +39,12 @@ class Reminder
     }
 
     /**
-     * Send a review reminder for the given order.
+     * Schedule an invitation for the given order, without recording it.
      *
+     * @deprecated 2.3.0 Does not tell temporary errors from permanent ones and does not record the result.
+     * @see \Lipscore\RatingsReviews\Model\Invitation\Scheduler::schedule()
      * @param \Magento\Sales\Model\Order $order
-     * @return bool
+     * @return array|false Decoded response, false on failure
      */
     public function send($order)
     {
@@ -50,9 +52,9 @@ class Reminder
             return false;
         }
 
-        $data = $this->helper->data($order);
+        $data = $this->helper->invitationData($order);
         $this->sender->setStoreId($order->getStoreId());
 
-        return $this->sender->send($data);
+        return $this->sender->send($data, \Lipscore\RatingsReviews\Model\Invitation\Scheduler::API_PATH);
     }
 }

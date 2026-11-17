@@ -2,17 +2,19 @@
 
 namespace Lipscore\RatingsReviews\Model\ResourceModel;
 
-use Lipscore\RatingsReviews\Model\Reminder\Source;
-use Lipscore\RatingsReviews\Model\Reminder\Status;
+use Lipscore\RatingsReviews\Model\Invitation\Status;
 use Magento\Framework\DB\Sql\Expression;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
 /**
- * Review request delivery log, one row per order.
+ * Invitation log, one row per order.
  */
-class OrderReminder extends AbstractDb
+class Invitation extends AbstractDb
 {
-    public const TABLE = 'lipscore_order_reminder';
+    public const TABLE = 'lipscore_invitation';
+
+    /** Length of the message column content. */
+    private const MAX_MESSAGE_LENGTH = 2000;
 
     /**
      * Initialize resource.
@@ -25,20 +27,14 @@ class OrderReminder extends AbstractDb
     }
 
     /**
-     * Whether the order was sent.
+     * Whether the order's invitation is scheduled (or Lipscore reported it as already scheduled).
      *
      * @param int $orderId
      * @return bool
      */
-    public function isSent($orderId)
+    public function isScheduled($orderId)
     {
-        $connection = $this->getConnection();
-        $select = $connection->select()
-            ->from($this->getMainTable(), ['status'])
-            ->where('order_id = ?', (int) $orderId);
-        $status = $connection->fetchOne($select);
-
-        return $status !== false && (int) $status === Status::SENT;
+        return (bool) $this->getScheduledOrderIds([$orderId]);
     }
 
     /**
@@ -59,12 +55,12 @@ class OrderReminder extends AbstractDb
     }
 
     /**
-     * Filter the given orders to the sent ones.
+     * Filter the given orders to the ones with a scheduled invitation.
      *
      * @param int[] $orderIds
      * @return int[]
      */
-    public function getSentOrderIds(array $orderIds)
+    public function getScheduledOrderIds(array $orderIds)
     {
         if (!$orderIds) {
             return [];
@@ -74,94 +70,85 @@ class OrderReminder extends AbstractDb
         $select = $connection->select()
             ->from($this->getMainTable(), ['order_id'])
             ->where('order_id IN (?)', array_map('intval', $orderIds))
-            ->where('status = ?', Status::SENT);
+            ->where('status IN (?)', Status::FINAL_STATUSES);
 
         return array_map('intval', $connection->fetchCol($select));
     }
 
     /**
-     * Record a sent request.
+     * Record results, one query for all orders.
      *
-     * @param int $orderId
-     * @param int $storeId
-     * @param int $source One of the Source constants
+     * Only FAILED results of the scheduled check count towards its retry limit (cron_attempts).
+     *
+     * @param array[] $results Rows with order_id, store_id, status, source, message and cron_attempt (bool)
      * @return void
      */
-    public function markSent($orderId, $storeId, $source)
+    public function saveResults(array $results)
     {
+        if (!$results) {
+            return;
+        }
+
+        $rows = [];
+        foreach ($results as $result) {
+            $message = isset($result['message']) ? (string) $result['message'] : '';
+            $rows[] = [
+                'order_id' => (int) $result['order_id'],
+                'store_id' => (int) $result['store_id'],
+                'status' => (int) $result['status'],
+                'source' => (int) $result['source'],
+                'attempts' => 1,
+                'cron_attempts' => empty($result['cron_attempt']) ? 0 : 1,
+                'message' => $message !== '' ? mb_substr($message, 0, self::MAX_MESSAGE_LENGTH) : null,
+            ];
+        }
+
         $this->getConnection()->insertOnDuplicate(
             $this->getMainTable(),
+            $rows,
             [
-                'order_id' => (int) $orderId,
-                'store_id' => (int) $storeId,
-                'status' => Status::SENT,
-                'source' => (int) $source,
-                'attempts' => 1,
-                'last_error' => null,
-            ],
-            [
+                'store_id',
                 'status',
                 'source',
-                'last_error',
+                'message',
                 'attempts' => new Expression('attempts + 1'),
+                'cron_attempts' => new Expression('cron_attempts + VALUES(cron_attempts)'),
             ]
         );
     }
 
     /**
-     * Record a failed request; only cron failures count towards the cron retry limit.
+     * Orders in the status that the hourly check should send.
      *
-     * @param int $orderId
-     * @param int $storeId
-     * @param int $source One of the Source constants
-     * @param string $error
-     * @return void
-     */
-    public function markFailed($orderId, $storeId, $source, $error)
-    {
-        $cronAttempt = (int) $source === Source::CRON ? 1 : 0;
-
-        $this->getConnection()->insertOnDuplicate(
-            $this->getMainTable(),
-            [
-                'order_id' => (int) $orderId,
-                'store_id' => (int) $storeId,
-                'status' => Status::FAILED,
-                'source' => (int) $source,
-                'attempts' => 1,
-                'cron_attempts' => $cronAttempt,
-                'last_error' => mb_substr((string) $error, 0, 2000),
-            ],
-            [
-                'status',
-                'source',
-                'last_error',
-                'attempts' => new Expression('attempts + 1'),
-                'cron_attempts' => new Expression('cron_attempts + ' . $cronAttempt),
-            ]
-        );
-    }
-
-    /**
-     * Orders without a record, plus failed ones due for retry per $retryDueBefore.
+     * Orders without a record (when $includeNew), plus failed ones due for retry per $retryDueBefore.
      *
      * @param int $storeId
      * @param string $orderStatus
      * @param string $updatedSince UTC datetime (Y-m-d H:i:s)
      * @param string[] $retryDueBefore [cron_attempts => UTC datetime the last failure must be before]
      * @param int $limit
+     * @param bool $includeNew False to only retry failed orders (real-time mode)
      * @return int[]
      */
-    public function getPendingOrderIds($storeId, $orderStatus, $updatedSince, array $retryDueBefore, $limit)
-    {
+    public function getPendingOrderIds(
+        $storeId,
+        $orderStatus,
+        $updatedSince,
+        array $retryDueBefore,
+        $limit,
+        $includeNew = true
+    ) {
         $connection = $this->getConnection();
 
-        $pending = ['lr.order_id IS NULL'];
+        $pending = $includeNew ? ['lr.order_id IS NULL'] : [];
         foreach ($retryDueBefore as $attempts => $dueBefore) {
             $pending[] = $connection->quoteInto(
                 sprintf('(lr.status = %d AND lr.cron_attempts = %d AND lr.updated_at <= ?)', Status::FAILED, $attempts),
                 $dueBefore
             );
+        }
+        if (!$pending) {
+            return [];
         }
 
         $select = $connection->select()

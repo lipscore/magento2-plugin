@@ -23,7 +23,6 @@ class Config
     public const XML_PATH_LIPSCORE_EMAILS_TEXT = 'lipscore_general/emails/emails_text';
     public const XML_PATH_LIPSCORE_EMAILS_ORDER_STATUS = 'lipscore_general/emails/order_status';
     public const XML_PATH_LIPSCORE_EMAILS_TRIGGER = 'lipscore_general/emails/trigger';
-    public const XML_PATH_LIPSCORE_EMAILS_CRON_SCHEDULE = 'lipscore_general/emails/cron_schedule';
     public const XML_PATH_LIPSCORE_EMAILS_CRON_LOOKBACK_DAYS = 'lipscore_general/emails/cron_lookback_days';
     public const XML_PATH_LIPSCORE_COUPONS_TEXT = 'lipscore_general/coupons/coupons_text';
     public const XML_PATH_LIPSCORE_COUPONS_PRICE_RULE_ID = 'lipscore_general/coupons/price_rule_id';
@@ -36,6 +35,7 @@ class Config
     public const EMAILS_TRIGGER_CRON = 'cron';
 
     public const EMAILS_CRON_LOOKBACK_DEFAULT_DAYS = 7;
+    public const EMAILS_CRON_LOOKBACK_MAX_DAYS = 30;
 
     /**
      * @var ScopeConfigInterface
@@ -311,7 +311,7 @@ class Config
     }
 
     /**
-     * Get the order status that triggers Lipscore review request emails.
+     * Get the order status that triggers Lipscore invitations.
      *
      * @param string|int|null $store Store code or ID
      * @return string
@@ -345,7 +345,7 @@ class Config
     }
 
     /**
-     * Check whether review requests are sent on order save.
+     * Check whether invitations are scheduled on order save.
      *
      * @param string|int|null $store Store code or ID
      * @return bool
@@ -356,7 +356,7 @@ class Config
     }
 
     /**
-     * Check whether review requests are sent by the scheduled check.
+     * Check whether invitations are scheduled by the hourly check.
      *
      * @param string|int|null $store Store code or ID
      * @return bool
@@ -367,7 +367,7 @@ class Config
     }
 
     /**
-     * Get how many days back the scheduled check looks for orders.
+     * Get how many days back the scheduled check looks for orders, at most EMAILS_CRON_LOOKBACK_MAX_DAYS.
      *
      * @param string|int|null $store Store code or ID
      * @return int
@@ -380,7 +380,11 @@ class Config
             $store
         );
 
-        return $days > 0 ? $days : self::EMAILS_CRON_LOOKBACK_DEFAULT_DAYS;
+        if ($days <= 0) {
+            return self::EMAILS_CRON_LOOKBACK_DEFAULT_DAYS;
+        }
+
+        return min($days, self::EMAILS_CRON_LOOKBACK_MAX_DAYS);
     }
 
     /**

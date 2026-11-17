@@ -3,21 +3,21 @@
 namespace Lipscore\RatingsReviews\Block\Adminhtml\Order\View;
 
 use Lipscore\RatingsReviews\Model\Logger;
-use Lipscore\RatingsReviews\Model\Reminder\Source;
-use Lipscore\RatingsReviews\Model\ResourceModel\OrderReminder as OrderReminderResource;
+use Lipscore\RatingsReviews\Model\Invitation\Source;
+use Lipscore\RatingsReviews\Model\ResourceModel\Invitation as InvitationResource;
 use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
 
 /**
- * Lipscore review request section of the admin order view.
+ * Lipscore invitation section of the admin order view.
  */
-class ReviewRequest extends Template
+class Invitation extends Template
 {
     /** @var string */
-    protected $_template = 'Lipscore_RatingsReviews::order/view/review_request.phtml';
+    protected $_template = 'Lipscore_RatingsReviews::order/view/invitation.phtml';
 
-    /** @var OrderReminderResource */
-    protected $orderReminderResource;
+    /** @var InvitationResource */
+    protected $invitationResource;
 
     /** @var Logger */
     protected $logger;
@@ -30,19 +30,19 @@ class ReviewRequest extends Template
 
     /**
      * @param Context $context
-     * @param OrderReminderResource $orderReminderResource
+     * @param InvitationResource $invitationResource
      * @param Logger $logger
      * @param Source $source
      * @param array $data
      */
     public function __construct(
         Context $context,
-        OrderReminderResource $orderReminderResource,
+        InvitationResource $invitationResource,
         Logger $logger,
         Source $source,
         array $data = []
     ) {
-        $this->orderReminderResource = $orderReminderResource;
+        $this->invitationResource = $invitationResource;
         $this->logger = $logger;
         $this->source = $source;
         parent::__construct($context, $data);
@@ -56,7 +56,7 @@ class ReviewRequest extends Template
     public function getRecord()
     {
         if ($this->record === false) {
-            $this->record = $this->orderReminderResource->getRecord((int) $this->getRequest()->getParam('order_id'));
+            $this->record = $this->invitationResource->getRecord((int) $this->getRequest()->getParam('order_id'));
         }
 
         return $this->record;

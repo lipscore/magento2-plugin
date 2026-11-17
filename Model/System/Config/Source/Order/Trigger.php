@@ -15,7 +15,7 @@ class Trigger implements OptionSourceInterface
     public function toOptionArray()
     {
         return [
-            ['value' => Config::EMAILS_TRIGGER_EVENT, 'label' => __('On order save (real-time)')],
+            ['value' => Config::EMAILS_TRIGGER_EVENT, 'label' => __('On order status save')],
             ['value' => Config::EMAILS_TRIGGER_CRON, 'label' => __('Scheduled check (cron)')],
         ];
     }

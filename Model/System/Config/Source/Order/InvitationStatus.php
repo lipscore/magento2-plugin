@@ -2,10 +2,10 @@
 
 namespace Lipscore\RatingsReviews\Model\System\Config\Source\Order;
 
-use Lipscore\RatingsReviews\Model\Reminder\Status;
+use Lipscore\RatingsReviews\Model\Invitation\Status;
 use Magento\Framework\Data\OptionSourceInterface;
 
-class ReviewRequestStatus implements OptionSourceInterface
+class InvitationStatus implements OptionSourceInterface
 {
     /** @var Status */
     private $status;

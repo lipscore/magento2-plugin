@@ -7,7 +7,7 @@
                     <resource id="Magento_Sales::sales_operation">
                         <resource id="Magento_Sales::sales_order">
                             <resource id="Magento_Sales::actions">
-                                <resource id="Lipscore_RatingsReviews::send_review_request" title="Send Lipscore Review Request" translate="title" sortOrder="200" />
+                                <resource id="Lipscore_RatingsReviews::schedule_invitations" title="Schedule Lipscore Invitations" translate="title" sortOrder="200" />
                             </resource>
                         </resource>
                     </resource>

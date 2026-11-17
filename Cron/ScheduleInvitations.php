@@ -3,9 +3,9 @@
 namespace Lipscore\RatingsReviews\Cron;
 
 use Lipscore\RatingsReviews\Model\Logger;
-use Lipscore\RatingsReviews\Model\Reminder\CronProcessor;
+use Lipscore\RatingsReviews\Model\Invitation\CronProcessor;
 
-class SendReviewRequests
+class ScheduleInvitations
 {
     /** @var CronProcessor */
     protected $processor;

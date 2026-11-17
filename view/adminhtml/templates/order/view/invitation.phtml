@@ -1,0 +1,49 @@
+<?php
+/** @var \Lipscore\RatingsReviews\Block\Adminhtml\Order\View\Invitation $block */
+/** @var \Magento\Framework\Escaper|null $escaper */
+
+use Lipscore\RatingsReviews\Model\Invitation\Status;
+
+// $escaper is passed to templates since Magento 2.4.0; the block provides the same escape methods before that.
+$escaper = $escaper ?? $block;
+
+$record = $block->getRecord();
+$status = $record ? (int) $record['status'] : Status::NONE;
+$date = $record ? $block->formatDate($record['updated_at'], \IntlDateFormatter::MEDIUM, true) : '';
+$source = $record ? $block->getSourceLabel($record['source']) : '';
+$message = $record ? (string) $record['message'] : '';
+?>
+<section class="admin__page-section lipscore-invitation">
+    <div class="admin__page-section-title">
+        <span class="title"><?= $escaper->escapeHtml(__('Lipscore Invitation')) ?></span>
+    </div>
+    <div class="admin__page-section-content">
+        <?php if (!$record): ?>
+            <p><?= $escaper->escapeHtml(__('No invitation recorded for this order.')) ?></p>
+            <?php $note = __('Invitations scheduled by extension versions before 2.3.0 are not recorded.'); ?>
+            <p class="note"><?= $escaper->escapeHtml($note) ?></p>
+        <?php elseif ($status === Status::SCHEDULED): ?>
+            <p><?= $escaper->escapeHtml(__('Scheduled in Lipscore on %1, %2.', $date, $source)) ?></p>
+            <p class="note"><?= $escaper->escapeHtml(__('Lipscore sends the invitation to the customer.')) ?></p>
+        <?php elseif ($status === Status::ALREADY_SCHEDULED): ?>
+            <p><?= $escaper->escapeHtml(__(
+                'Already scheduled: Lipscore did not create a new invitation on %1, %2.',
+                $date,
+                $source
+            )) ?></p>
+        <?php elseif ($status === Status::REJECTED): ?>
+            <p><?= $escaper->escapeHtml(__('Rejected by Lipscore on %1, %2.', $date, $source)) ?></p>
+            <?php $note = __('Correct the order data, then schedule the invitation again with the bulk action.'); ?>
+            <p class="note"><?= $escaper->escapeHtml($note) ?></p>
+        <?php elseif ($status === Status::FAILED): ?>
+            <p><?= $escaper->escapeHtml(__(
+                'Could not be scheduled on %1 after %2 attempt(s).',
+                $date,
+                (int) $record['attempts']
+            )) ?></p>
+        <?php endif; ?>
+        <?php if ($message !== ''): ?>
+            <p class="note"><?= $escaper->escapeHtml($message) ?></p>
+        <?php endif; ?>
+    </div>
+</section>

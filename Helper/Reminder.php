@@ -91,8 +91,10 @@ class Reminder extends AbstractHelper
     }
 
     /**
-     * Build reminder data for an order.
+     * Build reminder data for an order in the format of the legacy POST /purchases endpoint.
      *
+     * @deprecated 2.3.0 The extension uses POST /invitations.
+     * @see Reminder::invitationData()
      * @param Order $order
      * @return array
      */
@@ -100,6 +102,22 @@ class Reminder extends AbstractHelper
     {
         return [
             'purchase' => $this->purchaseData($order),
+            'products' => $this->productsData($order)
+        ];
+    }
+
+    /**
+     * Build the invitation for POST /invitations.
+     *
+     * One element of the "invitations" array of a bulk request, or the whole body of a single request.
+     *
+     * @param Order $order
+     * @return array
+     */
+    public function invitationData(Order $order)
+    {
+        return [
+            'invitation' => $this->purchaseData($order),
             'products' => $this->productsData($order)
         ];
     }
