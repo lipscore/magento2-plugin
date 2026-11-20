@@ -7,6 +7,7 @@ use Magento\Framework\Exception\LocalizedException;
 
 class Request
 {
+    /** Timeout in seconds, the REMINDER_TIMEOUT environment variable overrides it. */
     public const REMINDER_TIMEOUT = 5;
 
     /**
@@ -18,6 +19,7 @@ class Request
      * @var string|null
      */
     protected $path;
+
     /**
      * @var string
      */
@@ -26,7 +28,7 @@ class Request
     /**
      * @var int
      */
-    protected $timeout     = 5;
+    protected $timeout = self::REMINDER_TIMEOUT;
 
     /**
      * @var mixed
@@ -47,19 +49,12 @@ class Request
      * Request constructor.
      *
      * @param Config $config
+     * @throws LocalizedException
      */
     public function __construct(
         Config $config
     ) {
         $this->config = $config;
-
-        if (!empty($params['timeout'])) {
-            $this->timeout = $params['timeout'];
-        }
-
-        if (!empty($params['requestType'])) {
-            $this->requestType = $params['requestType'];
-        }
 
         if (class_exists(\Laminas\Http\Client::class)) {
             $this->client = new \Laminas\Http\Client();
@@ -73,55 +68,87 @@ class Request
     }
 
     /**
+     * POST JSON data to the Lipscore API of the store.
+     *
+     * Never throws on HTTP errors or timeouts: they are returned as a Response with the status code
+     * (0 when no response was received), so the caller can decide whether to retry.
+     *
+     * @param string $path API path, e.g. "invitations"
+     * @param array $data
+     * @param int|null $storeId
+     * @param int|null $timeout Seconds; defaults to REMINDER_TIMEOUT or the environment variable
+     * @return Response
+     * @throws \InvalidArgumentException When the data cannot be encoded as JSON
+     */
+    public function post($path, array $data, $storeId = null, $timeout = null)
+    {
+        $body = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        if ($body === false) {
+            throw new \InvalidArgumentException('Lipscore API request data cannot be encoded as JSON: '
+                . json_last_error_msg());
+        }
+
+        $this->path = $path;
+        $this->timeout = $timeout ? (int) $timeout : $this->getDefaultTimeout();
+        $url = sprintf(
+            '%s/%s?api_key=%s',
+            rtrim((string) $this->config->getApiUrl($storeId), '/'),
+            ltrim($path, '/'),
+            rawurlencode((string) $this->config->getApiKey($storeId))
+        );
+        $headers = [
+            'X-Authorization' => (string) $this->config->getApiSecret($storeId),
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ];
+
+        try {
+            if ($this->client instanceof \GuzzleHttp\Client) {
+                $this->response = $this->client->request('POST', $url, [
+                    'headers' => $headers,
+                    'body' => $body,
+                    'timeout' => $this->timeout,
+                    'http_errors' => false,
+                ]);
+            } else {
+                $this->client->resetParameters(true);
+                $this->client->setUri($url);
+                $this->client->setOptions(['timeout' => $this->timeout]);
+                $this->client->setMethod('POST');
+                $this->client->setRawBody($body);
+                $this->client->setHeaders($headers);
+                $this->response = $this->client->send();
+            }
+        } catch (\Exception $e) {
+            // Timeouts and connection failures of every supported client.
+            $this->response = null;
+            return new Response(0, '', $e);
+        }
+
+        return new Response((int) $this->response->getStatusCode(), (string) $this->response->getBody());
+    }
+
+    /**
      * Send data to the Lipscore API and return the decoded response.
      *
+     * @deprecated 2.3.0 Does not tell temporary errors from permanent ones.
+     * @see Request::post()
      * @param mixed $data
      * @param string|null $path
      * @return array|false
      */
     public function send($data, $path = null)
     {
-        if (!$path) {
-            $path = 'purchases';
+        $response = $this->post($path ?: 'purchases', (array) $data, $this->storeId);
+        if (!$response->isSuccess()) {
+            return false;
         }
-        $this->path = $path;
 
-        // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
-        $timeout = getenv('REMINDER_TIMEOUT');
-        $this->timeout =  $timeout ?: static::REMINDER_TIMEOUT;
-
-        $apiKey = $this->config->getApiKey($this->storeId);
-        $secret = $this->config->getApiSecret($this->storeId);
-        $apiUrl = $this->config->getApiUrl($this->storeId);
-        $headers = [
-            'X-Authorization' => (string) $secret,
-            'Content-Type'    => 'application/json',
-        ];
-        $url = "$apiUrl/{$this->path}?api_key=$apiKey";
-
-        if ($this->client instanceof \GuzzleHttp\Client) {
-            $options = [
-                'headers' => $headers,
-                'json'    => $data,
-                'timeout' => $this->timeout,
-            ];
-            $response = $this->client->request($this->requestType, $url, $options);
-            $this->response = $response;
-            $result = $response->getStatusCode() === 200 ? json_decode($response->getBody(), true) : false;
-        } else {
-            $this->client->setUri($url);
-            $this->client->setOptions(['timeout' => $this->timeout]);
-            $this->client->setMethod($this->requestType);
-            $this->client->setRawBody(json_encode($data));
-            $this->client->setHeaders($headers);
-            $this->response = $this->client->send();
-            $result = $this->response->isSuccess() ? json_decode($this->response->getBody(), true) : false;
-        }
-        return $result;
+        return $response->getData() ?? [];
     }
 
     /**
-     * Set the store id used for API requests.
+     * Set the store id used by send().
      *
      * @param int|null $storeId
      * @return void
@@ -132,12 +159,31 @@ class Request
     }
 
     /**
-     * Return the raw response body as a string.
+     * Return the last raw response as a string.
      *
      * @return string
      */
     public function responseMsg()
     {
-        return $this->response ? $this->response->__toString() : '';
+        if (!$this->response) {
+            return '';
+        }
+
+        return method_exists($this->response, 'toString')
+            ? $this->response->toString()
+            : (string) $this->response->getBody();
+    }
+
+    /**
+     * Default timeout in seconds.
+     *
+     * @return int
+     */
+    protected function getDefaultTimeout()
+    {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
+        $timeout = (int) getenv('REMINDER_TIMEOUT');
+
+        return $timeout > 0 ? $timeout : static::REMINDER_TIMEOUT;
     }
 }

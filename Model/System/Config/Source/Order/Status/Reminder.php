@@ -14,7 +14,7 @@ class Reminder extends AbstractStatus implements OptionSourceInterface
     public function toOptionArray()
     {
         $options = [
-            ['value' =>'', 'label' => __('Disable the Review Request Email')]
+            ['value' =>'', 'label' => __('Disable invitations')]
         ];
 
         try {

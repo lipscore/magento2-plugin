@@ -1,0 +1,7 @@
+# Keep development files out of Composer dist archives / Marketplace packages
+/dev-tools export-ignore
+/.github export-ignore
+/bearer.ignore export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/magento_code_sniffer_report.json export-ignore

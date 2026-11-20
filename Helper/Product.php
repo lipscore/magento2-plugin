@@ -88,6 +88,17 @@ class Product extends AbstractHelper
     }
 
     /**
+     * Clear in-memory product data; one process may send products of several stores.
+     *
+     * @return void
+     */
+    public function resetCache()
+    {
+        $this->productCache = [];
+        $this->childProductCache = [];
+    }
+
+    /**
      * Get product data for Lipscore, optionally including child product data.
      *
      * @param MagentoProduct $product

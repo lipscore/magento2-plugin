@@ -1,0 +1,21 @@
+{
+    "lipscore_invitation": {
+        "column": {
+            "order_id": true,
+            "store_id": true,
+            "status": true,
+            "source": true,
+            "attempts": true,
+            "cron_attempts": true,
+            "message": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "LIPSCORE_INVITATION_STATUS": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}
