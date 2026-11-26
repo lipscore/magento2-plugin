@@ -76,10 +76,36 @@ class OrderGridInvitation
             );
             $collection->addFilterToMap(self::FIELD_STATUS, $statusExpression);
             $collection->addFilterToMap(self::FIELD_DATE, $dateField);
+            $this->mapSharedColumns($collection, $table);
         } catch (\Exception $e) {
             $this->logger->log($e);
         }
 
         return $collection;
+    }
+
+    /**
+     * Qualify grid columns that also exist in the invitation table.
+     *
+     * Filters such as the purchase date one use bare column names, which are
+     * ambiguous after the join (created_at, updated_at, store_id, status).
+     *
+     * @param \Magento\Framework\Data\Collection\AbstractDb $collection
+     * @param string $table
+     * @return void
+     */
+    protected function mapSharedColumns($collection, $table)
+    {
+        $connection = $collection->getConnection();
+        $from = $collection->getSelect()->getPart(Select::FROM);
+        if (empty($from['main_table']['tableName'])) {
+            return;
+        }
+
+        $gridColumns = array_keys($connection->describeTable($from['main_table']['tableName']));
+        $invitationColumns = array_keys($connection->describeTable($table));
+        foreach (array_intersect($gridColumns, $invitationColumns) as $column) {
+            $collection->addFilterToMap($column, 'main_table.' . $column);
+        }
     }
 }

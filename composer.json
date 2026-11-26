@@ -7,7 +7,7 @@
         "ratings",
         "reminders"
     ],
-    "version": "2.3.0",
+    "version": "2.3.1",
     "require": {
         "php": "~7.4.0||~8.1.0||~8.2.0||~8.3.0||~8.4.0||~8.5.0",
         "magento/framework": "^103.0",
